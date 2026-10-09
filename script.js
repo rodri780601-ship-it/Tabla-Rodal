@@ -1,4 +1,4 @@
-// Listado de Especies Arbóreas Nativas de Chile (D.S. N° 68 / 2009 MINAGRI)
+// Especies Arbóreas Nativas de Chile (D.S. N° 68 / 2009 MINAGRI)
 const ESPECIES_NATIVAS_DS68 = [
     { cientifico: "Nothofagus obliqua", comun: "Roble" },
     { cientifico: "Nothofagus alpina", comun: "Raulí" },
@@ -16,7 +16,7 @@ const ESPECIES_NATIVAS_DS68 = [
     { cientifico: "Laurelia sempervirens", comun: "Laurel" },
     { cientifico: "Laureliopsis philippiana", comun: "Tepa" },
     { cientifico: "Eucryphia cordifolia", comun: "Ulmo" },
-    { cientifico: "Aextoxicon punctatum", comun: "Olivecillo" },
+    { cientifico: "Aextoxicon punctatum", comun: "Olivillo" },
     { cientifico: "Gevuina avellana", comun: "Avellano" },
     { cientifico: "Lomatia hirsuta", comun: "Radal" },
     { cientifico: "Cryptocarya alba", comun: "Peumo" },
@@ -34,35 +34,49 @@ const ESPECIES_NATIVAS_DS68 = [
     { cientifico: "Beilschmiedia berteroana", comun: "Belloto del sur" }
 ];
 
-// Estado global
+// Datos de Ejemplo Predefinidos para Demostración
+const EJEMPLO_PARAMETROS = {
+    rodalName: "Rodal R-01 (San Francisco)",
+    superficieRodal: 14.80,
+    tipoForestal: "Roble-Raulí-Coigüe",
+    estructuraRodal: "Irregular",
+    estadoDesarrollo: "Fustal",
+    tipoMuestreo: "Sistemático Aleatorio",
+    numParcelas: 4,
+    areaParcela: 500,
+    formaParcela: "Circular",
+    amplitudClase: 5
+};
+
+const EJEMPLO_REGISTROS = [
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Roble", dap: 12.5, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Roble", dap: 18.2, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Roble", dap: 22.0, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Raulí", dap: 14.1, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Coigüe común", dap: 31.4, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Roble", dap: 26.5, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Raulí", dap: 19.8, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Raulí", dap: 28.3, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Canelo", dap: 11.2, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 3, especie: "Roble", dap: 34.0, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 3, especie: "Coigüe común", dap: 21.5, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 3, especie: "Radal", dap: 16.0, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 4, especie: "Roble", dap: 23.4, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 4, especie: "Raulí", dap: 38.1, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 4, especie: "Ulmo", dap: 15.5, corta: "NO" }
+];
+
+// Estado global de la aplicación
+let parametrosValidados = null;
 let registrosIngresados = [];
 let chartEstructura = null;
 let chartAreaBasal = null;
 let chartComparativa = null;
 
-// Datos de Ejemplo Predefinidos
-const DATOS_EJEMPLO = [
-    { rodal: "Rodal 1", parcela: 1, especie: "Roble", dap: 12.5, corta: "NO" },
-    { rodal: "Rodal 1", parcela: 1, especie: "Roble", dap: 18.2, corta: "NO" },
-    { rodal: "Rodal 1", parcela: 1, especie: "Roble", dap: 22.0, corta: "SI" },
-    { rodal: "Rodal 1", parcela: 1, especie: "Raulí", dap: 14.1, corta: "NO" },
-    { rodal: "Rodal 1", parcela: 1, especie: "Coigüe común", dap: 31.4, corta: "SI" },
-    { rodal: "Rodal 1", parcela: 2, especie: "Roble", dap: 26.5, corta: "NO" },
-    { rodal: "Rodal 1", parcela: 2, especie: "Raulí", dap: 19.8, corta: "NO" },
-    { rodal: "Rodal 1", parcela: 2, especie: "Raulí", dap: 28.3, corta: "SI" },
-    { rodal: "Rodal 1", parcela: 2, especie: "Canelo", dap: 11.2, corta: "NO" },
-    { rodal: "Rodal 1", parcela: 3, especie: "Roble", dap: 34.0, corta: "SI" },
-    { rodal: "Rodal 1", parcela: 3, especie: "Coigüe común", dap: 21.5, corta: "NO" },
-    { rodal: "Rodal 1", parcela: 3, especie: "Radal", dap: 16.0, corta: "NO" },
-    { rodal: "Rodal 1", parcela: 4, especie: "Roble", dap: 23.4, corta: "NO" },
-    { rodal: "Rodal 1", parcela: 4, especie: "Raulí", dap: 38.1, corta: "SI" },
-    { rodal: "Rodal 1", parcela: 4, especie: "Ulmo", dap: 15.5, corta: "NO" }
-];
-
 document.addEventListener("DOMContentLoaded", () => {
     poblarSelectEspecies();
     setupEventListeners();
-    procesarYActualizarTodo();
+    actualizarEstadoInterfaz(false);
 });
 
 function poblarSelectEspecies() {
@@ -77,46 +91,148 @@ function poblarSelectEspecies() {
 }
 
 function setupEventListeners() {
+    // Formulario de Parámetros
+    document.getElementById("formParametros").addEventListener("submit", (e) => {
+        e.preventDefault();
+        validarGuardarParametros();
+    });
+
+    // Cargar Ejemplo
+    document.getElementById("btnCargarEjemplo").addEventListener("click", cargarEjemploCompleto);
+
+    // Formulario de Ingreso de Campo
     document.getElementById("treeForm").addEventListener("submit", (e) => {
         e.preventDefault();
         agregarArbol();
     });
 
-    document.getElementById("btnCargarEjemplo").addEventListener("click", () => {
-        registrosIngresados = JSON.parse(JSON.stringify(DATOS_EJEMPLO));
-        procesarYActualizarTodo();
-    });
-
+    // Limpiar Todo
     document.getElementById("btnBorrarTodo").addEventListener("click", () => {
-        if (confirm("¿Está seguro de eliminar todos los registros del inventario?")) {
+        if (confirm("¿Desea eliminar todos los registros de árboles del inventario?")) {
             registrosIngresados = [];
             procesarYActualizarTodo();
         }
     });
 
+    // Exportar Excel
     document.getElementById("btnExportarExcel").addEventListener("click", exportarTablaExcel);
+}
 
-    ["rodalName", "numParcelas", "areaParcela", "amplitudClase"].forEach(id => {
-        document.getElementById(id).addEventListener("change", procesarYActualizarTodo);
-    });
+function validarGuardarParametros() {
+    const rodalName = document.getElementById("rodalName").value.trim();
+    const superficieRodal = parseFloat(document.getElementById("superficieRodal").value);
+    const tipoForestal = document.getElementById("tipoForestal").value;
+    const estructuraRodal = document.getElementById("estructuraRodal").value;
+    const estadoDesarrollo = document.getElementById("estadoDesarrollo").value;
+    const tipoMuestreo = document.getElementById("tipoMuestreo").value;
+    const numParcelas = parseInt(document.getElementById("numParcelas").value);
+    const areaParcela = parseFloat(document.getElementById("areaParcela").value);
+    const formaParcela = document.getElementById("formaParcela").value;
+    const amplitudClase = parseFloat(document.getElementById("amplitudClase").value);
+
+    if (!rodalName || !superficieRodal || !tipoForestal || !estructuraRodal || 
+        !estadoDesarrollo || !tipoMuestreo || !numParcelas || !areaParcela || !formaParcela || !amplitudClase) {
+        alert("Por favor complete TODOS los parámetros obligatorios del Rodal.");
+        return;
+    }
+
+    parametrosValidados = {
+        rodalName, superficieRodal, tipoForestal, estructuraRodal,
+        estadoDesarrollo, tipoMuestreo, numParcelas, areaParcela,
+        formaParcela, amplitudClase
+    };
+
+    actualizarEstadoInterfaz(true);
+    renderizarResumenParametros();
+    procesarYActualizarTodo();
+    alert("✅ Parámetros del Rodal validados exitosamente. Ahora puede ingresar datos de campo y generar la Tabla de Rodal.");
+}
+
+function cargarEjemploCompleto() {
+    document.getElementById("rodalName").value = EJEMPLO_PARAMETROS.rodalName;
+    document.getElementById("superficieRodal").value = EJEMPLO_PARAMETROS.superficieRodal;
+    document.getElementById("tipoForestal").value = EJEMPLO_PARAMETROS.tipoForestal;
+    document.getElementById("estructuraRodal").value = EJEMPLO_PARAMETROS.estructuraRodal;
+    document.getElementById("estadoDesarrollo").value = EJEMPLO_PARAMETROS.estadoDesarrollo;
+    document.getElementById("tipoMuestreo").value = EJEMPLO_PARAMETROS.tipoMuestreo;
+    document.getElementById("numParcelas").value = EJEMPLO_PARAMETROS.numParcelas;
+    document.getElementById("areaParcela").value = EJEMPLO_PARAMETROS.areaParcela;
+    document.getElementById("formaParcela").value = EJEMPLO_PARAMETROS.formaParcela;
+    document.getElementById("amplitudClase").value = EJEMPLO_PARAMETROS.amplitudClase;
+
+    parametrosValidados = { ...EJEMPLO_PARAMETROS };
+    registrosIngresados = JSON.parse(JSON.stringify(EJEMPLO_REGISTROS));
+
+    actualizarEstadoInterfaz(true);
+    renderizarResumenParametros();
+    procesarYActualizarTodo();
+}
+
+function actualizarEstadoInterfaz(habilitado) {
+    const statusBadge = document.getElementById("statusParametros");
+    const lockWarning = document.getElementById("lockWarningCampo");
+    
+    const inputsCampo = ["parcelaNo", "especieSelect", "dapInput", "cortaSelect", "btnAgregarArbol", "btnBorrarTodo", "btnExportarExcel"];
+
+    if (habilitado) {
+        statusBadge.textContent = "Validado";
+        statusBadge.className = "badge badge-success";
+        lockWarning.style.display = "none";
+        inputsCampo.forEach(id => document.getElementById(id).removeAttribute("disabled"));
+    } else {
+        statusBadge.textContent = "Incompleto";
+        statusBadge.className = "badge badge-warning";
+        lockWarning.style.display = "block";
+        inputsCampo.forEach(id => document.getElementById(id).setAttribute("disabled", "true"));
+    }
+}
+
+function renderizarResumenParametros() {
+    const container = document.getElementById("resumenParametrosRodal");
+    if (!parametrosValidados) return;
+
+    const p = parametrosValidados;
+    const supMuestreadaHa = (p.numParcelas * p.areaParcela) / 10000;
+    const intenMuestreoPct = (supMuestreadaHa / p.superficieRodal) * 100;
+
+    container.innerHTML = `
+        <div class="info-rodal-grid">
+            <div class="info-rodal-item"><span class="label">Rodal:</span><strong>${p.rodalName} (${p.superficieRodal} ha)</strong></div>
+            <div class="info-rodal-item"><span class="label">Tipo Forestal (Art. 19 D.S. 259):</span><strong>${p.tipoForestal}</strong></div>
+            <div class="info-rodal-item"><span class="label">Estructura / Estado:</span><strong>${p.estructuraRodal} | ${p.estadoDesarrollo}</strong></div>
+            <div class="info-rodal-item"><span class="label">Diseño de Muestreo:</span><strong>${p.tipoMuestreo} (${p.formaParcela})</strong></div>
+            <div class="info-rodal-item"><span class="label">Parcelas / Superficie:</span><strong>${p.numParcelas} parc. de ${p.areaParcela} m²</strong></div>
+            <div class="info-rodal-item"><span class="label">Intensidad Muestreo:</span><strong>${supMuestreadaHa.toFixed(3)} ha (${intenMuestreoPct.toFixed(2)}%)</strong></div>
+        </div>
+    `;
 }
 
 function agregarArbol() {
-    const rodal = document.getElementById("rodalName").value || "Rodal 1";
+    if (!parametrosValidados) {
+        alert("Debe validar los parámetros del rodal antes de ingresar árboles.");
+        return;
+    }
+
     const parcela = parseInt(document.getElementById("parcelaNo").value);
     const especie = document.getElementById("especieSelect").value;
     const dap = parseFloat(document.getElementById("dapInput").value);
     const corta = document.getElementById("cortaSelect").value;
 
     if (isNaN(dap) || dap <= 0) {
-        alert("Por favor ingrese un valor de DAP válido.");
+        alert("Por favor ingrese un valor válido de DAP.");
         return;
     }
 
-    registrosIngresados.push({ rodal, parcela, especie, dap, corta });
+    registrosIngresados.push({
+        rodal: parametrosValidados.rodalName,
+        parcela,
+        especie,
+        dap,
+        corta
+    });
+
     document.getElementById("dapInput").value = "";
     document.getElementById("dapInput").focus();
-
     procesarYActualizarTodo();
 }
 
@@ -135,12 +251,10 @@ function procesarYActualizarTodo() {
 function renderizarTablaIngresos() {
     const tbody = document.getElementById("tbodyIngresos");
     tbody.innerHTML = "";
-
     document.getElementById("totalRegistrosCount").textContent = registrosIngresados.length;
 
     registrosIngresados.forEach((item, index) => {
         const g = (Math.PI / 40000) * Math.pow(item.dap, 2);
-        
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>${index + 1}</td>
@@ -157,17 +271,20 @@ function renderizarTablaIngresos() {
 }
 
 function calcularTablaRodal() {
-    const numParcelas = Math.max(1, parseInt(document.getElementById("numParcelas").value) || 1);
-    const areaParcelaM2 = Math.max(1, parseFloat(document.getElementById("areaParcela").value) || 500);
-    const ampClase = Math.max(1, parseFloat(document.getElementById("amplitudClase").value) || 5);
+    if (!parametrosValidados) {
+        document.getElementById("factorExpansionText").textContent = "--";
+        return { clases: [], especiesEspeciales: [], datos: {}, factorExpansion: 0 };
+    }
 
-    const factorExpansion = 10000 / (numParcelas * areaParcelaM2);
-    document.getElementById("factorExpansiónText").textContent = `${factorExpansion.toFixed(2)} (1 ha / ${numParcelas * areaParcelaM2} m² muestreados)`;
+    const { numParcelas, areaParcela, amplitudClase } = parametrosValidados;
+    const factorExpansion = 10000 / (numParcelas * areaParcela);
+    document.getElementById("factorExpansionText").textContent = `${factorExpansion.toFixed(2)} (1 ha / ${(numParcelas * areaParcela)} m² muestreados)`;
 
     if (registrosIngresados.length === 0) {
         return { clases: [], especiesEspeciales: [], datos: {}, factorExpansion };
     }
 
+    // Identificar las 3 especies más frecuentes
     const contexEspecies = {};
     registrosIngresados.forEach(r => {
         contexEspecies[r.especie] = (contexEspecies[r.especie] || 0) + 1;
@@ -177,15 +294,15 @@ function calcularTablaRodal() {
     const topEspecies = especiesOrdenadas.slice(0, 3);
 
     const daps = registrosIngresados.map(r => r.dap);
-    const minDap = Math.floor(Math.min(...daps) / ampClase) * ampClase;
-    const maxDap = Math.ceil(Math.max(...daps) / ampClase) * ampClase;
+    const minDap = Math.floor(Math.min(...daps) / amplitudClase) * amplitudClase;
+    const maxDap = Math.ceil(Math.max(...daps) / amplitudClase) * amplitudClase;
 
     const clases = [];
-    for (let c = minDap; c < maxDap; c += ampClase) {
+    for (let c = minDap; c < maxDap; c += amplitudClase) {
         clases.push({
             min: c,
-            max: c + ampClase,
-            mc: c + (ampClase / 2)
+            max: c + amplitudClase,
+            mc: c + (amplitudClase / 2)
         });
     }
 
@@ -214,6 +331,7 @@ function calcularTablaRodal() {
 
         const columnaEsp = topEspecies.includes(arb.especie) ? arb.especie : "Otras";
 
+        // Inicial
         matriz[claseIdx][columnaEsp].nIni += factorExpansion;
         matriz[claseIdx][columnaEsp].gIni += gArbol * factorExpansion;
         matriz[claseIdx]["Total"].nIni += factorExpansion;
@@ -224,6 +342,7 @@ function calcularTablaRodal() {
         totalesEspecie["Total"].nIni += factorExpansion;
         totalesEspecie["Total"].gIni += gArbol * factorExpansion;
 
+        // Residual
         if (arb.corta === "NO") {
             matriz[claseIdx][columnaEsp].nRes += factorExpansion;
             matriz[claseIdx][columnaEsp].gRes += gArbol * factorExpansion;
@@ -254,7 +373,7 @@ function renderizarTablaRodal(res) {
     tbody.innerHTML = "";
 
     if (!res.clases || res.clases.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10">No hay datos suficientes para estructurar la Tabla de Rodal. Complete el ingreso de campo.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10">No hay datos suficientes para estructurar la Tabla de Rodal. Complete los parámetros e ingrese árboles de campo.</td></tr>`;
         return;
     }
 
@@ -383,30 +502,46 @@ function exportarTablaExcel() {
         return;
     }
 
-    const res = calcularTablaRodal();
-    if (!res.clases || res.clases.length === 0) {
-        alert("No hay datos para exportar.");
+    if (!parametrosValidados) {
+        alert("Debe validar los parámetros del rodal.");
         return;
     }
 
+    const res = calcularTablaRodal();
+    if (!res.clases || res.clases.length === 0) {
+        alert("No hay datos suficientes para exportar.");
+        return;
+    }
+
+    const p = parametrosValidados;
     const ws1Data = [];
-    ws1Data.push(["12.3.9 Tabla de rodal inicial y residual, después de la intervención inmediata"]);
+
+    // Encabezado normativo
+    ws1Data.push(["12.3.9 TABLA DE RODAL INICIAL Y RESIDUAL (INVENTARIO Y MANEJO FORESTAL)"]);
     ws1Data.push([]);
-    ws1Data.push(["Rodal:", document.getElementById("rodalName").value]);
+    ws1Data.push(["Identificador Rodal:", p.rodalName, "", "Superficie Rodal (ha):", p.superficieRodal]);
+    ws1Data.push(["Tipo Forestal (Art. 19 D.S. 259):", p.tipoForestal, "", "Estructura:", p.estructuraRodal]);
+    ws1Data.push(["Estado de Desarrollo:", p.estadoDesarrollo, "", "Diseño Muestreo:", p.tipoMuestreo]);
+    ws1Data.push(["N° Parcelas:", p.numParcelas, "", "Superficie Parcela (m²):", p.areaParcela]);
+    ws1Data.push(["Forma Parcela:", p.formaParcela, "", "Amplitud Clase (cm):", p.amplitudClase]);
     ws1Data.push([]);
 
+    // Header Fila 1 Especies
     const rowH1 = ["Rango (cm) ≤ Ø <", "", "Mc"];
     res.especiesColumnas.forEach(esp => rowH1.push(esp, "", "", ""));
     ws1Data.push(rowH1);
 
+    // Header Fila 2 N y G
     const rowH2 = ["Min", "Max", "cm"];
     res.especiesColumnas.forEach(() => rowH2.push("N (árb./ha)", "", "G (m²/ha)", ""));
     ws1Data.push(rowH2);
 
+    // Header Fila 3 Ini / Res
     const rowH3 = ["", "", ""];
     res.especiesColumnas.forEach(() => rowH3.push("Ini.", "Res.", "Ini.", "Res."));
     ws1Data.push(rowH3);
 
+    // Filas de clases
     res.clases.forEach((cl, i) => {
         const row = [cl.min, cl.max, cl.mc];
         res.especiesColumnas.forEach(esp => {
@@ -416,7 +551,8 @@ function exportarTablaExcel() {
         ws1Data.push(row);
     });
 
-    const rowTot = ["TOTAL", "", ""];
+    // Totales
+    const rowTot = ["TOTAL RODAL", "", ""];
     res.especiesColumnas.forEach(esp => {
         const t = res.totalesEspecie[esp];
         rowTot.push(t.nIni, t.nRes, t.gIni, t.gRes);
@@ -425,15 +561,29 @@ function exportarTablaExcel() {
 
     const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
 
-    const ws2Data = [["Rodal", "Parcela", "Especie", "DAP (cm)", "Corta"]];
+    // Hoja 2: Registros de Campo
+    const ws2Data = [
+        ["PARÁMETROS DEL RODAL:"],
+        ["Rodal", p.rodalName],
+        ["Tipo Forestal", p.tipoForestal],
+        ["Estructura", p.estructuraRodal],
+        ["Estado Desarrollo", p.estadoDesarrollo],
+        ["Superficie (ha)", p.superficieRodal],
+        [],
+        ["DETALLE DE REGISTROS DE CAMPO:"],
+        ["Rodal", "Parcela", "Especie", "DAP (cm)", "Área Basal Individual g (m²)", "Intervención (Corta)"]
+    ];
+
     registrosIngresados.forEach(item => {
-        ws2Data.push([item.rodal, item.parcela, item.especie, item.dap, item.corta]);
+        const g = (Math.PI / 40000) * Math.pow(item.dap, 2);
+        ws2Data.push([item.rodal, item.parcela, item.especie, item.dap, g, item.corta]);
     });
+
     const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);
 
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws1, "Hoja1_TablaRodal");
     XLSX.utils.book_append_sheet(wb, ws2, "Hoja2_DatosCampo");
 
-    XLSX.writeFile(wb, `Tabla_de_Rodal_${document.getElementById("rodalName").value || 'Forestal'}.xlsx`);
+    XLSX.writeFile(wb, `Tabla_Rodal_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultor Forestal - Tabla de Rodal</title>
+    <title>Consultor Forestal - Tabla de Rodal & Planes de Manejo</title>
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,69 +16,158 @@
             <span class="tree-icon">🌲</span>
             <div>
                 <h1>Consultoría Forestal Chile</h1>
-                <p>Generador de Tabla de Rodal & Análisis de Inventario (D.S. N° 68 / 2009 MINAGRI)</p>
+                <p>Generador de Tabla de Rodal & Parámetros Normativos de Inventario (D.S. N° 259 / D.S. N° 68 MINAGRI)</p>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <!-- SECCIÓN DE CONFIGURACIÓN Y TOMA DE DATOS -->
-        <section class="card">
-            <h2>1. Configuración del Rodal y Muestreo</h2>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="rodalName">Identificador del Rodal:</label>
-                    <input type="text" id="rodalName" value="Rodal 1" placeholder="Ej: Rodal A-1">
-                </div>
-                <div class="form-group">
-                    <label for="numParcelas">Número de Parcelas Muestreadas:</label>
-                    <input type="number" id="numParcelas" value="4" min="1" step="1">
-                </div>
-                <div class="form-group">
-                    <label for="areaParcela">Superficie de Parcela (m²):</label>
-                    <input type="number" id="areaParcela" value="500" min="1" step="1" placeholder="Ej: 500 m² = 0.05 ha">
-                </div>
-                <div class="form-group">
-                    <label for="amplitudClase">Amplitud de Clase Diamétrica (cm):</label>
-                    <input type="number" id="amplitudClase" value="5" min="1" step="1">
-                </div>
+        <!-- SECCIÓN 1: PARAMETROS DEL RODAL Y MUESTREO (OBLIGATORIOS) -->
+        <section class="card border-highlight">
+            <div class="card-title-badge">
+                <h2>1. Parámetros del Rodal y Muestreos Normativos (Obligatorios)</h2>
+                <span class="badge badge-warning" id="statusParametros">Incompleto</span>
             </div>
+            <p class="help-text">Todos los campos normativos deben completarse para habilitar el procesamiento del inventario y la construcción de la Tabla de Rodal.</p>
+
+            <form id="formParametros" class="form-grid margin-top-sm">
+                <!-- Identificación & Superficie -->
+                <div class="form-group">
+                    <label for="rodalName">Identificador del Rodal: *</label>
+                    <input type="text" id="rodalName" placeholder="Ej: Rodal R-01" required>
+                </div>
+                <div class="form-group">
+                    <label for="superficieRodal">Superficie del Rodal (ha): *</label>
+                    <input type="number" id="superficieRodal" step="0.01" min="0.01" placeholder="Ej: 12.50" required>
+                </div>
+
+                <!-- Tipología Forestal (Art. 19 D.S. 259 / Ley Bosque Nativo) -->
+                <div class="form-group">
+                    <label for="tipoForestal">Tipo Forestal (Art. 19 D.S. 259 / D.S. 93): *</label>
+                    <select id="tipoForestal" required>
+                        <option value="">-- Seleccionar Tipo Forestal --</option>
+                        <option value="Alerce">Alerce</option>
+                        <option value="Araucaria">Araucaria</option>
+                        <option value="Ciprés de la Cordillera">Ciprés de la Cordillera</option>
+                        <option value="Ciprés de las Guaitecas">Ciprés de las Guaitecas</option>
+                        <option value="Coigüe de Magallanes">Coigüe de Magallanes</option>
+                        <option value="Coigüe-Raulí-Tepa">Coigüe-Raulí-Tepa</option>
+                        <option value="Esclerófilo">Esclerófilo</option>
+                        <option value="Lenga">Lenga</option>
+                        <option value="Palma Chilena">Palma Chilena</option>
+                        <option value="Roble-Hualo">Roble-Hualo</option>
+                        <option value="Roble-Raulí-Coigüe">Roble-Raulí-Coigüe</option>
+                        <option value="Siempreverde">Siempreverde</option>
+                    </select>
+                </div>
+
+                <!-- Estructura -->
+                <div class="form-group">
+                    <label for="estructuraRodal">Estructura del Rodal: *</label>
+                    <select id="estructuraRodal" required>
+                        <option value="">-- Seleccionar Estructura --</option>
+                        <option value="Regular">Regular (Coetáneo)</option>
+                        <option value="Irregular">Irregular (Incoetáneo / Multietáneo)</option>
+                        <option value="Indefinida">Indefinida / En Transición</option>
+                    </select>
+                </div>
+
+                <!-- Estado de Desarrollo -->
+                <div class="form-group">
+                    <label for="estadoDesarrollo">Estado de Desarrollo: *</label>
+                    <select id="estadoDesarrollo" required>
+                        <option value="">-- Seleccionar Estado --</option>
+                        <option value="Renoval / Monte Bravo">Renoval / Monte Bravo</option>
+                        <option value="Latizal">Latizal (Bajo / Alto)</option>
+                        <option value="Fustal">Fustal (Delgado / Medio / Grueso)</option>
+                        <option value="Bosque Adulto / Subactual">Bosque Adulto / Subactual</option>
+                        <option value="Bosque Degradado / Sobreexplotado">Bosque Degradado / Sobreexplotado</option>
+                    </select>
+                </div>
+
+                <!-- Diseños de Muestreo -->
+                <div class="form-group">
+                    <label for="tipoMuestreo">Tipo de Muestreo: *</label>
+                    <select id="tipoMuestreo" required>
+                        <option value="">-- Seleccionar Muestreo --</option>
+                        <option value="Sistemático Aleatorio">Muestreo Sistemático Aleatorio</option>
+                        <option value="Aleatorio Simple">Muestreo Aleatorio Simple</option>
+                        <option value="Estratificado">Muestreo Estratificado</option>
+                        <option value="Muestreo Sistemático con Malla Cuadrada">Muestreo Sistemático con Malla Cuadrada</option>
+                        <option value="Censo 100%">Censo al 100% (Relascopía / Marcación total)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="numParcelas">Número de Parcelas (N°): *</label>
+                    <input type="number" id="numParcelas" min="1" step="1" placeholder="Ej: 8" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="areaParcela">Superficie de Parcela (m²): *</label>
+                    <input type="number" id="areaParcela" min="1" step="1" placeholder="Ej: 500" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="formaParcela">Forma de la Parcela: *</label>
+                    <select id="formaParcela" required>
+                        <option value="">-- Seleccionar Forma --</option>
+                        <option value="Circular">Circular (Radio fijo)</option>
+                        <option value="Rectangular">Rectangular / Faaja</option>
+                        <option value="Cuadrada">Cuadrada</option>
+                        <option value="Punto de Muestreo Variable (Bitterlich)">Punto Variable / Bitterlich</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="amplitudClase">Amplitud Clase Diamétrica (cm): *</label>
+                    <input type="number" id="amplitudClase" value="5" min="1" step="1" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <button type="submit" class="btn btn-primary">✅ Guardar y Validar Parámetros</button>
+                    <button type="button" id="btnCargarEjemplo" class="btn btn-secondary">⚡ Cargar Datos y Parámetros de Ejemplo</button>
+                </div>
+            </form>
         </section>
 
-        <!-- REGISTRO DE ARBOLES EN CAMPO (HOJA 2) -->
-        <section class="card">
-            <h2>2. Ingreso de Datos de Campo (Hoja 2)</h2>
+        <!-- REGISTRO DE ÁRBOLES EN CAMPO (HOJA 2) -->
+        <section class="card" id="secIngresoCampo">
+            <h2>2. Ingreso de Datos de Campo (Hoja 2 - Detalle por Árbol)</h2>
+            <div id="lockWarningCampo" class="alert alert-warning">
+                ⚠️ Debe completar y validar todos los parámetros del Rodal (Sección 1) antes de ingresar o calcular registros.
+            </div>
+
             <form id="treeForm" class="form-grid">
                 <div class="form-group">
                     <label for="parcelaNo">N° Parcela:</label>
-                    <input type="number" id="parcelaNo" value="1" min="1" required>
+                    <input type="number" id="parcelaNo" value="1" min="1" required disabled>
                 </div>
                 <div class="form-group">
                     <label for="especieSelect">Especie Arbórea Nativa (D.S. 68/2009):</label>
-                    <select id="especieSelect" required>
+                    <select id="especieSelect" required disabled>
                         <!-- Cargado dinámicamente -->
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="dapInput">DAP (cm):</label>
-                    <input type="number" id="dapInput" step="0.1" min="0.1" placeholder="Ej: 24.5" required>
+                    <input type="number" id="dapInput" step="0.1" min="0.1" placeholder="Ej: 24.5" required disabled>
                 </div>
                 <div class="form-group">
                     <label for="cortaSelect">Intervención (Corta):</label>
-                    <select id="cortaSelect">
+                    <select id="cortaSelect" disabled>
                         <option value="NO">Conservar (Residual)</option>
                         <option value="SI">Corta (Cosecha / Raleo)</option>
                     </select>
                 </div>
                 <div class="form-group full-width">
-                    <button type="submit" class="btn btn-primary">➕ Agregar Árbol</button>
-                    <button type="button" id="btnCargarEjemplo" class="btn btn-secondary">⚡ Cargar Datos de Ejemplo</button>
-                    <button type="button" id="btnBorrarTodo" class="btn btn-danger">🗑️ Limpiar Registros</button>
+                    <button type="submit" id="btnAgregarArbol" class="btn btn-primary" disabled>➕ Agregar Árbol al Inventario</button>
+                    <button type="button" id="btnBorrarTodo" class="btn btn-danger" disabled>🗑️ Limpiar Todos los Registros</button>
                 </div>
             </form>
 
             <div class="table-responsive margin-top">
-                <h3>Registros Ingresados (<span id="totalRegistrosCount">0</span> árboles)</h3>
+                <h3>Registros de Campo Ingresados (<span id="totalRegistrosCount">0</span> árboles)</h3>
                 <table id="tablaIngresos">
                     <thead>
                         <tr>
@@ -87,9 +176,9 @@
                             <th>Parcela</th>
                             <th>Especie</th>
                             <th>DAP (cm)</th>
-                            <th>Área Basal (g, m²)</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
+                            <th>Área Basal Individual (g, m²)</th>
+                            <th>Intervención</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyIngresos">
@@ -100,12 +189,19 @@
         </section>
 
         <!-- TABLA DE RODAL GENERADA (HOJA 1) -->
-        <section class="card">
+        <section class="card" id="secTablaRodal">
             <div class="section-header">
                 <h2>3. Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
-                <button id="btnExportarExcel" class="btn btn-success">📥 Exportar a Excel (.xlsx)</button>
+                <button id="btnExportarExcel" class="btn btn-success" disabled>📥 Exportar a Excel (.xlsx)</button>
             </div>
-            <p class="help-text">Valores expresados por hectárea (N: árb./ha, G: m²/ha). Factor de expansión: <strong id="factorExpansiónText">--</strong></p>
+
+            <!-- Resumen Técnico del Rodal -->
+            <div id="resumenParametrosRodal" class="info-rodal-box margin-top-sm">
+                <!-- Insertado con JS tras validar parámetros -->
+                <p><em>Esperando validación de parámetros del rodal...</em></p>
+            </div>
+
+            <p class="help-text">Valores expresados por hectárea (N: árb./ha, G: m²/ha). Factor de Expansión Hectárea (F): <strong id="factorExpansionText">--</strong></p>
             <div class="table-responsive">
                 <table id="tablaRodal" class="tabla-rodal-custom">
                     <thead id="theadRodal">
@@ -139,7 +235,7 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2026 Consultoría y Gestión Forestal Sostenible | Cumplimiento Ley N° 20.283 & D.S. N° 68/2009</p>
+        <p>&copy; 2026 Consultoría y Gestión Forestal Sostenible | Cumplimiento Ley N° 20.283, D.S. N° 259 / 1980 & D.S. N° 68 / 2009 MINAGRI</p>
     </footer>
 
     <script src="script.js"></script>
