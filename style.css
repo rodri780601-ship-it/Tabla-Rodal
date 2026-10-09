@@ -37,7 +37,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-    max-width: 1300px;
+    max-width: 1350px;
     margin: 0 auto;
 }
 
@@ -56,7 +56,7 @@ body {
 }
 
 .container {
-    max-width: 1300px;
+    max-width: 1350px;
     margin: 2rem auto;
     padding: 0 1rem;
     display: flex;
@@ -74,6 +74,10 @@ body {
 
 .border-highlight {
     border-left: 5px solid var(--accent-color);
+}
+
+.border-highlight-blue {
+    border-left: 5px solid #00838f;
 }
 
 .card-title-badge {
@@ -251,7 +255,7 @@ input:disabled, select:disabled {
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     text-align: center;
 }
 
@@ -274,7 +278,7 @@ tbody tr:hover { background-color: #e8f5e9; }
     background-color: #2e7d32;
     color: white;
     border: 1px solid #1b5e20;
-    font-size: 0.82rem;
+    font-size: 0.80rem;
 }
 
 .tabla-rodal-custom th.sub-header {
@@ -291,6 +295,17 @@ tbody tr:hover { background-color: #e8f5e9; }
     font-weight: bold;
 }
 
+/* Tabla Anexo Ecuaciones */
+.tabla-anexo th {
+    background-color: #00695c;
+    color: white;
+}
+
+.tabla-anexo td {
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+}
+
 .help-text {
     font-size: 0.85rem;
     color: #555;
@@ -301,6 +316,7 @@ tbody tr:hover { background-color: #e8f5e9; }
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     gap: 1.5rem;
+
     margin-top: 1rem;
 }
 
@@ -338,4 +354,14 @@ tbody tr:hover { background-color: #e8f5e9; }
 .btn-sm {
     padding: 0.2rem 0.5rem;
     font-size: 0.78rem;
+}
+
+.especie-altura-card {
+    background-color: #f1f8e9;
+    border: 1px solid #c5e1a5;
+    border-radius: 6px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }

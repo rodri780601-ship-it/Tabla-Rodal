@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultor Forestal - Tabla de Rodal & Planes de Manejo</title>
+    <title>Consultor Forestal - Tabla de Rodal & Cálculo de Volumen</title>
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,7 +16,7 @@
             <span class="tree-icon">🌲</span>
             <div>
                 <h1>Consultoría Forestal Chile</h1>
-                <p>Generador de Tabla de Rodal & Parámetros Normativos de Inventario (D.S. N° 259 / D.S. N° 68 MINAGRI)</p>
+                <p>Generador de Tabla de Rodal, Volumen Bruto/Neto & Ecuaciones Dasométricas (D.S. N° 259 / D.S. N° 68 MINAGRI)</p>
             </div>
         </div>
     </header>
@@ -28,7 +28,7 @@
                 <h2>1. Parámetros del Rodal y Muestreos Normativos (Obligatorios)</h2>
                 <span class="badge badge-warning" id="statusParametros">Incompleto</span>
             </div>
-            <p class="help-text">Todos los campos normativos deben completarse para habilitar el procesamiento del inventario y la construcción de la Tabla de Rodal.</p>
+            <p class="help-text">Todos los campos normativos deben completarse para habilitar el procesamiento del inventario, la tabla de rodal y la volumetría.</p>
 
             <form id="formParametros" class="form-grid margin-top-sm">
                 <!-- Identificación & Superficie -->
@@ -41,9 +41,9 @@
                     <input type="number" id="superficieRodal" step="0.01" min="0.01" placeholder="Ej: 12.50" required>
                 </div>
 
-                <!-- Tipología Forestal (Art. 19 D.S. 259 / Ley Bosque Nativo) -->
+                <!-- Tipología Forestal -->
                 <div class="form-group">
-                    <label for="tipoForestal">Tipo Forestal (Art. 19 D.S. 259 / D.S. 93): *</label>
+                    <label for="tipoForestal">Tipo Forestal (Art. 19 D.S. 259): *</label>
                     <select id="tipoForestal" required>
                         <option value="">-- Seleccionar Tipo Forestal --</option>
                         <option value="Alerce">Alerce</option>
@@ -94,7 +94,7 @@
                         <option value="Aleatorio Simple">Muestreo Aleatorio Simple</option>
                         <option value="Estratificado">Muestreo Estratificado</option>
                         <option value="Muestreo Sistemático con Malla Cuadrada">Muestreo Sistemático con Malla Cuadrada</option>
-                        <option value="Censo 100%">Censo al 100% (Relascopía / Marcación total)</option>
+                        <option value="Censo 100%">Censo al 100%</option>
                     </select>
                 </div>
 
@@ -113,9 +113,9 @@
                     <select id="formaParcela" required>
                         <option value="">-- Seleccionar Forma --</option>
                         <option value="Circular">Circular (Radio fijo)</option>
-                        <option value="Rectangular">Rectangular / Faaja</option>
+                        <option value="Rectangular">Rectangular / Franja</option>
                         <option value="Cuadrada">Cuadrada</option>
-                        <option value="Punto de Muestreo Variable (Bitterlich)">Punto Variable / Bitterlich</option>
+                        <option value="Punto Variable / Bitterlich">Punto Variable / Bitterlich</option>
                     </select>
                 </div>
 
@@ -131,9 +131,24 @@
             </form>
         </section>
 
+        <!-- CONFIGURACIÓN DE ALTURA PROMEDIO Y FÓRMULAS DE VOLUMEN POR ESPECIE -->
+        <section class="card" id="secConfigAltura">
+            <h2>2. Configuración de Alturas Promedio y Modelos Alométricos de Volumen</h2>
+            <p class="help-text">Ingrese la altura promedio ($H$, $m$) para cada especie presente o use el valor promedio ingresado por árbol. Seleccione o verifique el modelo volumétrico aplicable.</p>
+
+            <div id="lockWarningAltura" class="alert alert-warning">
+                ⚠️ Debe validar los parámetros del Rodal (Sección 1) e ingresar registros de campo para definir las alturas promedio por especie.
+            </div>
+
+            <div id="containerAlturasEspecie" class="form-grid margin-top-sm">
+                <!-- Generado dinámicamente según especies encontradas en los ingresos -->
+                <p><em>Sin especies registradas...</em></p>
+            </div>
+        </section>
+
         <!-- REGISTRO DE ÁRBOLES EN CAMPO (HOJA 2) -->
         <section class="card" id="secIngresoCampo">
-            <h2>2. Ingreso de Datos de Campo (Hoja 2 - Detalle por Árbol)</h2>
+            <h2>3. Ingreso de Datos de Campo (Hoja 2 - Detalle por Árbol)</h2>
             <div id="lockWarningCampo" class="alert alert-warning">
                 ⚠️ Debe completar y validar todos los parámetros del Rodal (Sección 1) antes de ingresar o calcular registros.
             </div>
@@ -152,6 +167,10 @@
                 <div class="form-group">
                     <label for="dapInput">DAP (cm):</label>
                     <input type="number" id="dapInput" step="0.1" min="0.1" placeholder="Ej: 24.5" required disabled>
+                </div>
+                <div class="form-group">
+                    <label for="alturaInput">Altura Total $H$ (m) [Opcional]:</label>
+                    <input type="number" id="alturaInput" step="0.1" min="1" placeholder="Ej: 14.2 (Opcional)" disabled>
                 </div>
                 <div class="form-group">
                     <label for="cortaSelect">Intervención (Corta):</label>
@@ -176,7 +195,9 @@
                             <th>Parcela</th>
                             <th>Especie</th>
                             <th>DAP (cm)</th>
-                            <th>Área Basal Individual (g, m²)</th>
+                            <th>Altura H (m)</th>
+                            <th>Área Basal (g, m²)</th>
+                            <th>Volumen Ind. (v, m³)</th>
                             <th>Intervención</th>
                             <th>Acción</th>
                         </tr>
@@ -191,17 +212,16 @@
         <!-- TABLA DE RODAL GENERADA (HOJA 1) -->
         <section class="card" id="secTablaRodal">
             <div class="section-header">
-                <h2>3. Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
-                <button id="btnExportarExcel" class="btn btn-success" disabled>📥 Exportar a Excel (.xlsx)</button>
+                <h2>4. Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
+                <button id="btnExportarExcel" class="btn btn-success" disabled>📥 Exportar Libro Excel Completo (.xlsx)</button>
             </div>
 
             <!-- Resumen Técnico del Rodal -->
             <div id="resumenParametrosRodal" class="info-rodal-box margin-top-sm">
-                <!-- Insertado con JS tras validar parámetros -->
                 <p><em>Esperando validación de parámetros del rodal...</em></p>
             </div>
 
-            <p class="help-text">Valores expresados por hectárea (N: árb./ha, G: m²/ha). Factor de Expansión Hectárea (F): <strong id="factorExpansionText">--</strong></p>
+            <p class="help-text">Valores expresados por hectárea: $N$ (árb./ha), $G$ (m²/ha), $V$ (m³/ha). Factor de Expansión Hectárea (F): <strong id="factorExpansionText">--</strong></p>
             <div class="table-responsive">
                 <table id="tablaRodal" class="tabla-rodal-custom">
                     <thead id="theadRodal">
@@ -214,20 +234,42 @@
             </div>
         </section>
 
+        <!-- SECCIÓN FÓRMULAS DE VOLUMEN Y FUENTES (HOJA ANEXA) -->
+        <section class="card border-highlight-blue" id="secFormulasFuentes">
+            <h2>5. Memoria de Ecuaciones Volumétricas y Fuentes Bibliográficas (Anexo Técnico)</h2>
+            <p class="help-text">Relación de modelos alométricos y ecuaciones de volumen bruto/neto ($V, m^3$) aplicadas a cada especie nativa procesada en el rodal conforme a bibliografía dasométrica chilena (CONAF / INFOR).</p>
+
+            <div class="table-responsive margin-top-sm">
+                <table class="tabla-anexo">
+                    <thead>
+                        <tr>
+                            <th>Especie Arbórea Nativa</th>
+                            <th>Ecuación de Volumen ($V, m^3$) / Factor Forma ($f$)</th>
+                            <th>Variables Requeridas</th>
+                            <th>Fuente Bibliográfica / Referencia Técnica</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyFormulasFuentes">
+                        <!-- Generado dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- GRÁFICOS ASOCIADOS -->
         <section class="card">
-            <h2>4. Gráficos de Estructura y Manejo Forestal</h2>
+            <h2>6. Gráficos de Estructura, Área Basal y Volumetría Forestal</h2>
             <div class="charts-grid">
                 <div class="chart-box">
                     <h3>Estructura Diamétrica del Rodal (N/ha por Clase)</h3>
                     <canvas id="chartEstructuraDiametrica"></canvas>
                 </div>
                 <div class="chart-box">
-                    <h3>Distribución del Área Basal por Especie (m²/ha)</h3>
-                    <canvas id="chartAreaBasalEspecie"></canvas>
+                    <h3>Distribución del Volumen por Especie (m³/ha)</h3>
+                    <canvas id="chartVolumenEspecie"></canvas>
                 </div>
                 <div class="chart-box">
-                    <h3>Comparativa Inicial vs Residual (N/ha y G/m²/ha)</h3>
+                    <h3>Balance de Volumen Manejado (Inicial / Corta / Residual)</h3>
                     <canvas id="chartComparativaManejo"></canvas>
                 </div>
             </div>
