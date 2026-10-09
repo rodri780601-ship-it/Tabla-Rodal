@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultor Forestal - Tabla de Rodal & Importador (DAP a 2 decimales)</title>
+    <title>Consultor Forestal - Tabla de Rodal & Exportación Avanzada</title>
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- SheetJS CDN para lectura y exportación Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- jsPDF y html2canvas para generación de reportes PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <header class="header">
@@ -16,7 +19,7 @@
             <span class="tree-icon">🌲</span>
             <div>
                 <h1>Consultoría Forestal Chile</h1>
-                <p>Generador de Tabla de Rodal, Volumetría & Carga Masiva (Parcela, Especie, DAP [máx 2 decimales]) | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
+                <p>Generador de Tabla de Rodal, Volumetría & Carga Masiva (Parcela, Especie, DAP) | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
             </div>
         </div>
     </header>
@@ -232,7 +235,10 @@
         <section class="card" id="secTablaRodal">
             <div class="section-header">
                 <h2>5. Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
-                <button id="btnExportarExcel" class="btn btn-success" disabled>📥 Exportar Libro Excel Completo (.xlsx)</button>
+                <div class="action-buttons-group">
+                    <button id="btnExportarExcel" class="btn btn-success" disabled>📥 Exportar Excel Estilizado (.xlsx)</button>
+                    <button id="btnExportarPDF" class="btn btn-pdf" disabled>📄 Exportar Informe PDF Completo</button>
+                </div>
             </div>
 
             <!-- Resumen Técnico del Rodal -->
@@ -241,7 +247,7 @@
             </div>
 
             <p class="help-text">Valores expresados por hectárea: $N$ (árb./ha), $G$ (m²/ha), $V$ (m³/ha). Factor de Expansión Hectárea (F): <strong id="factorExpansionText">--</strong></p>
-            <div class="table-responsive">
+            <div class="table-responsive" id="printTablaArea">
                 <table id="tablaRodal" class="tabla-rodal-custom">
                     <thead id="theadRodal">
                         <!-- Encabezados estructurados -->
@@ -276,18 +282,18 @@
         </section>
 
         <!-- GRÁFICOS ASOCIADOS -->
-        <section class="card">
+        <section class="card" id="secGraficosArea">
             <h2>7. Gráficos de Estructura, Área Basal y Volumetría Forestal</h2>
             <div class="charts-grid">
-                <div class="chart-box">
+                <div class="chart-box" id="boxChart1">
                     <h3>Estructura Diamétrica del Rodal (N/ha por Clase)</h3>
                     <canvas id="chartEstructuraDiametrica"></canvas>
                 </div>
-                <div class="chart-box">
+                <div class="chart-box" id="boxChart2">
                     <h3>Distribución del Volumen por Especie (m³/ha)</h3>
                     <canvas id="chartVolumenEspecie"></canvas>
                 </div>
-                <div class="chart-box">
+                <div class="chart-box" id="boxChart3">
                     <h3>Balance de Volumen Manejado (Inicial / Corta / Residual)</h3>
                     <canvas id="chartComparativaManejo"></canvas>
                 </div>

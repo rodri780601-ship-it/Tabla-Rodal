@@ -112,6 +112,7 @@ function setupEventListeners() {
     });
 
     document.getElementById("btnExportarExcel").addEventListener("click", exportarTablaExcel);
+    document.getElementById("btnExportarPDF").addEventListener("click", exportarInformePDF);
 
     // Eventos de Importación
     const fileInput = document.getElementById("fileInput");
@@ -193,7 +194,7 @@ function actualizarEstadoInterfaz(habilitado) {
     const lockWarningAlt = document.getElementById("lockWarningAltura");
     const lockWarningImport = document.getElementById("lockWarningImport");
 
-    const inputsCampo = ["fileInput", "parcelaNo", "especieSelect", "dapInput", "cortaSelect", "btnAgregarArbol", "btnBorrarTodo", "btnExportarExcel"];
+    const inputsCampo = ["fileInput", "parcelaNo", "especieSelect", "dapInput", "cortaSelect", "btnAgregarArbol", "btnBorrarTodo", "btnExportarExcel", "btnExportarPDF"];
 
     if (habilitado) {
         statusBadge.textContent = "Validado";
@@ -212,7 +213,7 @@ function actualizarEstadoInterfaz(habilitado) {
     }
 }
 
-// PROCESAMIENTO SIMPLIFICADO DE ARCHIVOS (PARCELA, ESPECIE, DAP CON HASTA 2 DECIMALES)
+// PROCESAMIENTO SIMPLIFICADO DE ARCHIVOS
 function procesarArchivoSubido() {
     const fileInput = document.getElementById("fileInput");
     const feedback = document.getElementById("importFeedback");
@@ -298,7 +299,6 @@ function importarArraySimplificado(dataArray, nombreArchivo) {
         const keys = Object.keys(row);
         const findKey = (name) => keys.find(k => k.trim().toLowerCase() === name.toLowerCase());
 
-        // Búsqueda de Parcela, Especie y DAP
         const keyParcela = findKey("parcela") || findKey("num_parcela") || findKey("p");
         const keyEspecie = findKey("especie") || findKey("esp") || findKey("nombre_especie");
         const keyDap = findKey("dap") || findKey("dap_cm") || findKey("diametro");
@@ -307,7 +307,6 @@ function importarArraySimplificado(dataArray, nombreArchivo) {
         let especieRaw = String(row[keyEspecie] || "").trim();
         const dapRaw = parseFloat(String(row[keyDap]).replace(',', '.'));
 
-        // Normalización de Especie según D.S. N° 68 / 2009 MINAGRI
         let especieEncontrada = ESPECIES_NATIVAS_DS68.find(e => 
             e.comun.toLowerCase() === especieRaw.toLowerCase() || 
             e.cientifico.toLowerCase() === especieRaw.toLowerCase()
@@ -316,15 +315,13 @@ function importarArraySimplificado(dataArray, nombreArchivo) {
         const especieFinal = especieEncontrada ? especieEncontrada.comun : (especieRaw || "Roble");
 
         if (!isNaN(dapRaw) && dapRaw > 0) {
-            // REDONDEO OBLIGATORIO A MÁXIMO DOS DECIMALES
             const dapFinal = Math.round(dapRaw * 100) / 100;
-
             registrosIngresados.push({
                 rodal: parametrosValidados.rodalName,
                 parcela,
                 especie: especieFinal,
                 dap: dapFinal,
-                corta: "NO" // Valor por defecto
+                corta: "NO"
             });
             contadorValidos++;
         } else {
@@ -335,8 +332,8 @@ function importarArraySimplificado(dataArray, nombreArchivo) {
     feedback.innerHTML = `
         <div class="alert alert-success">
             ✅ <strong>Importación Simplificada exitosa (${nombreArchivo}):</strong><br>
-            Se cargaron <strong>${contadorValidos}</strong> registros considerando <strong>Parcela</strong>, <strong>Especie</strong> y <strong>DAP</strong> (redondeado automáticamente a máx. 2 decimales).
-            ${contadorErrores > 0 ? `<br><small>(${contadorErrores} filas omitidas por error de formato o DAP inválido)</small>` : ''}
+            Se cargaron <strong>${contadorValidos}</strong> registros considerando <strong>Parcela</strong>, <strong>Especie</strong> y <strong>DAP</strong> (redondeado a máx. 2 decimales).
+            ${contadorErrores > 0 ? `<br><small>(${contadorErrores} filas omitidas por error o DAP inválido)</small>` : ''}
         </div>
     `;
 
@@ -344,7 +341,6 @@ function importarArraySimplificado(dataArray, nombreArchivo) {
     procesarYActualizarTodo();
 }
 
-// DESCARGA DE PLANTILLAS 3 COLUMNAS CON HASTA 2 DECIMALES
 function descargarPlantillaExcel3Col() {
     const wsData = [
         ["Parcela", "Especie", "Dap"],
@@ -418,7 +414,6 @@ function agregarArbol() {
         return;
     }
 
-    // REDONDEO OBLIGATORIO A MÁXIMO DOS DECIMALES
     const dapFinal = Math.round(dapRaw * 100) / 100;
 
     registrosIngresados.push({
@@ -461,7 +456,7 @@ function actualizarConfiguracionAlturas() {
 
     especiesPresentes.forEach(espNombre => {
         if (!alturasPromedioEspecie[espNombre]) {
-            alturasPromedioEspecie[espNombre] = 15.0; // Valor por defecto
+            alturasPromedioEspecie[espNombre] = 15.0;
         }
 
         const infoEspecieObj = ESPECIES_NATIVAS_DS68.find(e => e.comun === espNombre) || {
@@ -824,6 +819,7 @@ function actualizarGraficos(res) {
     });
 }
 
+// EXPORTACIÓN A EXCEL CON BORDES, TÍTULOS EN NEGRITA Y CENTRADOS
 function exportarTablaExcel() {
     if (typeof XLSX === 'undefined') {
         alert("La librería SheetJS no está disponible.");
@@ -843,6 +839,7 @@ function exportarTablaExcel() {
 
     const p = parametrosValidados;
     
+    // HOJA 1: TABLA DE RODAL Y VOLUMEN
     const ws1Data = [];
     ws1Data.push(["12.3.9 TABLA DE RODAL INICIAL, RESIDUAL Y VOLUMETRÍA FORESTAL"]);
     ws1Data.push([]);
@@ -853,6 +850,7 @@ function exportarTablaExcel() {
     ws1Data.push(["Forma Parcela:", p.formaParcela, "", "Amplitud Clase (cm):", p.amplitudClase]);
     ws1Data.push([]);
 
+    // Header Fila 1 Especies
     const rowH1 = ["Rango (cm) ≤ Ø <", "", "Mc"];
     res.especiesColumnas.forEach(esp => {
         const altP = alturasPromedioEspecie[esp] ? ` (H=${alturasPromedioEspecie[esp]}m)` : '';
@@ -860,14 +858,17 @@ function exportarTablaExcel() {
     });
     ws1Data.push(rowH1);
 
+    // Header Fila 2 N, G, V
     const rowH2 = ["Min", "Max", "cm"];
     res.especiesColumnas.forEach(() => rowH2.push("N (árb./ha)", "", "G (m²/ha)", "", "V (m³/ha)", ""));
     ws1Data.push(rowH2);
 
+    // Header Fila 3 Ini / Res
     const rowH3 = ["", "", ""];
     res.especiesColumnas.forEach(() => rowH3.push("Ini.", "Res.", "Ini.", "Res.", "Ini.", "Res."));
     ws1Data.push(rowH3);
 
+    // Filas
     res.clases.forEach((cl, i) => {
         const row = [cl.min, cl.max, cl.mc];
         res.especiesColumnas.forEach(esp => {
@@ -877,6 +878,7 @@ function exportarTablaExcel() {
         ws1Data.push(row);
     });
 
+    // Totales
     const rowTot = ["TOTAL RODAL", "", ""];
     res.especiesColumnas.forEach(esp => {
         const t = res.totalesEspecie[esp];
@@ -886,6 +888,70 @@ function exportarTablaExcel() {
 
     const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
 
+    // BORDES Y ESTILOS EN LA HOJA 1
+    const thinBorder = {
+        top: { style: "thin", color: { rgb: "000000" } },
+        bottom: { style: "thin", color: { rgb: "000000" } },
+        left: { style: "thin", color: { rgb: "000000" } },
+        right: { style: "thin", color: { rgb: "000000" } }
+    };
+
+    const styleHeader = {
+        font: { bold: true, color: { rgb: "FFFFFF" } },
+        fill: { fgColor: { rgb: "2E7D32" } },
+        alignment: { horizontal: "center", vertical: "center", wrapText: true },
+        border: thinBorder
+    };
+
+    const styleSubHeader = {
+        font: { bold: true, color: { rgb: "FFFFFF" } },
+        fill: { fgColor: { rgb: "388E3C" } },
+        alignment: { horizontal: "center", vertical: "center" },
+        border: thinBorder
+    };
+
+    const styleCellCenter = {
+        alignment: { horizontal: "center", vertical: "center" },
+        border: thinBorder
+    };
+
+    const styleTotal = {
+        font: { bold: true },
+        fill: { fgColor: { rgb: "E8F5E9" } },
+        alignment: { horizontal: "center", vertical: "center" },
+        border: thinBorder
+    };
+
+    // Aplicar formato celular
+    const range = XLSX.utils.decode_range(ws1['!ref']);
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cell_address = XLSX.utils.encode_cell({ r: R, c: C });
+            if (!ws1[cell_address]) {
+                ws1[cell_address] = { t: 's', v: '' };
+            }
+            const cell = ws1[cell_address];
+
+            // Título Principal
+            if (R === 0) {
+                cell.s = { font: { bold: true, size: 14 }, alignment: { horizontal: "center" } };
+            }
+            // Filas de Encabezado (H1, H2, H3)
+            else if (R >= 7 && R <= 9) {
+                cell.s = styleHeader;
+            }
+            // Fila de Totales
+            else if (R === range.e.r) {
+                cell.s = styleTotal;
+            }
+            // Filas de Datos
+            else if (R > 9) {
+                cell.s = styleCellCenter;
+            }
+        }
+    }
+
+    // HOJA 2: REGISTROS DE CAMPO
     const ws2Data = [
         ["PARÁMETROS DEL RODAL:"],
         ["Rodal", p.rodalName],
@@ -906,6 +972,7 @@ function exportarTablaExcel() {
 
     const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);
 
+    // HOJA 3: ANEXO DE ECUACIONES
     const ws3Data = [
         ["ANEXO TÉCNICO: MEMORIA DE ECUACIONES DE VOLUMEN Y FUENTES BIBLIOGRÁFICAS"],
         [],
@@ -931,4 +998,108 @@ function exportarTablaExcel() {
     XLSX.utils.book_append_sheet(wb, ws3, "Hoja3_Anexo_Formulas_Fuentes");
 
     XLSX.writeFile(wb, `Tabla_Rodal_Volumen_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
+}
+
+// EXPORTACIÓN A PDF CON TABLA Y GRÁFICOS
+async function exportarInformePDF() {
+    if (!window.jspdf || !window.html2canvas) {
+        alert("Las librerías de generación PDF no se han cargado correctamente.");
+        return;
+    }
+
+    if (!parametrosValidados) {
+        alert("Debe validar los parámetros del rodal.");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const p = parametrosValidados;
+
+    // Encabezado del Documento
+    doc.setFillColor(27, 94, 32);
+    doc.rect(0, 0, 210, 25, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text("INFORME DE INVENTARIO Y TABLA DE RODAL", 105, 12, { align: "center" });
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text("Consultoría Forestal Chile | Ley N° 20.283 & D.S. N° 259 MINAGRI", 105, 18, { align: "center" });
+
+    // Cuadro de Resumen
+    doc.setTextColor(33, 33, 33);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Identificación del Rodal: ${p.rodalName}`, 14, 33);
+    
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`• Tipo Forestal: ${p.tipoForestal}`, 14, 40);
+    doc.text(`• Estructura: ${p.estructuraRodal}`, 14, 45);
+    doc.text(`• Estado de Desarrollo: ${p.estadoDesarrollo}`, 14, 50);
+    doc.text(`• Superficie: ${p.superficieRodal} ha`, 110, 40);
+    doc.text(`• Diseño Muestreo: ${p.tipoMuestreo} (${p.formaParcela})`, 110, 45);
+    doc.text(`• Parcelas: ${p.numParcelas} de ${p.areaParcela} m²`, 110, 50);
+
+    // Capturar Tabla de Rodal con html2canvas
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text("1. TABLA DE RODAL Y VOLUMETRÍA FORESTAL", 14, 60);
+
+    const tablaElement = document.getElementById("printTablaArea");
+    const canvasTabla = await html2canvas(tablaElement, { scale: 2 });
+    const imgTabla = canvasTabla.toDataURL("image/png");
+    
+    const imgWidth = 182;
+    const imgHeight = (canvasTabla.height * imgWidth) / canvasTabla.width;
+    doc.addImage(imgTabla, 'PNG', 14, 63, imgWidth, Math.min(imgHeight, 120));
+
+    // Capturar Gráficos
+    let currentY = 63 + Math.min(imgHeight, 120) + 10;
+
+    if (currentY > 220) {
+        doc.addPage();
+        currentY = 20;
+    }
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text("2. GRÁFICOS DE ESTRUCTURA Y MANEJO FORESTAL", 14, currentY);
+    currentY += 5;
+
+    const chartBox1 = document.getElementById("boxChart1");
+    const canvasC1 = await html2canvas(chartBox1, { scale: 2 });
+    const imgC1 = canvasC1.toDataURL("image/png");
+    const hC1 = (canvasC1.height * 85) / canvasC1.width;
+
+    const chartBox2 = document.getElementById("boxChart2");
+    const canvasC2 = await html2canvas(chartBox2, { scale: 2 });
+    const imgC2 = canvasC2.toDataURL("image/png");
+    const hC2 = (canvasC2.height * 85) / canvasC2.width;
+
+    if (currentY + hC1 > 270) {
+        doc.addPage();
+        currentY = 20;
+    }
+
+    doc.addImage(imgC1, 'PNG', 14, currentY, 85, hC1);
+    doc.addImage(imgC2, 'PNG', 105, currentY, 85, hC2);
+
+    currentY += Math.max(hC1, hC2) + 10;
+
+    if (currentY + 70 > 270) {
+        doc.addPage();
+        currentY = 20;
+    }
+
+    const chartBox3 = document.getElementById("boxChart3");
+    const canvasC3 = await html2canvas(chartBox3, { scale: 2 });
+    const imgC3 = canvasC3.toDataURL("image/png");
+    const hC3 = (canvasC3.height * 120) / canvasC3.width;
+
+    doc.addImage(imgC3, 'PNG', 45, currentY, 120, hC3);
+
+    // Guardar PDF
+    doc.save(`Informe_Tabla_Rodal_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
 }
