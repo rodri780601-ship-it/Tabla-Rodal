@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultor Forestal - Tabla de Rodal & Importador Simplificado</title>
+    <title>Consultor Forestal - Tabla de Rodal & Importador (DAP a 2 decimales)</title>
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,7 +16,7 @@
             <span class="tree-icon">🌲</span>
             <div>
                 <h1>Consultoría Forestal Chile</h1>
-                <p>Generador de Tabla de Rodal, Volumetría & Carga Simplificada de Parcelas (Especie, Parcela, DAP) | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
+                <p>Generador de Tabla de Rodal, Volumetría & Carga Masiva (Parcela, Especie, DAP [máx 2 decimales]) | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
             </div>
         </div>
     </header>
@@ -133,8 +133,8 @@
 
         <!-- SECCIÓN DE IMPORTACIÓN SIMPLIFICADA DE ARCHIVOS (EXCEL / TXT) -->
         <section class="card border-highlight-green" id="secImportacionArchivos">
-            <h2>2. Carga Masiva de Parcelas (Sólo: Especie, Parcela y DAP)</h2>
-            <p class="help-text">Suba su archivo Excel (.xlsx, .xls) o Texto Plano (.txt, .csv). El archivo debe contener estrictamente las columnas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (o DAP).</p>
+            <h2>2. Carga Masiva de Parcelas (Sólo: Parcela, Especie y DAP [máx. 2 decimales])</h2>
+            <p class="help-text">Suba su archivo Excel (.xlsx, .xls) o Texto Plano (.txt, .csv). El archivo debe contener estrictamente las columnas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (redondeado automáticamente a máximo 2 decimales).</p>
 
             <div id="lockWarningImport" class="alert alert-warning">
                 ⚠️ Debe validar los parámetros del Rodal (Sección 1) antes de importar parcelas.
@@ -188,8 +188,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="dapInput">DAP (cm):</label>
-                    <input type="number" id="dapInput" step="0.1" min="0.1" placeholder="Ej: 24.5" required disabled>
+                    <label for="dapInput">DAP (cm - máx 2 decimales):</label>
+                    <input type="number" id="dapInput" step="0.01" min="0.01" placeholder="Ej: 24.55" required disabled>
                 </div>
                 <div class="form-group">
                     <label for="cortaSelect">Intervención (Corta):</label>
