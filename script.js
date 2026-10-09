@@ -112,7 +112,7 @@ function setupEventListeners() {
     });
 
     document.getElementById("btnExportarExcel").addEventListener("click", exportarTablaExcel);
-    document.getElementById("btnExportarPDF").addEventListener("click", exportarInformePDF);
+    document.getElementById("btnExportarPDF").addEventListener("click", exportarInformePDFApaisadoOficio);
 
     // Eventos de Importación
     const fileInput = document.getElementById("fileInput");
@@ -888,7 +888,6 @@ function exportarTablaExcel() {
 
     const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
 
-    // BORDES Y ESTILOS EN LA HOJA 1
     const thinBorder = {
         top: { style: "thin", color: { rgb: "000000" } },
         bottom: { style: "thin", color: { rgb: "000000" } },
@@ -900,13 +899,6 @@ function exportarTablaExcel() {
         font: { bold: true, color: { rgb: "FFFFFF" } },
         fill: { fgColor: { rgb: "2E7D32" } },
         alignment: { horizontal: "center", vertical: "center", wrapText: true },
-        border: thinBorder
-    };
-
-    const styleSubHeader = {
-        font: { bold: true, color: { rgb: "FFFFFF" } },
-        fill: { fgColor: { rgb: "388E3C" } },
-        alignment: { horizontal: "center", vertical: "center" },
         border: thinBorder
     };
 
@@ -922,7 +914,6 @@ function exportarTablaExcel() {
         border: thinBorder
     };
 
-    // Aplicar formato celular
     const range = XLSX.utils.decode_range(ws1['!ref']);
     for (let R = range.s.r; R <= range.e.r; ++R) {
         for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -932,19 +923,15 @@ function exportarTablaExcel() {
             }
             const cell = ws1[cell_address];
 
-            // Título Principal
             if (R === 0) {
                 cell.s = { font: { bold: true, size: 14 }, alignment: { horizontal: "center" } };
             }
-            // Filas de Encabezado (H1, H2, H3)
             else if (R >= 7 && R <= 9) {
                 cell.s = styleHeader;
             }
-            // Fila de Totales
             else if (R === range.e.r) {
                 cell.s = styleTotal;
             }
-            // Filas de Datos
             else if (R > 9) {
                 cell.s = styleCellCenter;
             }
@@ -1000,10 +987,10 @@ function exportarTablaExcel() {
     XLSX.writeFile(wb, `Tabla_Rodal_Volumen_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
 }
 
-// EXPORTACIÓN A PDF CON TABLA Y GRÁFICOS
-async function exportarInformePDF() {
+// EXPORTACIÓN A PDF EN HOJA TAMAÑO OFICIO (LEGAL) APAISADA (LANDSCAPE) SIN CORTES
+async function exportarInformePDFApaisadoOficio() {
     if (!window.jspdf || !window.html2canvas) {
-        alert("Las librerías de generación PDF no se han cargado correctamente.");
+        alert("Las librerías de generación PDF no están disponibles.");
         return;
     }
 
@@ -1013,93 +1000,105 @@ async function exportarInformePDF() {
     }
 
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
+    
+    // TAMAÑO OFICIO / LEGAL EN CHILE Y SUDAMÉRICA: 215.9 mm x 355.6 mm (8.5 x 14 pulgadas)
+    // EN FORMATO APAISADO (LANDSCAPE): Ancho = 355.6 mm, Alto = 215.9 mm
+    const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: [215.9, 355.6]
+    });
+
     const p = parametrosValidados;
+    const pageWidth = 355.6;
+    const pageHeight = 215.9;
+    const margin = 10;
+    const printableWidth = pageWidth - (margin * 2); // 335.6 mm
 
-    // Encabezado del Documento
+    // PÁGINA 1: ENCABEZADO, RESUMEN Y TABLA DE RODAL COMPLETA
     doc.setFillColor(27, 94, 32);
-    doc.rect(0, 0, 210, 25, 'F');
+    doc.rect(0, 0, pageWidth, 18, 'F');
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text("INFORME DE INVENTARIO Y TABLA DE RODAL", 105, 12, { align: "center" });
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.text("Consultoría Forestal Chile | Ley N° 20.283 & D.S. N° 259 MINAGRI", 105, 18, { align: "center" });
+    doc.text("INFORME DE INVENTARIO Y TABLA DE RODAL COMPLETA", pageWidth / 2, 11, { align: "center" });
 
-    // Cuadro de Resumen
+    // Cuadro de Resumen de Parámetros del Rodal
     doc.setTextColor(33, 33, 33);
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Identificación del Rodal: ${p.rodalName}`, 14, 33);
-    
     doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`• Tipo Forestal: ${p.tipoForestal}`, 14, 40);
-    doc.text(`• Estructura: ${p.estructuraRodal}`, 14, 45);
-    doc.text(`• Estado de Desarrollo: ${p.estadoDesarrollo}`, 14, 50);
-    doc.text(`• Superficie: ${p.superficieRodal} ha`, 110, 40);
-    doc.text(`• Diseño Muestreo: ${p.tipoMuestreo} (${p.formaParcela})`, 110, 45);
-    doc.text(`• Parcelas: ${p.numParcelas} de ${p.areaParcela} m²`, 110, 50);
-
-    // Capturar Tabla de Rodal con html2canvas
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.text("1. TABLA DE RODAL Y VOLUMETRÍA FORESTAL", 14, 60);
-
-    const tablaElement = document.getElementById("printTablaArea");
-    const canvasTabla = await html2canvas(tablaElement, { scale: 2 });
-    const imgTabla = canvasTabla.toDataURL("image/png");
+    doc.text(`Identificación Rodal: ${p.rodalName}`, margin, 24);
     
-    const imgWidth = 182;
-    const imgHeight = (canvasTabla.height * imgWidth) / canvasTabla.width;
-    doc.addImage(imgTabla, 'PNG', 14, 63, imgWidth, Math.min(imgHeight, 120));
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Tipo Forestal: ${p.tipoForestal} | Estructura: ${p.estructuraRodal} | Estado: ${p.estadoDesarrollo}`, margin, 29);
+    doc.text(`Superficie: ${p.superficieRodal} ha | Muestreo: ${p.tipoMuestreo} (${p.formaParcela}) | Parcelas: ${p.numParcelas} de ${p.areaParcela} m²`, margin, 34);
 
-    // Capturar Gráficos
-    let currentY = 63 + Math.min(imgHeight, 120) + 10;
+    // Capturar Tabla de Rodal Completa
+    const tablaElement = document.getElementById("printTablaArea");
+    
+    // Generar canvas de alta resolución
+    const canvasTabla = await html2canvas(tablaElement, {
+        scale: 2,
+        useCORS: true,
+        logging: false
+    });
 
-    if (currentY > 220) {
-        doc.addPage();
-        currentY = 20;
+    const imgDataTabla = canvasTabla.toDataURL("image/png");
+
+    // Límite vertical disponible en la Hoja Oficio Apaisada
+    const startY = 38;
+    const availableHeight = pageHeight - startY - margin; // ~167.9 mm
+
+    // Cálculo proporcional de escala horizontal
+    let imgWidth = printableWidth; // 335.6 mm
+    let imgHeight = (canvasTabla.height * imgWidth) / canvasTabla.width;
+
+    // Si la altura sobrepasa el espacio vertical restante, escalar proporcionalmente para GARANTIZAR que CABE COMPLETA SIN CORTAR
+    if (imgHeight > availableHeight) {
+        imgHeight = availableHeight;
+        imgWidth = (canvasTabla.width * imgHeight) / canvasTabla.height;
     }
 
+    // Centrar horizontalmente si el ancho resultante es menor al imprimible
+    const xPos = margin + ((printableWidth - imgWidth) / 2);
+
+    doc.addImage(imgDataTabla, 'PNG', xPos, startY, imgWidth, imgHeight);
+
+    // PÁGINA 2: GRÁFICOS DE ESTRUCTURA Y Y BALANCE VOLUMÉTRICO
+    doc.addPage([215.9, 355.6], 'landscape');
+
+    doc.setFillColor(27, 94, 32);
+    doc.rect(0, 0, pageWidth, 18, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.text("2. GRÁFICOS DE ESTRUCTURA Y MANEJO FORESTAL", 14, currentY);
-    currentY += 5;
+    doc.text("ANÁLISIS GRÁFICO DE ESTRUCTURA Y VOLUMETRÍA FORESTAL", pageWidth / 2, 11, { align: "center" });
 
+    // Capturar los 3 Gráficos
     const chartBox1 = document.getElementById("boxChart1");
-    const canvasC1 = await html2canvas(chartBox1, { scale: 2 });
-    const imgC1 = canvasC1.toDataURL("image/png");
-    const hC1 = (canvasC1.height * 85) / canvasC1.width;
-
     const chartBox2 = document.getElementById("boxChart2");
-    const canvasC2 = await html2canvas(chartBox2, { scale: 2 });
-    const imgC2 = canvasC2.toDataURL("image/png");
-    const hC2 = (canvasC2.height * 85) / canvasC2.width;
-
-    if (currentY + hC1 > 270) {
-        doc.addPage();
-        currentY = 20;
-    }
-
-    doc.addImage(imgC1, 'PNG', 14, currentY, 85, hC1);
-    doc.addImage(imgC2, 'PNG', 105, currentY, 85, hC2);
-
-    currentY += Math.max(hC1, hC2) + 10;
-
-    if (currentY + 70 > 270) {
-        doc.addPage();
-        currentY = 20;
-    }
-
     const chartBox3 = document.getElementById("boxChart3");
+
+    const canvasC1 = await html2canvas(chartBox1, { scale: 2 });
+    const canvasC2 = await html2canvas(chartBox2, { scale: 2 });
     const canvasC3 = await html2canvas(chartBox3, { scale: 2 });
+
+    const imgC1 = canvasC1.toDataURL("image/png");
+    const imgC2 = canvasC2.toDataURL("image/png");
     const imgC3 = canvasC3.toDataURL("image/png");
-    const hC3 = (canvasC3.height * 120) / canvasC3.width;
 
-    doc.addImage(imgC3, 'PNG', 45, currentY, 120, hC3);
+    const wChart = 105;
+    const hC1 = (canvasC1.height * wChart) / canvasC1.width;
+    const hC2 = (canvasC2.height * wChart) / canvasC2.width;
 
-    // Guardar PDF
-    doc.save(`Informe_Tabla_Rodal_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
+    doc.addImage(imgC1, 'PNG', 15, 28, wChart, hC1);
+    doc.addImage(imgC2, 'PNG', 130, 28, wChart, hC2);
+
+    const wChart3 = 180;
+    const hC3 = (canvasC3.height * wChart3) / canvasC3.width;
+    const xPosC3 = margin + ((printableWidth - wChart3) / 2);
+
+    doc.addImage(imgC3, 'PNG', xPosC3, 28 + Math.max(hC1, hC2) + 10, wChart3, Math.min(hC3, 85));
+
+    doc.save(`Tabla_Rodal_Oficio_Apaisado_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
 }
