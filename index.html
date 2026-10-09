@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultor Forestal - Tabla de Rodal</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS CDN for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <span class="tree-icon">🌲</span>
+            <div>
+                <h1>Consultoría Forestal Chile</h1>
+                <p>Generador de Tabla de Rodal & Análisis de Inventario (D.S. N° 68 / 2009 MINAGRI)</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- SECCIÓN DE CONFIGURACIÓN Y TOMA DE DATOS -->
+        <section class="card">
+            <h2>1. Configuración del Rodal y Muestreo</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="rodalName">Identificador del Rodal:</label>
+                    <input type="text" id="rodalName" value="Rodal 1" placeholder="Ej: Rodal A-1">
+                </div>
+                <div class="form-group">
+                    <label for="numParcelas">Número de Parcelas Muestreadas:</label>
+                    <input type="number" id="numParcelas" value="4" min="1" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="areaParcela">Superficie de Parcela (m²):</label>
+                    <input type="number" id="areaParcela" value="500" min="1" step="1" placeholder="Ej: 500 m² = 0.05 ha">
+                </div>
+                <div class="form-group">
+                    <label for="amplitudClase">Amplitud de Clase Diamétrica (cm):</label>
+                    <input type="number" id="amplitudClase" value="5" min="1" step="1">
+                </div>
+            </div>
+        </section>
+
+        <!-- REGISTRO DE ARBOLES EN CAMPO (HOJA 2) -->
+        <section class="card">
+            <h2>2. Ingreso de Datos de Campo (Hoja 2)</h2>
+            <form id="treeForm" class="form-grid">
+                <div class="form-group">
+                    <label for="parcelaNo">N° Parcela:</label>
+                    <input type="number" id="parcelaNo" value="1" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="especieSelect">Especie Arbórea Nativa (D.S. 68/2009):</label>
+                    <select id="especieSelect" required>
+                        <!-- Cargado dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dapInput">DAP (cm):</label>
+                    <input type="number" id="dapInput" step="0.1" min="0.1" placeholder="Ej: 24.5" required>
+                </div>
+                <div class="form-group">
+                    <label for="cortaSelect">Intervención (Corta):</label>
+                    <select id="cortaSelect">
+                        <option value="NO">Conservar (Residual)</option>
+                        <option value="SI">Corta (Cosecha / Raleo)</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" class="btn btn-primary">➕ Agregar Árbol</button>
+                    <button type="button" id="btnCargarEjemplo" class="btn btn-secondary">⚡ Cargar Datos de Ejemplo</button>
+                    <button type="button" id="btnBorrarTodo" class="btn btn-danger">🗑️ Limpiar Registros</button>
+                </div>
+            </form>
+
+            <div class="table-responsive margin-top">
+                <h3>Registros Ingresados (<span id="totalRegistrosCount">0</span> árboles)</h3>
+                <table id="tablaIngresos">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Rodal</th>
+                            <th>Parcela</th>
+                            <th>Especie</th>
+                            <th>DAP (cm)</th>
+                            <th>Área Basal (g, m²)</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyIngresos">
+                        <!-- Filas insertadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- TABLA DE RODAL GENERADA (HOJA 1) -->
+        <section class="card">
+            <div class="section-header">
+                <h2>3. Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
+                <button id="btnExportarExcel" class="btn btn-success">📥 Exportar a Excel (.xlsx)</button>
+            </div>
+            <p class="help-text">Valores expresados por hectárea (N: árb./ha, G: m²/ha). Factor de expansión: <strong id="factorExpansiónText">--</strong></p>
+            <div class="table-responsive">
+                <table id="tablaRodal" class="tabla-rodal-custom">
+                    <thead id="theadRodal">
+                        <!-- Encabezados estructurados -->
+                    </thead>
+                    <tbody id="tbodyRodal">
+                        <!-- Filas calculadas -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- GRÁFICOS ASOCIADOS -->
+        <section class="card">
+            <h2>4. Gráficos de Estructura y Manejo Forestal</h2>
+            <div class="charts-grid">
+                <div class="chart-box">
+                    <h3>Estructura Diamétrica del Rodal (N/ha por Clase)</h3>
+                    <canvas id="chartEstructuraDiametrica"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>Distribución del Área Basal por Especie (m²/ha)</h3>
+                    <canvas id="chartAreaBasalEspecie"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>Comparativa Inicial vs Residual (N/ha y G/m²/ha)</h3>
+                    <canvas id="chartComparativaManejo"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Consultoría y Gestión Forestal Sostenible | Cumplimiento Ley N° 20.283 & D.S. N° 68/2009</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
