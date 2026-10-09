@@ -1,4 +1,4 @@
-// Especies Arbóreas Nativas de Chile (D.S. N° 68 / 2009 MINAGRI) y Ecuaciones Volumétricas Oficiales / Bibliográficas
+// Especies Arbóreas Nativas de Chile (D.S. N° 68 / 2009 MINAGRI) y Ecuaciones Volumétricas
 const ESPECIES_NATIVAS_DS68 = [
     { cientifico: "Nothofagus obliqua", comun: "Roble", ecuacion: "V = 0.0000632 * (DAP^1.921) * (H^0.985)", fForma: 0.60, fuente: "INFOR / CONAF (Ecuación de volumen fustal para Nothofagus obliqua)" },
     { cientifico: "Nothofagus alpina", comun: "Raulí", ecuacion: "V = 0.0000589 * (DAP^1.945) * (H^0.970)", fForma: 0.62, fuente: "INFOR (Modelos alométricos para Raulí en renovales)" },
@@ -17,15 +17,15 @@ const ESPECIES_NATIVAS_DS68 = [
     { cientifico: "Laureliopsis philippiana", comun: "Tepa", ecuacion: "V = 0.0000570 * (DAP^1.950) * (H^0.960)", fForma: 0.57, fuente: "INFOR (Modelos volumétricos para Tepa)" },
     { cientifico: "Eucryphia cordifolia", comun: "Ulmo", ecuacion: "V = 0.0000640 * (DAP^1.900) * (H^0.980)", fForma: 0.60, fuente: "INFOR (Ecuaciones de biomasa y volumen de Ulmo)" },
     { cientifico: "Aextoxicon punctatum", comun: "Olivillo", ecuacion: "V = 0.0000580 * (DAP^1.930) * (H^0.960)", fForma: 0.56, fuente: "CONAF / INFOR (Ecuación Tipo Bosque Olivillo)" },
-    { cientifico: "Gevuina avellana", comun: "Avellano", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma mórfico f = 0.50 para latifoliadas menores" },
-    { cientifico: "Lomatia hirsuta", comun: "Radal", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma f = 0.50 para especies del estrato secundario" },
-    { cientifico: "Cryptocarya alba", comun: "Peumo", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma f = 0.50 para Tipo Esclerófilo" },
-    { cientifico: "Lithraea caustica", comun: "Litre", ecuacion: "V = g * H * 0.45", fForma: 0.45, fuente: "Factor de forma f = 0.45 para Esclerófilo bajo" },
-    { cientifico: "Quillaja saponaria", comun: "Quillay", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "CONAF (Tablas de volumen para Quillay en zona central)" },
+    { cientifico: "Gevuina avellana", comun: "Avellano", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma f = 0.50" },
+    { cientifico: "Lomatia hirsuta", comun: "Radal", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma f = 0.50" },
+    { cientifico: "Cryptocarya alba", comun: "Peumo", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma f = 0.50" },
+    { cientifico: "Lithraea caustica", comun: "Litre", ecuacion: "V = g * H * 0.45", fForma: 0.45, fuente: "Factor de forma f = 0.45" },
+    { cientifico: "Quillaja saponaria", comun: "Quillay", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "CONAF" },
     { cientifico: "Maytenus boaria", comun: "Maitén", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma f = 0.50" },
-    { cientifico: "Acacia caven", comun: "Espino", ecuacion: "V = g * H * 0.45", fForma: 0.45, fuente: "INFOR (Volumen leñoso en formación matorral Espino)" },
-    { cientifico: "Podocarpus salignus", comun: "Mañío de hoja larga", ecuacion: "V = g * H * 0.58", fForma: 0.58, fuente: "Factor de forma f = 0.58 para Mañío" },
-    { cientifico: "Saxegothaea conspicua", comun: "Mañío hembra / Macho", ecuacion: "V = g * H * 0.58", fForma: 0.58, fuente: "Factor de forma f = 0.58 para Podocarpáceas" },
+    { cientifico: "Acacia caven", comun: "Espino", ecuacion: "V = g * H * 0.45", fForma: 0.45, fuente: "INFOR" },
+    { cientifico: "Podocarpus salignus", comun: "Mañío de hoja larga", ecuacion: "V = g * H * 0.58", fForma: 0.58, fuente: "Factor de forma f = 0.58" },
+    { cientifico: "Saxegothaea conspicua", comun: "Mañío hembra / Macho", ecuacion: "V = g * H * 0.58", fForma: 0.58, fuente: "Factor de forma f = 0.58" },
     { cientifico: "Luma apiculata", comun: "Arrayán", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma f = 0.50" },
     { cientifico: "Myrceugenia exsucca", comun: "Pitra", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma f = 0.50" },
     { cientifico: "Crinodendron patagua", comun: "Patagua", ecuacion: "V = g * H * 0.50", fForma: 0.50, fuente: "Factor de forma f = 0.50" },
@@ -69,7 +69,7 @@ const EJEMPLO_REGISTROS = [
 // Estado global de la aplicación
 let parametrosValidados = null;
 let registrosIngresados = [];
-let alturasPromedioEspecie = {}; // { "Roble": 16.5, ... }
+let alturasPromedioEspecie = {};
 let chartEstructura = null;
 let chartVolumen = null;
 let chartComparativa = null;
@@ -112,6 +112,30 @@ function setupEventListeners() {
     });
 
     document.getElementById("btnExportarExcel").addEventListener("click", exportarTablaExcel);
+
+    // Eventos de Importación de Archivos
+    const fileInput = document.getElementById("fileInput");
+    fileInput.addEventListener("change", procesarArchivoSubido);
+
+    document.getElementById("btnDescargarPlantillaExcel").addEventListener("click", descargarPlantillaExcel);
+    document.getElementById("btnDescargarPlantillaTxt").addEventListener("click", descargarPlantillaTxt);
+
+    // Drag & Drop
+    const dropzone = document.getElementById("dropzoneContainer");
+    dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("dragover"); });
+    dropzone.addEventListener("dragleave", () => { dropzone.classList.remove("dragover"); });
+    dropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzone.classList.remove("dragover");
+        if (!parametrosValidados) {
+            alert("Debe validar los parámetros del rodal antes de cargar archivos.");
+            return;
+        }
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            procesarArchivoSubido();
+        }
+    });
 }
 
 function validarGuardarParametros() {
@@ -167,22 +191,192 @@ function actualizarEstadoInterfaz(habilitado) {
     const statusBadge = document.getElementById("statusParametros");
     const lockWarning = document.getElementById("lockWarningCampo");
     const lockWarningAlt = document.getElementById("lockWarningAltura");
+    const lockWarningImport = document.getElementById("lockWarningImport");
 
-    const inputsCampo = ["parcelaNo", "especieSelect", "dapInput", "alturaInput", "cortaSelect", "btnAgregarArbol", "btnBorrarTodo", "btnExportarExcel"];
+    const inputsCampo = ["fileInput", "parcelaNo", "especieSelect", "dapInput", "alturaInput", "cortaSelect", "btnAgregarArbol", "btnBorrarTodo", "btnExportarExcel"];
 
     if (habilitado) {
         statusBadge.textContent = "Validado";
         statusBadge.className = "badge badge-success";
         lockWarning.style.display = "none";
         lockWarningAlt.style.display = "none";
+        lockWarningImport.style.display = "none";
         inputsCampo.forEach(id => document.getElementById(id).removeAttribute("disabled"));
     } else {
         statusBadge.textContent = "Incompleto";
         statusBadge.className = "badge badge-warning";
         lockWarning.style.display = "block";
         lockWarningAlt.style.display = "block";
+        lockWarningImport.style.display = "block";
         inputsCampo.forEach(id => document.getElementById(id).setAttribute("disabled", "true"));
     }
+}
+
+// PROCESAMIENTO DE ARCHIVOS SUBIDOS (EXCEL / TXT / CSV)
+function procesarArchivoSubido() {
+    const fileInput = document.getElementById("fileInput");
+    const feedback = document.getElementById("importFeedback");
+    const file = fileInput.files[0];
+
+    if (!file) return;
+
+    if (!parametrosValidados) {
+        alert("Debe validar los parámetros del rodal.");
+        return;
+    }
+
+    const fileName = file.name.toLowerCase();
+    feedback.innerHTML = `<p style="color:#0288d1;">⏳ Procesando archivo: <strong>${file.name}</strong>...</p>`;
+
+    if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.SheetNames[0];
+                const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], { defval: "" });
+                importarArrayNormalizado(jsonData, file.name);
+            } catch (err) {
+                feedback.innerHTML = `<div class="alert alert-warning">❌ Error al leer archivo Excel: ${err.message}</div>`;
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    } else if (fileName.endsWith(".txt") || fileName.endsWith(".csv")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const text = e.target.result;
+                const parseado = parsearTextoPlano(text);
+                importarArrayNormalizado(parseado, file.name);
+            } catch (err) {
+                feedback.innerHTML = `<div class="alert alert-warning">❌ Error al leer archivo de texto: ${err.message}</div>`;
+            }
+        };
+        reader.readAsText(file);
+    } else {
+        feedback.innerHTML = `<div class="alert alert-warning">⚠️ Formato no soportado. Suba un archivo .xlsx, .xls, .txt o .csv</div>`;
+    }
+}
+
+function parsearTextoPlano(texto) {
+    const lineas = texto.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+    if (lineas.length < 2) return [];
+
+    // Detectar delimitador (tabulador, coma, punto y coma)
+    const primeraFila = lineas[0];
+    let delim = '\t';
+    if (primeraFila.includes(';')) delim = ';';
+    else if (primeraFila.includes(',')) delim = ',';
+
+    const headers = primeraFila.split(delim).map(h => h.trim());
+    const result = [];
+
+    for (let i = 1; i < lineas.length; i++) {
+        const cols = lineas[i].split(delim).map(c => c.trim());
+        if (cols.length >= 3) {
+            const rowObj = {};
+            headers.forEach((h, idx) => {
+                rowObj[h] = cols[idx] !== undefined ? cols[idx] : "";
+            });
+            result.push(rowObj);
+        }
+    }
+    return result;
+}
+
+function importarArrayNormalizado(dataArray, nombreArchivo) {
+    const feedback = document.getElementById("importFeedback");
+    if (!dataArray || dataArray.length === 0) {
+        feedback.innerHTML = `<div class="alert alert-warning">⚠️ El archivo no contiene filas o datos legibles.</div>`;
+        return;
+    }
+
+    let contadorValidos = 0;
+    let contadorErrores = 0;
+
+    dataArray.forEach(row => {
+        // Normalización de claves (case insensitive)
+        const keys = Object.keys(row);
+        const findKey = (name) => keys.find(k => k.trim().toLowerCase() === name.toLowerCase());
+
+        const keyParcela = findKey("parcela") || findKey("num_parcela") || findKey("p");
+        const keyEspecie = findKey("especie") || findKey("esp") || findKey("nombre_especie");
+        const keyDap = findKey("dap") || findKey("dap_cm") || findKey("diametro");
+        const keyAltura = findKey("altura") || findKey("h") || findKey("altura_m");
+        const keyCorta = findKey("corta") || findKey("intervencion") || findKey("cortar");
+
+        const parcela = parseInt(row[keyParcela]) || 1;
+        let especieRaw = String(row[keyEspecie] || "").trim();
+        const dap = parseFloat(String(row[keyDap]).replace(',', '.'));
+        const altura = row[keyAltura] ? parseFloat(String(row[keyAltura]).replace(',', '.')) : null;
+        let cortaRaw = String(row[keyCorta] || "NO").trim().toUpperCase();
+
+        // Mapeo Inteligente de Nombre de Especie
+        let especieEncontrada = ESPECIES_NATIVAS_DS68.find(e => 
+            e.comun.toLowerCase() === especieRaw.toLowerCase() || 
+            e.cientifico.toLowerCase() === especieRaw.toLowerCase()
+        );
+
+        const especieFinal = especieEncontrada ? especieEncontrada.comun : (especieRaw || "Roble");
+        const cortaFinal = (cortaRaw === "SI" || cortaRaw === "S" || cortaRaw === "1" || cortaRaw === "CORTA") ? "SI" : "NO";
+
+        if (!isNaN(dap) && dap > 0) {
+            registrosIngresados.push({
+                rodal: parametrosValidados.rodalName,
+                parcela,
+                especie: especieFinal,
+                dap,
+                altura: (!isNaN(altura) && altura > 0) ? altura : null,
+                corta: cortaFinal
+            });
+            contadorValidos++;
+        } else {
+            contadorErrores++;
+        }
+    });
+
+    feedback.innerHTML = `
+        <div class="alert alert-success">
+            ✅ <strong>Importación exitosa desde ${nombreArchivo}:</strong> Se cargaron <strong>${contadorValidos}</strong> árboles correctamente.
+            ${contadorErrores > 0 ? `<br><small>(${contadorErrores} filas fueron omitidas por formato o DAP inválido)</small>` : ''}
+        </div>
+    `;
+
+    document.getElementById("fileInput").value = "";
+    procesarYActualizarTodo();
+}
+
+// DESCARGA DE PLANTILLAS
+function descargarPlantillaExcel() {
+    const wsData = [
+        ["Parcela", "Especie", "Dap", "Altura", "Corta"],
+        [1, "Roble", 18.5, 14.0, "NO"],
+        [1, "Raulí", 22.0, 16.5, "SI"],
+        [1, "Coigüe común", 31.4, 20.0, "NO"],
+        [2, "Roble", 25.8, 17.5, "NO"],
+        [2, "Canelo", 12.0, 10.0, "NO"]
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Parcelas_Campo");
+    XLSX.writeFile(wb, "Plantilla_Ingreso_Parcelas_Forestales.xlsx");
+}
+
+function descargarPlantillaTxt() {
+    const contenido = "Parcela\tEspecie\tDap\tAltura\tCorta\n" +
+                      "1\tRoble\t18.5\t14.0\tNO\n" +
+                      "1\tRaulí\t22.0\t16.5\tSI\n" +
+                      "1\tCoigüe común\t31.4\t20.0\tNO\n" +
+                      "2\tRoble\t25.8\t17.5\tNO\n" +
+                      "2\tCanelo\t12.0\t10.0\tNO";
+
+    const blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Plantilla_Ingreso_Parcelas_Forestales.txt";
+    link.click();
 }
 
 function renderizarResumenParametros() {
@@ -256,19 +450,17 @@ function actualizarConfiguracionAlturas() {
     container.innerHTML = "";
 
     if (registrosIngresados.length === 0) {
-        container.innerHTML = "<p><em>No hay registros de campo ingresados aún.</em></p>";
+        container.innerHTML = "<p><em>No hay registros de campo ingresados o importados aún.</em></p>";
         return;
     }
 
-    // Obtener especies únicas ingresadas
     const especiesPresentes = [...new Set(registrosIngresados.map(r => r.especie))];
 
     especiesPresentes.forEach(espNombre => {
-        // Calcular altura promedio basada en los árboles con altura explicita o asignar valor predeterminado
         const arbolesEspecie = registrosIngresados.filter(r => r.especie === espNombre);
         const alturasValidas = arbolesEspecie.map(r => r.altura).filter(h => h !== null && !isNaN(h) && h > 0);
         
-        let altPromedio = 15.0; // Valor base por defecto
+        let altPromedio = 15.0;
         if (alturasValidas.length > 0) {
             altPromedio = alturasValidas.reduce((a,b) => a+b, 0) / alturasValidas.length;
         } else if (alturasPromedioEspecie[espNombre]) {
@@ -307,48 +499,29 @@ function actualizarAlturaEspecieManual(especie, valor) {
     }
 }
 
-// Función para calcular volumen individual según especie y alometría
 function calcularVolumenArbol(dap, alturaM, especieNombre) {
     const espObj = ESPECIES_NATIVAS_DS68.find(e => e.comun === especieNombre);
-    const g = (Math.PI / 40000) * Math.pow(dap, 2); // m2
+    const g = (Math.PI / 40000) * Math.pow(dap, 2);
     const H = alturaM;
 
-    if (!espObj) {
-        return g * H * 0.50; // Factor genérico
-    }
+    if (!espObj) return g * H * 0.50;
 
     const eq = espObj.ecuacion;
-
     if (eq.includes("DAP^")) {
-        // Ecuación de potencia tipo INFOR: V = b0 * DAP^b1 * H^b2
-        if (especieNombre === "Roble") {
-            return 0.0000632 * Math.pow(dap, 1.921) * Math.pow(H, 0.985);
-        } else if (especieNombre === "Raulí") {
-            return 0.0000589 * Math.pow(dap, 1.945) * Math.pow(H, 0.970);
-        } else if (especieNombre === "Coigüe común") {
-            return 0.0000512 * Math.pow(dap, 2.012) * Math.pow(H, 0.950);
-        } else if (especieNombre === "Lape / Lenga") {
-            return 0.0000670 * Math.pow(dap, 1.890) * Math.pow(H, 1.010);
-        } else if (especieNombre === "Hualo") {
-            return 0.0000610 * Math.pow(dap, 1.930) * Math.pow(H, 0.970);
-        } else if (especieNombre === "Coigüe de Chiloé") {
-            return 0.0000530 * Math.pow(dap, 1.990) * Math.pow(H, 0.960);
-        } else if (especieNombre === "Ciprés de la Cordillera") {
-            return 0.0000720 * Math.pow(dap, 1.850) * Math.pow(H, 0.990);
-        } else if (especieNombre === "Canelo") {
-            return 0.0000550 * Math.pow(dap, 1.980) * Math.pow(H, 0.940);
-        } else if (especieNombre === "Laurel") {
-            return 0.0000600 * Math.pow(dap, 1.910) * Math.pow(H, 0.970);
-        } else if (especieNombre === "Tepa") {
-            return 0.0000570 * Math.pow(dap, 1.950) * Math.pow(H, 0.960);
-        } else if (especieNombre === "Ulmo") {
-            return 0.0000640 * Math.pow(dap, 1.900) * Math.pow(H, 0.980);
-        } else if (especieNombre === "Olivillo") {
-            return 0.0000580 * Math.pow(dap, 1.930) * Math.pow(H, 0.960);
-        }
+        if (especieNombre === "Roble") return 0.0000632 * Math.pow(dap, 1.921) * Math.pow(H, 0.985);
+        else if (especieNombre === "Raulí") return 0.0000589 * Math.pow(dap, 1.945) * Math.pow(H, 0.970);
+        else if (especieNombre === "Coigüe común") return 0.0000512 * Math.pow(dap, 2.012) * Math.pow(H, 0.950);
+        else if (especieNombre === "Lape / Lenga") return 0.0000670 * Math.pow(dap, 1.890) * Math.pow(H, 1.010);
+        else if (especieNombre === "Hualo") return 0.0000610 * Math.pow(dap, 1.930) * Math.pow(H, 0.970);
+        else if (especieNombre === "Coigüe de Chiloé") return 0.0000530 * Math.pow(dap, 1.990) * Math.pow(H, 0.960);
+        else if (especieNombre === "Ciprés de la Cordillera") return 0.0000720 * Math.pow(dap, 1.850) * Math.pow(H, 0.990);
+        else if (especieNombre === "Canelo") return 0.0000550 * Math.pow(dap, 1.980) * Math.pow(H, 0.940);
+        else if (especieNombre === "Laurel") return 0.0000600 * Math.pow(dap, 1.910) * Math.pow(H, 0.970);
+        else if (especieNombre === "Tepa") return 0.0000570 * Math.pow(dap, 1.950) * Math.pow(H, 0.960);
+        else if (especieNombre === "Ulmo") return 0.0000640 * Math.pow(dap, 1.900) * Math.pow(H, 0.980);
+        else if (especieNombre === "Olivillo") return 0.0000580 * Math.pow(dap, 1.930) * Math.pow(H, 0.960);
     }
 
-    // Si es basada en factor de forma: V = g * H * f
     const f = espObj.fForma || 0.50;
     return g * H * f;
 }
@@ -394,7 +567,6 @@ function calcularTablaRodal() {
         return { clases: [], especiesEspeciales: [], datos: {}, factorExpansion };
     }
 
-    // Identificar las 3 especies más frecuentes
     const contexEspecies = {};
     registrosIngresados.forEach(r => {
         contexEspecies[r.especie] = (contexEspecies[r.especie] || 0) + 1;
@@ -418,7 +590,6 @@ function calcularTablaRodal() {
 
     const especiesColumnas = [...topEspecies, "Otras", "Total"];
     
-    // Matriz: datos por clase y especie: { nIni, nRes, gIni, gRes, vIni, vRes }
     const matriz = clases.map(() => {
         const rowObj = {};
         especiesColumnas.forEach(esp => {
@@ -444,7 +615,6 @@ function calcularTablaRodal() {
 
         const columnaEsp = topEspecies.includes(arb.especie) ? arb.especie : "Otras";
 
-        // Inicial
         matriz[claseIdx][columnaEsp].nIni += factorExpansion;
         matriz[claseIdx][columnaEsp].gIni += gArbol * factorExpansion;
         matriz[claseIdx][columnaEsp].vIni += vArbol * factorExpansion;
@@ -461,7 +631,6 @@ function calcularTablaRodal() {
         totalesEspecie["Total"].gIni += gArbol * factorExpansion;
         totalesEspecie["Total"].vIni += vArbol * factorExpansion;
 
-        // Residual
         if (arb.corta === "NO") {
             matriz[claseIdx][columnaEsp].nRes += factorExpansion;
             matriz[claseIdx][columnaEsp].gRes += gArbol * factorExpansion;
@@ -498,11 +667,10 @@ function renderizarTablaRodal(res) {
     tbody.innerHTML = "";
 
     if (!res.clases || res.clases.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="12">No hay datos suficientes para estructurar la Tabla de Rodal. Complete los parámetros e ingrese árboles de campo.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="12">No hay datos suficientes para estructurar la Tabla de Rodal. Complete los parámetros e ingrese o importe árboles de campo.</td></tr>`;
         return;
     }
 
-    // Row 1: Especies
     const tr1 = document.createElement("tr");
     tr1.innerHTML = `<th rowspan="2" colspan="2">Rango (cm)<br>≤ Ø <</th><th rowspan="2">Mc</th>`;
     res.especiesColumnas.forEach(esp => {
@@ -511,7 +679,6 @@ function renderizarTablaRodal(res) {
     });
     thead.appendChild(tr1);
 
-    // Row 2: Sub-encabezados N, G, V
     const tr2 = document.createElement("tr");
     res.especiesColumnas.forEach(() => {
         tr2.innerHTML += `
@@ -522,7 +689,6 @@ function renderizarTablaRodal(res) {
     });
     thead.appendChild(tr2);
 
-    // Row 3: Ini vs Res
     const tr3 = document.createElement("tr");
     tr3.innerHTML = `<th>Min</th><th>Max</th><th>cm</th>`;
     res.especiesColumnas.forEach(() => {
@@ -530,7 +696,6 @@ function renderizarTablaRodal(res) {
     });
     thead.appendChild(tr3);
 
-    // Filas
     res.clases.forEach((cl, i) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -553,7 +718,6 @@ function renderizarTablaRodal(res) {
         tbody.appendChild(tr);
     });
 
-    // Total
     const trTotal = document.createElement("tr");
     trTotal.className = "total-row";
     trTotal.innerHTML = `<td colspan="3"><strong>TOTAL RODAL</strong></td>`;
@@ -606,7 +770,6 @@ function actualizarGraficos(res) {
 
     const labelsClases = res.clases.map(c => `${c.min}-${c.max} cm`);
     
-    // 1. Estructura Diamétrica N/ha
     const dataNIni = res.clases.map((_, i) => res.matriz[i]["Total"].nIni);
     const dataNRes = res.clases.map((_, i) => res.matriz[i]["Total"].nRes);
 
@@ -627,7 +790,6 @@ function actualizarGraficos(res) {
         }
     });
 
-    // 2. Distribución del Volumen por Especie (m3/ha)
     const especiesLabels = res.especiesColumnas.filter(e => e !== "Total");
     const dataVPorEspecie = especiesLabels.map(esp => res.totalesEspecie[esp].vIni);
 
@@ -647,7 +809,6 @@ function actualizarGraficos(res) {
         }
     });
 
-    // 3. Balance Manejo Volumen (m3/ha)
     const totGlobal = res.totalesEspecie["Total"];
     if (chartComparativa) chartComparativa.destroy();
     chartComparativa = new Chart(document.getElementById("chartComparativaManejo"), {
@@ -687,7 +848,6 @@ function exportarTablaExcel() {
 
     const p = parametrosValidados;
     
-    // HOJA 1: TABLA DE RODAL Y VOLUMEN
     const ws1Data = [];
     ws1Data.push(["12.3.9 TABLA DE RODAL INICIAL, RESIDUAL Y VOLUMETRÍA FORESTAL"]);
     ws1Data.push([]);
@@ -698,7 +858,6 @@ function exportarTablaExcel() {
     ws1Data.push(["Forma Parcela:", p.formaParcela, "", "Amplitud Clase (cm):", p.amplitudClase]);
     ws1Data.push([]);
 
-    // Header Fila 1 Especies
     const rowH1 = ["Rango (cm) ≤ Ø <", "", "Mc"];
     res.especiesColumnas.forEach(esp => {
         const altP = alturasPromedioEspecie[esp] ? ` (H=${alturasPromedioEspecie[esp]}m)` : '';
@@ -706,17 +865,14 @@ function exportarTablaExcel() {
     });
     ws1Data.push(rowH1);
 
-    // Header Fila 2 N, G, V
     const rowH2 = ["Min", "Max", "cm"];
     res.especiesColumnas.forEach(() => rowH2.push("N (árb./ha)", "", "G (m²/ha)", "", "V (m³/ha)", ""));
     ws1Data.push(rowH2);
 
-    // Header Fila 3 Ini / Res
     const rowH3 = ["", "", ""];
     res.especiesColumnas.forEach(() => rowH3.push("Ini.", "Res.", "Ini.", "Res.", "Ini.", "Res."));
     ws1Data.push(rowH3);
 
-    // Filas
     res.clases.forEach((cl, i) => {
         const row = [cl.min, cl.max, cl.mc];
         res.especiesColumnas.forEach(esp => {
@@ -726,7 +882,6 @@ function exportarTablaExcel() {
         ws1Data.push(row);
     });
 
-    // Totales
     const rowTot = ["TOTAL RODAL", "", ""];
     res.especiesColumnas.forEach(esp => {
         const t = res.totalesEspecie[esp];
@@ -736,7 +891,6 @@ function exportarTablaExcel() {
 
     const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
 
-    // HOJA 2: REGISTROS DE CAMPO
     const ws2Data = [
         ["PARÁMETROS DEL RODAL:"],
         ["Rodal", p.rodalName],
@@ -757,7 +911,6 @@ function exportarTablaExcel() {
 
     const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);
 
-    // HOJA 3: ANEXO DE MEMORIA DE ECUACIONES Y FUENTES
     const ws3Data = [
         ["ANEXO TÉCNICO: MEMORIA DE ECUACIONES DE VOLUMEN Y FUENTES BIBLIOGRÁFICAS"],
         [],
@@ -777,7 +930,6 @@ function exportarTablaExcel() {
 
     const ws3 = XLSX.utils.aoa_to_sheet(ws3Data);
 
-    // CREACIÓN DEL LIBRO EXCEL MULTI-HOJA
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws1, "Hoja1_TablaRodal_Volumen");
     XLSX.utils.book_append_sheet(wb, ws2, "Hoja2_DatosCampo");

@@ -1,4 +1,4 @@
-/* Estilos Consultoría Forestal - Planes de Manejo & Tabla de Rodal */
+/* Estilos Consultoría Forestal - Importador y Tabla de Rodal */
 :root {
     --primary-color: #1b5e20;
     --primary-hover: #2e7d32;
@@ -72,13 +72,9 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.border-highlight {
-    border-left: 5px solid var(--accent-color);
-}
-
-.border-highlight-blue {
-    border-left: 5px solid #00838f;
-}
+.border-highlight { border-left: 5px solid var(--accent-color); }
+.border-highlight-green { border-left: 5px solid #2e7d32; }
+.border-highlight-blue { border-left: 5px solid #00838f; }
 
 .card-title-badge {
     display: flex;
@@ -168,6 +164,55 @@ input:disabled, select:disabled {
     cursor: not-allowed;
 }
 
+/* Área de Dropzone e Importación */
+.import-dropzone {
+    border: 2px dashed #a5d6a7;
+    background-color: #f1f8e9;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.import-dropzone.dragover {
+    background-color: #c8e6c9;
+    border-color: #2e7d32;
+}
+
+.import-icon {
+    font-size: 2.8rem;
+}
+
+.import-instructions strong {
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.import-instructions p {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 0.2rem;
+}
+
+.import-instructions code {
+    background: #e0e0e0;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+}
+
+.import-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.4rem;
+}
+
 .btn {
     padding: 0.65rem 1.2rem;
     border: none;
@@ -215,6 +260,12 @@ input:disabled, select:disabled {
     background-color: #fffde7;
     border: 1px solid #fff59d;
     color: #f57f17;
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    border: 1px solid #a5d6a7;
+    color: #2e7d32;
 }
 
 .info-rodal-box {
@@ -316,7 +367,6 @@ tbody tr:hover { background-color: #e8f5e9; }
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     gap: 1.5rem;
-
     margin-top: 1rem;
 }
 

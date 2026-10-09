@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultor Forestal - Tabla de Rodal & Cálculo de Volumen</title>
+    <title>Consultor Forestal - Tabla de Rodal & Importador de Archivos</title>
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- SheetJS CDN for Excel Export -->
+    <!-- SheetJS CDN for Excel Read/Export -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -16,7 +16,7 @@
             <span class="tree-icon">🌲</span>
             <div>
                 <h1>Consultoría Forestal Chile</h1>
-                <p>Generador de Tabla de Rodal, Volumen Bruto/Neto & Ecuaciones Dasométricas (D.S. N° 259 / D.S. N° 68 MINAGRI)</p>
+                <p>Generador de Tabla de Rodal, Volumetría & Carga Masiva de Parcelas (Excel/TXT) | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
             </div>
         </div>
     </header>
@@ -28,7 +28,7 @@
                 <h2>1. Parámetros del Rodal y Muestreos Normativos (Obligatorios)</h2>
                 <span class="badge badge-warning" id="statusParametros">Incompleto</span>
             </div>
-            <p class="help-text">Todos los campos normativos deben completarse para habilitar el procesamiento del inventario, la tabla de rodal y la volumetría.</p>
+            <p class="help-text">Todos los campos normativos deben completarse para habilitar la carga de parcelas y el procesamiento del inventario.</p>
 
             <form id="formParametros" class="form-grid margin-top-sm">
                 <!-- Identificación & Superficie -->
@@ -131,26 +131,49 @@
             </form>
         </section>
 
-        <!-- CONFIGURACIÓN DE ALTURA PROMEDIO Y FÓRMULAS DE VOLUMEN POR ESPECIE -->
+        <!-- SECCIÓN DE IMPORTACIÓN MASIVA DE ARCHIVOS (EXCEL / TXT / CSV) -->
+        <section class="card border-highlight-green" id="secImportacionArchivos">
+            <h2>2. Importación Masiva de Parcelas de Campo (.xlsx, .xls, .txt, .csv)</h2>
+            <p class="help-text">Suba un archivo descargado de sus colectores de datos o planilla de muestreo. Se admiten archivos Excel o Texto Plano separados por tabulación, coma o punto y coma.</p>
+
+            <div id="lockWarningImport" class="alert alert-warning">
+                ⚠️ Debe validar los parámetros del Rodal (Sección 1) antes de importar parcelas.
+            </div>
+
+            <div class="import-dropzone margin-top-sm" id="dropzoneContainer">
+                <div class="import-icon">📁</div>
+                <div class="import-instructions">
+                    <strong>Seleccione o arrastre un archivo (.xlsx, .xls, .txt, .csv)</strong>
+                    <p>Columnas esperadas: <code>Parcela</code> | <code>Especie</code> | <code>Dap</code> (o DAP) | <code>Altura</code> (Opcional) | <code>Corta</code> (SI/NO)</p>
+                </div>
+                <input type="file" id="fileInput" accept=".xlsx, .xls, .txt, .csv" disabled>
+                <div class="import-buttons">
+                    <button type="button" class="btn btn-success" id="btnDescargarPlantillaExcel">📥 Descargar Plantilla Excel</button>
+                    <button type="button" class="btn btn-secondary" id="btnDescargarPlantillaTxt">📄 Descargar Plantilla TXT</button>
+                </div>
+            </div>
+            <div id="importFeedback" class="margin-top-sm"></div>
+        </section>
+
+        <!-- CONFIGURACIÓN DE ALTURA PROMEDIO POR ESPECIE -->
         <section class="card" id="secConfigAltura">
-            <h2>2. Configuración de Alturas Promedio y Modelos Alométricos de Volumen</h2>
-            <p class="help-text">Ingrese la altura promedio ($H$, $m$) para cada especie presente o use el valor promedio ingresado por árbol. Seleccione o verifique el modelo volumétrico aplicable.</p>
+            <h2>3. Configuración de Alturas Promedio y Modelos de Volumen</h2>
+            <p class="help-text">Verifique o ajuste la altura promedio ($H$, $m$) calculada automáticamente por especie a partir de los datos cargados.</p>
 
             <div id="lockWarningAltura" class="alert alert-warning">
-                ⚠️ Debe validar los parámetros del Rodal (Sección 1) e ingresar registros de campo para definir las alturas promedio por especie.
+                ⚠️ Debe validar los parámetros del Rodal e ingresar o importar parcelas.
             </div>
 
             <div id="containerAlturasEspecie" class="form-grid margin-top-sm">
-                <!-- Generado dinámicamente según especies encontradas en los ingresos -->
                 <p><em>Sin especies registradas...</em></p>
             </div>
         </section>
 
-        <!-- REGISTRO DE ÁRBOLES EN CAMPO (HOJA 2) -->
+        <!-- REGISTRO Y EDICIÓN INDIVIDUAL DE ÁRBOLES (HOJA 2) -->
         <section class="card" id="secIngresoCampo">
-            <h2>3. Ingreso de Datos de Campo (Hoja 2 - Detalle por Árbol)</h2>
+            <h2>4. Datos de Campo de Parcelas (Hoja 2 - Detalle por Árbol)</h2>
             <div id="lockWarningCampo" class="alert alert-warning">
-                ⚠️ Debe completar y validar todos los parámetros del Rodal (Sección 1) antes de ingresar o calcular registros.
+                ⚠️ Debe completar y validar todos los parámetros del Rodal antes de agregar registros manualmente.
             </div>
 
             <form id="treeForm" class="form-grid">
@@ -180,13 +203,13 @@
                     </select>
                 </div>
                 <div class="form-group full-width">
-                    <button type="submit" id="btnAgregarArbol" class="btn btn-primary" disabled>➕ Agregar Árbol al Inventario</button>
+                    <button type="submit" id="btnAgregarArbol" class="btn btn-primary" disabled>➕ Agregar Árbol Individual</button>
                     <button type="button" id="btnBorrarTodo" class="btn btn-danger" disabled>🗑️ Limpiar Todos los Registros</button>
                 </div>
             </form>
 
             <div class="table-responsive margin-top">
-                <h3>Registros de Campo Ingresados (<span id="totalRegistrosCount">0</span> árboles)</h3>
+                <h3>Registros Cargados (<span id="totalRegistrosCount">0</span> árboles)</h3>
                 <table id="tablaIngresos">
                     <thead>
                         <tr>
@@ -212,7 +235,7 @@
         <!-- TABLA DE RODAL GENERADA (HOJA 1) -->
         <section class="card" id="secTablaRodal">
             <div class="section-header">
-                <h2>4. Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
+                <h2>5. Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
                 <button id="btnExportarExcel" class="btn btn-success" disabled>📥 Exportar Libro Excel Completo (.xlsx)</button>
             </div>
 
@@ -236,7 +259,7 @@
 
         <!-- SECCIÓN FÓRMULAS DE VOLUMEN Y FUENTES (HOJA ANEXA) -->
         <section class="card border-highlight-blue" id="secFormulasFuentes">
-            <h2>5. Memoria de Ecuaciones Volumétricas y Fuentes Bibliográficas (Anexo Técnico)</h2>
+            <h2>6. Memoria de Ecuaciones Volumétricas y Fuentes Bibliográficas (Anexo Técnico)</h2>
             <p class="help-text">Relación de modelos alométricos y ecuaciones de volumen bruto/neto ($V, m^3$) aplicadas a cada especie nativa procesada en el rodal conforme a bibliografía dasométrica chilena (CONAF / INFOR).</p>
 
             <div class="table-responsive margin-top-sm">
@@ -258,7 +281,7 @@
 
         <!-- GRÁFICOS ASOCIADOS -->
         <section class="card">
-            <h2>6. Gráficos de Estructura, Área Basal y Volumetría Forestal</h2>
+            <h2>7. Gráficos de Estructura, Área Basal y Volumetría Forestal</h2>
             <div class="charts-grid">
                 <div class="chart-box">
                     <h3>Estructura Diamétrica del Rodal (N/ha por Clase)</h3>
