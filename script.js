@@ -1,4 +1,4 @@
-// Especies Arbóreas Nativas de Chile (D.S. N° 68 / 2009 MINAGRI) y Ecuaciones Volumétricas
+// Catálogo de Especies Arbóreas Nativas de Chile (D.S. N° 68 / 2009 MINAGRI)
 const ESPECIES_NATIVAS_DS68 = [
     { cientifico: "Nothofagus obliqua", comun: "Roble", ecuacion: "V = 0.0000632 * (DAP^1.921) * (H^0.985)", fForma: 0.60, fuente: "INFOR / CONAF (Ecuación de volumen fustal para Nothofagus obliqua)" },
     { cientifico: "Nothofagus alpina", comun: "Raulí", ecuacion: "V = 0.0000589 * (DAP^1.945) * (H^0.970)", fForma: 0.62, fuente: "INFOR (Modelos alométricos para Raulí en renovales)" },
@@ -49,24 +49,24 @@ const EJEMPLO_PARAMETROS = {
 };
 
 const EJEMPLO_REGISTROS = [
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Roble", dap: 12.5, altura: 10.5, corta: "NO" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Roble", dap: 18.2, altura: 14.0, corta: "NO" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Roble", dap: 22.0, altura: 16.5, corta: "SI" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Raulí", dap: 14.1, altura: 12.0, corta: "NO" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Coigüe común", dap: 31.4, altura: 21.0, corta: "SI" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Roble", dap: 26.5, altura: 18.0, corta: "NO" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Raulí", dap: 19.8, altura: 15.2, corta: "NO" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Raulí", dap: 28.3, altura: 19.0, corta: "SI" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Canelo", dap: 11.2, altura: 9.5, corta: "NO" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 3, especie: "Roble", dap: 34.0, altura: 22.5, corta: "SI" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 3, especie: "Coigüe común", dap: 21.5, altura: 16.0, corta: "NO" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 3, especie: "Radal", dap: 16.0, altura: 11.0, corta: "NO" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 4, especie: "Roble", dap: 23.4, altura: 17.2, corta: "NO" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 4, especie: "Raulí", dap: 38.1, altura: 24.0, corta: "SI" },
-    { rodal: "Rodal R-01 (San Francisco)", parcela: 4, especie: "Ulmo", dap: 15.5, altura: 13.0, corta: "NO" }
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Roble", dap: 12.5, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Roble", dap: 18.2, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Roble", dap: 22.0, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Raulí", dap: 14.1, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 1, especie: "Coigüe común", dap: 31.4, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Roble", dap: 26.5, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Raulí", dap: 19.8, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Raulí", dap: 28.3, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 2, especie: "Canelo", dap: 11.2, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 3, especie: "Roble", dap: 34.0, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 3, especie: "Coigüe común", dap: 21.5, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 3, especie: "Radal", dap: 16.0, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 4, especie: "Roble", dap: 23.4, corta: "NO" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 4, especie: "Raulí", dap: 38.1, corta: "SI" },
+    { rodal: "Rodal R-01 (San Francisco)", parcela: 4, especie: "Ulmo", dap: 15.5, corta: "NO" }
 ];
 
-// Estado global de la aplicación
+// Estado global
 let parametrosValidados = null;
 let registrosIngresados = [];
 let alturasPromedioEspecie = {};
@@ -113,12 +113,12 @@ function setupEventListeners() {
 
     document.getElementById("btnExportarExcel").addEventListener("click", exportarTablaExcel);
 
-    // Eventos de Importación de Archivos
+    // Eventos para la Importación de Archivos (Excel / TXT)
     const fileInput = document.getElementById("fileInput");
     fileInput.addEventListener("change", procesarArchivoSubido);
 
-    document.getElementById("btnDescargarPlantillaExcel").addEventListener("click", descargarPlantillaExcel);
-    document.getElementById("btnDescargarPlantillaTxt").addEventListener("click", descargarPlantillaTxt);
+    document.getElementById("btnDescargarPlantillaExcel").addEventListener("click", descargarPlantillaExcel3Col);
+    document.getElementById("btnDescargarPlantillaTxt").addEventListener("click", descargarPlantillaTxt3Col);
 
     // Drag & Drop
     const dropzone = document.getElementById("dropzoneContainer");
@@ -193,7 +193,7 @@ function actualizarEstadoInterfaz(habilitado) {
     const lockWarningAlt = document.getElementById("lockWarningAltura");
     const lockWarningImport = document.getElementById("lockWarningImport");
 
-    const inputsCampo = ["fileInput", "parcelaNo", "especieSelect", "dapInput", "alturaInput", "cortaSelect", "btnAgregarArbol", "btnBorrarTodo", "btnExportarExcel"];
+    const inputsCampo = ["fileInput", "parcelaNo", "especieSelect", "dapInput", "cortaSelect", "btnAgregarArbol", "btnBorrarTodo", "btnExportarExcel"];
 
     if (habilitado) {
         statusBadge.textContent = "Validado";
@@ -212,7 +212,7 @@ function actualizarEstadoInterfaz(habilitado) {
     }
 }
 
-// PROCESAMIENTO DE ARCHIVOS SUBIDOS (EXCEL / TXT / CSV)
+// PROCESAMIENTO SIMPLIFICADO DE ARCHIVOS (ESPECIE, PARCELA, DAP)
 function procesarArchivoSubido() {
     const fileInput = document.getElementById("fileInput");
     const feedback = document.getElementById("importFeedback");
@@ -221,12 +221,12 @@ function procesarArchivoSubido() {
     if (!file) return;
 
     if (!parametrosValidados) {
-        alert("Debe validar los parámetros del rodal.");
+        alert("Debe validar los parámetros del rodal primero.");
         return;
     }
 
     const fileName = file.name.toLowerCase();
-    feedback.innerHTML = `<p style="color:#0288d1;">⏳ Procesando archivo: <strong>${file.name}</strong>...</p>`;
+    feedback.innerHTML = `<p style="color:#0288d1;">⏳ Leyendo archivo: <strong>${file.name}</strong>...</p>`;
 
     if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
         const reader = new FileReader();
@@ -236,9 +236,9 @@ function procesarArchivoSubido() {
                 const workbook = XLSX.read(data, { type: 'array' });
                 const firstSheet = workbook.SheetNames[0];
                 const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], { defval: "" });
-                importarArrayNormalizado(jsonData, file.name);
+                importarArraySimplificado(jsonData, file.name);
             } catch (err) {
-                feedback.innerHTML = `<div class="alert alert-warning">❌ Error al leer archivo Excel: ${err.message}</div>`;
+                feedback.innerHTML = `<div class="alert alert-warning">❌ Error al leer Excel: ${err.message}</div>`;
             }
         };
         reader.readAsArrayBuffer(file);
@@ -248,9 +248,9 @@ function procesarArchivoSubido() {
             try {
                 const text = e.target.result;
                 const parseado = parsearTextoPlano(text);
-                importarArrayNormalizado(parseado, file.name);
+                importarArraySimplificado(parseado, file.name);
             } catch (err) {
-                feedback.innerHTML = `<div class="alert alert-warning">❌ Error al leer archivo de texto: ${err.message}</div>`;
+                feedback.innerHTML = `<div class="alert alert-warning">❌ Error al leer archivo TXT: ${err.message}</div>`;
             }
         };
         reader.readAsText(file);
@@ -263,7 +263,6 @@ function parsearTextoPlano(texto) {
     const lineas = texto.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
     if (lineas.length < 2) return [];
 
-    // Detectar delimitador (tabulador, coma, punto y coma)
     const primeraFila = lineas[0];
     let delim = '\t';
     if (primeraFila.includes(';')) delim = ';';
@@ -274,7 +273,7 @@ function parsearTextoPlano(texto) {
 
     for (let i = 1; i < lineas.length; i++) {
         const cols = lineas[i].split(delim).map(c => c.trim());
-        if (cols.length >= 3) {
+        if (cols.length >= 2) {
             const rowObj = {};
             headers.forEach((h, idx) => {
                 rowObj[h] = cols[idx] !== undefined ? cols[idx] : "";
@@ -285,10 +284,10 @@ function parsearTextoPlano(texto) {
     return result;
 }
 
-function importarArrayNormalizado(dataArray, nombreArchivo) {
+function importarArraySimplificado(dataArray, nombreArchivo) {
     const feedback = document.getElementById("importFeedback");
     if (!dataArray || dataArray.length === 0) {
-        feedback.innerHTML = `<div class="alert alert-warning">⚠️ El archivo no contiene filas o datos legibles.</div>`;
+        feedback.innerHTML = `<div class="alert alert-warning">⚠️ El archivo está vacío o no contiene datos válidos.</div>`;
         return;
     }
 
@@ -296,30 +295,25 @@ function importarArrayNormalizado(dataArray, nombreArchivo) {
     let contadorErrores = 0;
 
     dataArray.forEach(row => {
-        // Normalización de claves (case insensitive)
         const keys = Object.keys(row);
         const findKey = (name) => keys.find(k => k.trim().toLowerCase() === name.toLowerCase());
 
+        // Búsqueda exclusiva de Parcela, Especie y DAP
         const keyParcela = findKey("parcela") || findKey("num_parcela") || findKey("p");
         const keyEspecie = findKey("especie") || findKey("esp") || findKey("nombre_especie");
         const keyDap = findKey("dap") || findKey("dap_cm") || findKey("diametro");
-        const keyAltura = findKey("altura") || findKey("h") || findKey("altura_m");
-        const keyCorta = findKey("corta") || findKey("intervencion") || findKey("cortar");
 
         const parcela = parseInt(row[keyParcela]) || 1;
         let especieRaw = String(row[keyEspecie] || "").trim();
         const dap = parseFloat(String(row[keyDap]).replace(',', '.'));
-        const altura = row[keyAltura] ? parseFloat(String(row[keyAltura]).replace(',', '.')) : null;
-        let cortaRaw = String(row[keyCorta] || "NO").trim().toUpperCase();
 
-        // Mapeo Inteligente de Nombre de Especie
+        // Normalización de Especie según D.S. N° 68 / 2009 MINAGRI
         let especieEncontrada = ESPECIES_NATIVAS_DS68.find(e => 
             e.comun.toLowerCase() === especieRaw.toLowerCase() || 
             e.cientifico.toLowerCase() === especieRaw.toLowerCase()
         );
 
         const especieFinal = especieEncontrada ? especieEncontrada.comun : (especieRaw || "Roble");
-        const cortaFinal = (cortaRaw === "SI" || cortaRaw === "S" || cortaRaw === "1" || cortaRaw === "CORTA") ? "SI" : "NO";
 
         if (!isNaN(dap) && dap > 0) {
             registrosIngresados.push({
@@ -327,8 +321,7 @@ function importarArrayNormalizado(dataArray, nombreArchivo) {
                 parcela,
                 especie: especieFinal,
                 dap,
-                altura: (!isNaN(altura) && altura > 0) ? altura : null,
-                corta: cortaFinal
+                corta: "NO" // Valor por defecto para inventario base
             });
             contadorValidos++;
         } else {
@@ -338,8 +331,9 @@ function importarArrayNormalizado(dataArray, nombreArchivo) {
 
     feedback.innerHTML = `
         <div class="alert alert-success">
-            ✅ <strong>Importación exitosa desde ${nombreArchivo}:</strong> Se cargaron <strong>${contadorValidos}</strong> árboles correctamente.
-            ${contadorErrores > 0 ? `<br><small>(${contadorErrores} filas fueron omitidas por formato o DAP inválido)</small>` : ''}
+            ✅ <strong>Importación Simplificada exitosa (${nombreArchivo}):</strong><br>
+            Se cargaron <strong>${contadorValidos}</strong> registros de árboles considerando <strong>Especie</strong>, <strong>Parcela</strong> y <strong>DAP</strong>.
+            ${contadorErrores > 0 ? `<br><small>(${contadorErrores} filas omitidas por error o DAP inválido)</small>` : ''}
         </div>
     `;
 
@@ -347,35 +341,41 @@ function importarArrayNormalizado(dataArray, nombreArchivo) {
     procesarYActualizarTodo();
 }
 
-// DESCARGA DE PLANTILLAS
-function descargarPlantillaExcel() {
+// DESCARGA DE PLANTILLAS 3 COLUMNAS
+function descargarPlantillaExcel3Col() {
     const wsData = [
-        ["Parcela", "Especie", "Dap", "Altura", "Corta"],
-        [1, "Roble", 18.5, 14.0, "NO"],
-        [1, "Raulí", 22.0, 16.5, "SI"],
-        [1, "Coigüe común", 31.4, 20.0, "NO"],
-        [2, "Roble", 25.8, 17.5, "NO"],
-        [2, "Canelo", 12.0, 10.0, "NO"]
+        ["Parcela", "Especie", "Dap"],
+        [1, "Roble", 18.5],
+        [1, "Raulí", 22.0],
+        [1, "Coigüe común", 31.4],
+        [2, "Roble", 25.8],
+        [2, "Canelo", 12.0],
+        [2, "Raulí", 29.1],
+        [3, "Roble", 34.0],
+        [3, "Ulmo", 15.2]
     ];
 
     const ws = XLSX.utils.aoa_to_sheet(wsData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Parcelas_Campo");
-    XLSX.writeFile(wb, "Plantilla_Ingreso_Parcelas_Forestales.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, "Parcelas_Especie_DAP");
+    XLSX.writeFile(wb, "Plantilla_Parcelas_Especie_Parcela_DAP.xlsx");
 }
 
-function descargarPlantillaTxt() {
-    const contenido = "Parcela\tEspecie\tDap\tAltura\tCorta\n" +
-                      "1\tRoble\t18.5\t14.0\tNO\n" +
-                      "1\tRaulí\t22.0\t16.5\tSI\n" +
-                      "1\tCoigüe común\t31.4\t20.0\tNO\n" +
-                      "2\tRoble\t25.8\t17.5\tNO\n" +
-                      "2\tCanelo\t12.0\t10.0\tNO";
+function descargarPlantillaTxt3Col() {
+    const contenido = "Parcela\tEspecie\tDap\n" +
+                      "1\tRoble\t18.5\n" +
+                      "1\tRaulí\t22.0\n" +
+                      "1\tCoigüe común\t31.4\n" +
+                      "2\tRoble\t25.8\n" +
+                      "2\tCanelo\t12.0\n" +
+                      "2\tRaulí\t29.1\n" +
+                      "3\tRoble\t34.0\n" +
+                      "3\tUlmo\t15.2";
 
     const blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "Plantilla_Ingreso_Parcelas_Forestales.txt";
+    link.download = "Plantilla_Parcelas_Especie_Parcela_DAP.txt";
     link.click();
 }
 
@@ -408,7 +408,6 @@ function agregarArbol() {
     const parcela = parseInt(document.getElementById("parcelaNo").value);
     const especie = document.getElementById("especieSelect").value;
     const dap = parseFloat(document.getElementById("dapInput").value);
-    const altura = parseFloat(document.getElementById("alturaInput").value) || null;
     const corta = document.getElementById("cortaSelect").value;
 
     if (isNaN(dap) || dap <= 0) {
@@ -421,12 +420,10 @@ function agregarArbol() {
         parcela,
         especie,
         dap,
-        altura,
         corta
     });
 
     document.getElementById("dapInput").value = "";
-    document.getElementById("alturaInput").value = "";
     document.getElementById("dapInput").focus();
     procesarYActualizarTodo();
 }
@@ -450,24 +447,16 @@ function actualizarConfiguracionAlturas() {
     container.innerHTML = "";
 
     if (registrosIngresados.length === 0) {
-        container.innerHTML = "<p><em>No hay registros de campo ingresados o importados aún.</em></p>";
+        container.innerHTML = "<p><em>No hay registros de campo ingresados o cargados aún.</em></p>";
         return;
     }
 
     const especiesPresentes = [...new Set(registrosIngresados.map(r => r.especie))];
 
     especiesPresentes.forEach(espNombre => {
-        const arbolesEspecie = registrosIngresados.filter(r => r.especie === espNombre);
-        const alturasValidas = arbolesEspecie.map(r => r.altura).filter(h => h !== null && !isNaN(h) && h > 0);
-        
-        let altPromedio = 15.0;
-        if (alturasValidas.length > 0) {
-            altPromedio = alturasValidas.reduce((a,b) => a+b, 0) / alturasValidas.length;
-        } else if (alturasPromedioEspecie[espNombre]) {
-            altPromedio = alturasPromedioEspecie[espNombre];
+        if (!alturasPromedioEspecie[espNombre]) {
+            alturasPromedioEspecie[espNombre] = 15.0; // Valor inicial
         }
-
-        alturasPromedioEspecie[espNombre] = parseFloat(altPromedio.toFixed(1));
 
         const infoEspecieObj = ESPECIES_NATIVAS_DS68.find(e => e.comun === espNombre) || {
             ecuacion: "V = g * H * 0.50",
@@ -533,7 +522,7 @@ function renderizarTablaIngresos() {
 
     registrosIngresados.forEach((item, index) => {
         const g = (Math.PI / 40000) * Math.pow(item.dap, 2);
-        const H = item.altura || alturasPromedioEspecie[item.especie] || 15.0;
+        const H = alturasPromedioEspecie[item.especie] || 15.0;
         const v = calcularVolumenArbol(item.dap, H, item.especie);
 
         const tr = document.createElement("tr");
@@ -543,7 +532,7 @@ function renderizarTablaIngresos() {
             <td>${item.parcela}</td>
             <td><strong>${item.especie}</strong></td>
             <td>${item.dap.toFixed(1)}</td>
-            <td>${H.toFixed(1)} ${item.altura ? '' : '<small>(prom)</small>'}</td>
+            <td>${H.toFixed(1)} <small>(prom)</small></td>
             <td>${g.toFixed(4)}</td>
             <td>${v.toFixed(4)}</td>
             <td><span style="color: ${item.corta === 'SI' ? '#c62828' : '#2e7d32'}; font-weight:bold;">${item.corta === 'SI' ? 'Corta' : 'Residual'}</span></td>
@@ -605,7 +594,7 @@ function calcularTablaRodal() {
 
     registrosIngresados.forEach(arb => {
         const gArbol = (Math.PI / 40000) * Math.pow(arb.dap, 2);
-        const H = arb.altura || alturasPromedioEspecie[arb.especie] || 15.0;
+        const H = alturasPromedioEspecie[arb.especie] || 15.0;
         const vArbol = calcularVolumenArbol(arb.dap, H, arb.especie);
 
         let claseIdx = clases.findIndex(cl => arb.dap >= cl.min && arb.dap < cl.max);
@@ -667,7 +656,7 @@ function renderizarTablaRodal(res) {
     tbody.innerHTML = "";
 
     if (!res.clases || res.clases.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="12">No hay datos suficientes para estructurar la Tabla de Rodal. Complete los parámetros e ingrese o importe árboles de campo.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="12">No hay datos suficientes para estructurar la Tabla de Rodal. Complete los parámetros e ingrese o cargue parcelas de campo.</td></tr>`;
         return;
     }
 
@@ -751,7 +740,7 @@ function renderizarAnexoFormulas(res) {
             cientifico: espNombre,
             comun: espNombre,
             ecuacion: "V = g * H * 0.50",
-            fuente: "Factor de forma f = 0.50 (Estándar genérico)"
+            fuente: "Factor de forma f = 0.50"
         };
 
         const tr = document.createElement("tr");
@@ -898,15 +887,15 @@ function exportarTablaExcel() {
         ["Estructura", p.estructuraRodal],
         ["Superficie (ha)", p.superficieRodal],
         [],
-        ["DETALLE DE REGISTROS DE CAMPO Y VOLUMETRÍA INDIVIDUAL:"],
-        ["Rodal", "Parcela", "Especie", "DAP (cm)", "Altura H (m)", "Área Basal g (m²)", "Volumen Ind. v (m³)", "Intervención (Corta)"]
+        ["DETALLE DE REGISTROS DE CAMPO:"],
+        ["Rodal", "Parcela", "Especie", "DAP (cm)", "Área Basal g (m²)", "Volumen Ind. v (m³)"]
     ];
 
     registrosIngresados.forEach(item => {
         const g = (Math.PI / 40000) * Math.pow(item.dap, 2);
-        const H = item.altura || alturasPromedioEspecie[item.especie] || 15.0;
+        const H = alturasPromedioEspecie[item.especie] || 15.0;
         const v = calcularVolumenArbol(item.dap, H, item.especie);
-        ws2Data.push([item.rodal, item.parcela, item.especie, item.dap, H, g, v, item.corta]);
+        ws2Data.push([item.rodal, item.parcela, item.especie, item.dap, g, v]);
     });
 
     const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);

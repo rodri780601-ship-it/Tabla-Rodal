@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultor Forestal - Tabla de Rodal & Importador de Archivos</title>
+    <title>Consultor Forestal - Tabla de Rodal & Importador Simplificado</title>
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- SheetJS CDN for Excel Read/Export -->
+    <!-- SheetJS CDN para lectura y exportación Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -16,7 +16,7 @@
             <span class="tree-icon">🌲</span>
             <div>
                 <h1>Consultoría Forestal Chile</h1>
-                <p>Generador de Tabla de Rodal, Volumetría & Carga Masiva de Parcelas (Excel/TXT) | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
+                <p>Generador de Tabla de Rodal, Volumetría & Carga Simplificada de Parcelas (Especie, Parcela, DAP) | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
             </div>
         </div>
     </header>
@@ -28,7 +28,7 @@
                 <h2>1. Parámetros del Rodal y Muestreos Normativos (Obligatorios)</h2>
                 <span class="badge badge-warning" id="statusParametros">Incompleto</span>
             </div>
-            <p class="help-text">Todos los campos normativos deben completarse para habilitar la carga de parcelas y el procesamiento del inventario.</p>
+            <p class="help-text">Todos los campos normativos deben completarse antes de cargar archivos o procesar la información del rodal.</p>
 
             <form id="formParametros" class="form-grid margin-top-sm">
                 <!-- Identificación & Superficie -->
@@ -131,25 +131,25 @@
             </form>
         </section>
 
-        <!-- SECCIÓN DE IMPORTACIÓN MASIVA DE ARCHIVOS (EXCEL / TXT / CSV) -->
+        <!-- SECCIÓN DE IMPORTACIÓN SIMPLIFICADA DE ARCHIVOS (EXCEL / TXT) -->
         <section class="card border-highlight-green" id="secImportacionArchivos">
-            <h2>2. Importación Masiva de Parcelas de Campo (.xlsx, .xls, .txt, .csv)</h2>
-            <p class="help-text">Suba un archivo descargado de sus colectores de datos o planilla de muestreo. Se admiten archivos Excel o Texto Plano separados por tabulación, coma o punto y coma.</p>
+            <h2>2. Carga Masiva de Parcelas (Sólo: Especie, Parcela y DAP)</h2>
+            <p class="help-text">Suba su archivo Excel (.xlsx, .xls) o Texto Plano (.txt, .csv). El archivo debe contener estrictamente las columnas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (o DAP).</p>
 
             <div id="lockWarningImport" class="alert alert-warning">
                 ⚠️ Debe validar los parámetros del Rodal (Sección 1) antes de importar parcelas.
             </div>
 
             <div class="import-dropzone margin-top-sm" id="dropzoneContainer">
-                <div class="import-icon">📁</div>
+                <div class="import-icon">📂</div>
                 <div class="import-instructions">
                     <strong>Seleccione o arrastre un archivo (.xlsx, .xls, .txt, .csv)</strong>
-                    <p>Columnas esperadas: <code>Parcela</code> | <code>Especie</code> | <code>Dap</code> (o DAP) | <code>Altura</code> (Opcional) | <code>Corta</code> (SI/NO)</p>
+                    <p>Estructura requerida de 3 columnas: <code>Parcela</code> | <code>Especie</code> | <code>Dap</code></p>
                 </div>
                 <input type="file" id="fileInput" accept=".xlsx, .xls, .txt, .csv" disabled>
                 <div class="import-buttons">
-                    <button type="button" class="btn btn-success" id="btnDescargarPlantillaExcel">📥 Descargar Plantilla Excel</button>
-                    <button type="button" class="btn btn-secondary" id="btnDescargarPlantillaTxt">📄 Descargar Plantilla TXT</button>
+                    <button type="button" class="btn btn-success" id="btnDescargarPlantillaExcel">📥 Plantilla Excel (3 Col.)</button>
+                    <button type="button" class="btn btn-secondary" id="btnDescargarPlantillaTxt">📄 Plantilla TXT (3 Col.)</button>
                 </div>
             </div>
             <div id="importFeedback" class="margin-top-sm"></div>
@@ -157,11 +157,11 @@
 
         <!-- CONFIGURACIÓN DE ALTURA PROMEDIO POR ESPECIE -->
         <section class="card" id="secConfigAltura">
-            <h2>3. Configuración de Alturas Promedio y Modelos de Volumen</h2>
-            <p class="help-text">Verifique o ajuste la altura promedio ($H$, $m$) calculada automáticamente por especie a partir de los datos cargados.</p>
+            <h2>3. Configuración de Altura Promedio (H, m) por Especie</h2>
+            <p class="help-text">Verifique o asigne la altura promedio ($H$) para cada especie registrada para el cálculo volumétrico ($V, m^3/ha$).</p>
 
             <div id="lockWarningAltura" class="alert alert-warning">
-                ⚠️ Debe validar los parámetros del Rodal e ingresar o importar parcelas.
+                ⚠️ Debe validar los parámetros del Rodal e ingresar o cargar datos de parcelas.
             </div>
 
             <div id="containerAlturasEspecie" class="form-grid margin-top-sm">
@@ -190,10 +190,6 @@
                 <div class="form-group">
                     <label for="dapInput">DAP (cm):</label>
                     <input type="number" id="dapInput" step="0.1" min="0.1" placeholder="Ej: 24.5" required disabled>
-                </div>
-                <div class="form-group">
-                    <label for="alturaInput">Altura Total $H$ (m) [Opcional]:</label>
-                    <input type="number" id="alturaInput" step="0.1" min="1" placeholder="Ej: 14.2 (Opcional)" disabled>
                 </div>
                 <div class="form-group">
                     <label for="cortaSelect">Intervención (Corta):</label>

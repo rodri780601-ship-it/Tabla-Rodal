@@ -1,4 +1,4 @@
-/* Estilos Consultoría Forestal - Importador y Tabla de Rodal */
+/* Estilos Consultoría Forestal - Importación Simplificada 3 Columnas */
 :root {
     --primary-color: #1b5e20;
     --primary-hover: #2e7d32;
@@ -164,7 +164,7 @@ input:disabled, select:disabled {
     cursor: not-allowed;
 }
 
-/* Área de Dropzone e Importación */
+/* Área de Importación */
 .import-dropzone {
     border: 2px dashed #a5d6a7;
     background-color: #f1f8e9;
@@ -183,9 +183,7 @@ input:disabled, select:disabled {
     border-color: #2e7d32;
 }
 
-.import-icon {
-    font-size: 2.8rem;
-}
+.import-icon { font-size: 2.8rem; }
 
 .import-instructions strong {
     font-size: 1rem;
@@ -202,7 +200,8 @@ input:disabled, select:disabled {
     background: #e0e0e0;
     padding: 0.1rem 0.4rem;
     border-radius: 4px;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
+    font-weight: bold;
 }
 
 .import-buttons {
