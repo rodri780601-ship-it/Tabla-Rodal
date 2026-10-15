@@ -3,50 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultor Forestal - Tabla de Rodal, Volumetría & Estadística de Muestreo</title>
+    <title>Consultoría Forestal Chile | Plataforma de Inventarios & Manejo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- SheetJS CDN para lectura y exportación Excel -->
+    <!-- SheetJS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <!-- jsPDF y html2canvas para generación de reportes PDF -->
+    <!-- jsPDF & html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-    <header class="header">
-        <div class="logo-container">
-            <span class="tree-icon">🌲</span>
-            <div>
-                <h1>Consultoría Forestal Chile</h1>
-                <p>Generador de Tabla de Rodal, Volumetría, Carga Masiva & Análisis Estadístico de Muestreo | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="brand">
+                <div class="brand-icon">🌲</div>
+                <div>
+                    <h1 class="brand-title">Consultoría Forestal Chile</h1>
+                    <p class="brand-subtitle">Plataforma Biométrica de Inventarios y Tablas de Rodal (Ley N° 20.283 / D.S. N° 68 MINAGRI)</p>
+                </div>
+            </div>
+            <div class="header-status">
+                <span class="status-indicator">● Sistema en Línea</span>
             </div>
         </div>
     </header>
 
-    <main class="container">
-        <!-- SECCIÓN 1: PARAMETROS DEL RODAL Y MUESTREO (OBLIGATORIOS) -->
-        <section class="card border-highlight">
-            <div class="card-title-badge">
-                <h2>1. Parámetros del Rodal y Muestreos Normativos (Obligatorios)</h2>
-                <span class="badge badge-warning" id="statusParametros">Incompleto</span>
+    <main class="main-layout">
+        <!-- SECCIÓN 1: PARAMETROS DEL RODAL -->
+        <section class="panel-card border-emerald">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title"><span class="step-num">1</span> Parámetros Normativos del Rodal</h2>
+                    <p class="card-subtitle">Complete la caracterización del rodal y diseño muestral antes del ingreso de datos.</p>
+                </div>
+                <span class="status-badge badge-pending" id="statusParametros">Incompleto</span>
             </div>
-            <p class="help-text">Todos los campos normativos deben completarse antes de cargar archivos o procesar la información del rodal.</p>
 
-            <form id="formParametros" class="form-grid margin-top-sm">
-                <!-- Identificación & Superficie -->
-                <div class="form-group">
-                    <label for="rodalName">Identificador del Rodal: *</label>
-                    <input type="text" id="rodalName" placeholder="Ej: Rodal R-01" required>
+            <form id="formParametros" class="grid-form">
+                <div class="input-group">
+                    <label for="rodalName">Identificador del Rodal <span class="req">*</span></label>
+                    <input type="text" id="rodalName" placeholder="Ej: Rodal R-01 (San Francisco)" required>
                 </div>
-                <div class="form-group">
-                    <label for="superficieRodal">Superficie del Rodal (ha): *</label>
-                    <input type="number" id="superficieRodal" step="0.01" min="0.01" placeholder="Ej: 12.50" required>
+                <div class="input-group">
+                    <label for="superficieRodal">Superficie Rodal (ha) <span class="req">*</span></label>
+                    <input type="number" id="superficieRodal" step="0.01" min="0.01" placeholder="Ej: 14.80" required>
                 </div>
-
-                <!-- Tipología Forestal -->
-                <div class="form-group">
-                    <label for="tipoForestal">Tipo Forestal (Art. 19 D.S. 259): *</label>
+                <div class="input-group">
+                    <label for="tipoForestal">Tipo Forestal (Art. 19 D.S. 259) <span class="req">*</span></label>
                     <select id="tipoForestal" required>
                         <option value="">-- Seleccionar Tipo Forestal --</option>
                         <option value="Alerce">Alerce</option>
@@ -63,10 +70,8 @@
                         <option value="Siempreverde">Siempreverde</option>
                     </select>
                 </div>
-
-                <!-- Estructura -->
-                <div class="form-group">
-                    <label for="estructuraRodal">Estructura del Rodal: *</label>
+                <div class="input-group">
+                    <label for="estructuraRodal">Estructura del Rodal <span class="req">*</span></label>
                     <select id="estructuraRodal" required>
                         <option value="">-- Seleccionar Estructura --</option>
                         <option value="Regular">Regular (Coetáneo)</option>
@@ -74,10 +79,8 @@
                         <option value="Indefinida">Indefinida / En Transición</option>
                     </select>
                 </div>
-
-                <!-- Estado de Desarrollo -->
-                <div class="form-group">
-                    <label for="estadoDesarrollo">Estado de Desarrollo: *</label>
+                <div class="input-group">
+                    <label for="estadoDesarrollo">Estado de Desarrollo <span class="req">*</span></label>
                     <select id="estadoDesarrollo" required>
                         <option value="">-- Seleccionar Estado --</option>
                         <option value="Renoval / Monte Bravo">Renoval / Monte Bravo</option>
@@ -87,32 +90,27 @@
                         <option value="Bosque Degradado / Sobreexplotado">Bosque Degradado / Sobreexplotado</option>
                     </select>
                 </div>
-
-                <!-- Diseños de Muestreo -->
-                <div class="form-group">
-                    <label for="tipoMuestreo">Tipo de Muestreo: *</label>
+                <div class="input-group">
+                    <label for="tipoMuestreo">Diseño de Muestreo <span class="req">*</span></label>
                     <select id="tipoMuestreo" required>
                         <option value="">-- Seleccionar Muestreo --</option>
-                        <option value="Sistemático Aleatorio">Muestreo Sistemático Aleatorio</option>
-                        <option value="Aleatorio Simple">Muestreo Aleatorio Simple</option>
-                        <option value="Estratificado">Muestreo Estratificado</option>
-                        <option value="Muestreo Sistemático con Malla Cuadrada">Muestreo Sistemático con Malla Cuadrada</option>
-                        <option value="Censo 100%">Censo al 100%</option>
+                        <option value="Sistemático Aleatorio">Sistemático Aleatorio</option>
+                        <option value="Aleatorio Simple">Aleatorio Simple</option>
+                        <option value="Estratificado">Estratificado</option>
+                        <option value="Malla Cuadrada">Malla Cuadrada</option>
+                        <option value="Censo 100%">Censo 100%</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label for="numParcelas">Número de Parcelas (N°): *</label>
-                    <input type="number" id="numParcelas" min="1" step="1" placeholder="Ej: 8" required>
+                <div class="input-group">
+                    <label for="numParcelas">Número de Parcelas (N°) <span class="req">*</span></label>
+                    <input type="number" id="numParcelas" min="1" step="1" placeholder="Ej: 4" required>
                 </div>
-
-                <div class="form-group">
-                    <label for="areaParcela">Superficie de Parcela (m²): *</label>
+                <div class="input-group">
+                    <label for="areaParcela">Superficie Parcela (m²) <span class="req">*</span></label>
                     <input type="number" id="areaParcela" min="1" step="1" placeholder="Ej: 500" required>
                 </div>
-
-                <div class="form-group">
-                    <label for="formaParcela">Forma de la Parcela: *</label>
+                <div class="input-group">
+                    <label for="formaParcela">Forma Parcela <span class="req">*</span></label>
                     <select id="formaParcela" required>
                         <option value="">-- Seleccionar Forma --</option>
                         <option value="Circular">Circular (Radio fijo)</option>
@@ -121,104 +119,111 @@
                         <option value="Punto Variable / Bitterlich">Punto Variable / Bitterlich</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label for="amplitudClase">Amplitud Clase Diamétrica (cm): *</label>
+                <div class="input-group">
+                    <label for="amplitudClase">Amplitud Clase Diamétrica (cm) <span class="req">*</span></label>
                     <input type="number" id="amplitudClase" value="5" min="1" step="1" required>
                 </div>
 
-                <div class="form-group full-width">
-                    <button type="submit" class="btn btn-primary">✅ Guardar y Validar Parámetros</button>
-                    <button type="button" id="btnCargarEjemplo" class="btn btn-secondary">⚡ Cargar Datos y Parámetros de Ejemplo</button>
+                <div class="form-actions span-full">
+                    <button type="submit" class="btn btn-emerald">✅ Validar y Guardar Parámetros</button>
+                    <button type="button" id="btnCargarEjemplo" class="btn btn-outline">⚡ Cargar Ejemplo Completo</button>
                 </div>
             </form>
         </section>
 
-        <!-- SECCIÓN DE IMPORTACIÓN SIMPLIFICADA DE ARCHIVOS (EXCEL / TXT) -->
-        <section class="card border-highlight-green" id="secImportacionArchivos">
-            <h2>2. Carga Masiva de Parcelas (Sólo: Parcela, Especie y DAP [máx. 2 decimales])</h2>
-            <p class="help-text">Suba su archivo Excel (.xlsx, .xls) o Texto Plano (.txt, .csv). El archivo debe contener estrictamente las columnas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (redondeado automáticamente a máximo 2 decimales).</p>
-
-            <div id="lockWarningImport" class="alert alert-warning">
-                ⚠️ Debe validar los parámetros del Rodal (Sección 1) antes de importar parcelas.
+        <!-- SECCIÓN 2: IMPORTACIÓN MASIVA -->
+        <section class="panel-card border-blue" id="secImportacionArchivos">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title"><span class="step-num">2</span> Carga Masiva de Datos de Campo</h2>
+                    <p class="card-subtitle">Formatos aceptados: Excel (.xlsx, .xls) y Texto (.txt, .csv) con 3 columnas: Parcela, Especie, DAP.</p>
+                </div>
             </div>
 
-            <div class="import-dropzone margin-top-sm" id="dropzoneContainer">
-                <div class="import-icon">📂</div>
-                <div class="import-instructions">
-                    <strong>Seleccione o arrastre un archivo (.xlsx, .xls, .txt, .csv)</strong>
-                    <p>Estructura requerida de 3 columnas: <code>Parcela</code> | <code>Especie</code> | <code>Dap</code></p>
+            <div id="lockWarningImport" class="callout callout-warning">
+                ⚠️ Debe validar los parámetros del rodal en la Sección 1 antes de cargar archivos de parcelas.
+            </div>
+
+            <div class="dropzone" id="dropzoneContainer">
+                <div class="dropzone-icon">📥</div>
+                <div class="dropzone-text">
+                    <strong>Arrastre un archivo aquí o haga clic para examinar</strong>
+                    <p>Estructura simplificada: <code>Parcela</code> | <code>Especie</code> | <code>Dap</code> (DAP máx 2 decimales)</p>
                 </div>
-                <input type="file" id="fileInput" accept=".xlsx, .xls, .txt, .csv" disabled>
-                <div class="import-buttons">
-                    <button type="button" class="btn btn-success" id="btnDescargarPlantillaExcel">📥 Plantilla Excel (3 Col.)</button>
-                    <button type="button" class="btn btn-secondary" id="btnDescargarPlantillaTxt">📄 Plantilla TXT (3 Col.)</button>
+                <input type="file" id="fileInput" accept=".xlsx, .xls, .txt, .csv" class="file-hidden" disabled>
+                <div class="template-btns">
+                    <button type="button" class="btn btn-sm btn-outline" id="btnDescargarPlantillaExcel">📄 Plantilla Excel (3 Col)</button>
+                    <button type="button" class="btn btn-sm btn-outline" id="btnDescargarPlantillaTxt">📝 Plantilla TXT (3 Col)</button>
                 </div>
             </div>
             <div id="importFeedback" class="margin-top-sm"></div>
         </section>
 
-        <!-- CONFIGURACIÓN DE ALTURA PROMEDIO POR ESPECIE -->
-        <section class="card" id="secConfigAltura">
-            <h2>3. Configuración de Altura Promedio (H, m) por Especie</h2>
-            <p class="help-text">Verifique o asigne la altura promedio ($H$) para cada especie registrada para el cálculo volumétrico ($V, m^3/ha$).</p>
-
-            <div id="lockWarningAltura" class="alert alert-warning">
-                ⚠️ Debe validar los parámetros del Rodal e ingresar o cargar datos de parcelas.
+        <!-- SECCIÓN 3: ALTURAS PROMEDIO POR ESPECIE -->
+        <section class="panel-card" id="secConfigAltura">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title"><span class="step-num">3</span> Alturas Promedio (H, m) para Cubicación</h2>
+                    <p class="card-subtitle">Especifique o verifique las alturas representativas para el cálculo de volumen bruto (m³/ha).</p>
+                </div>
             </div>
 
-            <div id="containerAlturasEspecie" class="form-grid margin-top-sm">
-                <p><em>Sin especies registradas...</em></p>
+            <div id="lockWarningAltura" class="callout callout-warning">
+                ⚠️ Debe validar los parámetros e ingresar o importar parcelas.
+            </div>
+
+            <div id="containerAlturasEspecie" class="species-cards-grid margin-top-sm">
+                <p class="placeholder-text">Sin especies registradas...</p>
             </div>
         </section>
 
-        <!-- REGISTRO Y EDICIÓN INDIVIDUAL DE ÁRBOLES (HOJA 2) - DESPLEGABLE CON DETAILS/SUMMARY -->
-        <section class="card" id="secIngresoCampo">
+        <!-- SECCIÓN 4: REGISTRO INDIVIDUAL DESPLEGABLE -->
+        <section class="panel-card" id="secIngresoCampo">
             <details id="detailsDatosCampo">
-                <summary class="collapsible-summary">
-                    <div class="summary-content">
-                        <h2>4. Datos de Campo de Parcelas (Hoja 2 - Detalle por Árbol)</h2>
-                        <span class="summary-badge-count"><span id="totalRegistrosBadge">0</span> árboles registrados</span>
+                <summary class="collapsible-header">
+                    <div class="summary-title-group">
+                        <h2 class="card-title"><span class="step-num">4</span> Datos de Campo de Parcelas (Detalle por Árbol)</h2>
+                        <span class="badge-pill"><span id="totalRegistrosBadge">0</span> árboles en inventario</span>
                     </div>
-                    <span class="toggle-icon">🔽</span>
+                    <span class="chevron-icon">▼</span>
                 </summary>
 
-                <div class="collapsible-body margin-top-sm">
-                    <div id="lockWarningCampo" class="alert alert-warning">
-                        ⚠️ Debe completar y validar todos los parámetros del Rodal antes de agregar registros manualmente.
+                <div class="collapsible-content">
+                    <div id="lockWarningCampo" class="callout callout-warning">
+                        ⚠️ Debe completar y validar los parámetros del rodal antes de ingresar registros individuales.
                     </div>
 
-                    <form id="treeForm" class="form-grid">
-                        <div class="form-group">
-                            <label for="parcelaNo">N° Parcela:</label>
+                    <form id="treeForm" class="grid-form">
+                        <div class="input-group">
+                            <label for="parcelaNo">N° Parcela</label>
                             <input type="number" id="parcelaNo" value="1" min="1" required disabled>
                         </div>
-                        <div class="form-group">
-                            <label for="especieSelect">Especie Arbórea Nativa (D.S. 68/2009):</label>
-                            <select id="especieSelect" required disabled>
-                                <!-- Cargado dinámicamente -->
-                            </select>
+                        <div class="input-group">
+                            <label for="especieSelect">Especie Nativa (D.S. 68/2009)</label>
+                            <select id="especieSelect" required disabled></select>
                         </div>
-                        <div class="form-group">
-                            <label for="dapInput">DAP (cm - máx 2 decimales):</label>
+                        <div class="input-group">
+                            <label for="dapInput">DAP (cm - máx 2 decimales)</label>
                             <input type="number" id="dapInput" step="0.01" min="0.01" placeholder="Ej: 24.55" required disabled>
                         </div>
-                        <div class="form-group">
-                            <label for="cortaSelect">Intervención (Corta):</label>
+                        <div class="input-group">
+                            <label for="cortaSelect">Intervención</label>
                             <select id="cortaSelect" disabled>
                                 <option value="NO">Conservar (Residual)</option>
                                 <option value="SI">Corta (Cosecha / Raleo)</option>
                             </select>
                         </div>
-                        <div class="form-group full-width">
-                            <button type="submit" id="btnAgregarArbol" class="btn btn-primary" disabled>➕ Agregar Árbol Individual</button>
-                            <button type="button" id="btnBorrarTodo" class="btn btn-danger" disabled>🗑️ Limpiar Todos los Registros</button>
+                        <div class="form-actions span-full">
+                            <button type="submit" id="btnAgregarArbol" class="btn btn-emerald" disabled>➕ Agregar Árbol</button>
+                            <button type="button" id="btnBorrarTodo" class="btn btn-danger" disabled>🗑️ Limpiar Inventario</button>
                         </div>
                     </form>
 
-                    <div class="table-responsive margin-top">
-                        <h3>Registros Cargados (<span id="totalRegistrosCount">0</span> árboles)</h3>
-                        <table id="tablaIngresos">
+                    <div class="table-container margin-top">
+                        <div class="table-header-info">
+                            <h3>Registros Ingresados (<span id="totalRegistrosCount">0</span>)</h3>
+                        </div>
+                        <table id="tablaIngresos" class="data-table">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -227,89 +232,92 @@
                                     <th>Especie</th>
                                     <th>DAP (cm)</th>
                                     <th>Altura H (m)</th>
-                                    <th>Área Basal (g, m²)</th>
-                                    <th>Volumen Ind. (v, m³)</th>
-                                    <th>Intervención</th>
+                                    <th>Área Basal (m²)</th>
+                                    <th>Volumen (m³)</th>
+                                    <th>Estado</th>
                                     <th>Acción</th>
                                 </tr>
                             </thead>
-                            <tbody id="tbodyIngresos">
-                                <!-- Filas insertadas dinámicamente -->
-                            </tbody>
+                            <tbody id="tbodyIngresos"></tbody>
                         </table>
                     </div>
                 </div>
             </details>
         </section>
 
-        <!-- TABLA DE RODAL GENERADA (HOJA 1) -->
-        <section class="card" id="secTablaRodal">
-            <div class="section-header">
-                <h2>5. Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
-                <div class="action-buttons-group">
-                    <button id="btnExportarExcel" class="btn btn-success" disabled>📥 Exportar Excel Estilizado (.xlsx)</button>
-                    <button id="btnExportarPDF" class="btn btn-pdf" disabled>📄 PDF Apaisado Tamaño Oficio</button>
+        <!-- SECCIÓN 5: TABLA DE RODAL -->
+        <section class="panel-card" id="secTablaRodal">
+            <div class="card-header border-bottom">
+                <div>
+                    <h2 class="card-title"><span class="step-num">5</span> Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
+                    <p class="card-subtitle">Estructura diamétrica, área basal y volumen por hectárea desglosados por especie.</p>
+                </div>
+                <div class="action-btn-group">
+                    <button id="btnExportarExcel" class="btn btn-emerald" disabled>📥 Exportar Excel Estilizado</button>
+                    <button id="btnExportarPDF" class="btn btn-pdf" disabled>📄 PDF Apaisado (Oficio)</button>
                 </div>
             </div>
 
-            <!-- Resumen Técnico del Rodal -->
-            <div id="resumenParametrosRodal" class="info-rodal-box margin-top-sm">
+            <!-- Resumen Informativo del Rodal -->
+            <div id="resumenParametrosRodal" class="info-banner margin-top-sm">
                 <p><em>Esperando validación de parámetros del rodal...</em></p>
             </div>
 
-            <!-- EXPLICACIÓN Y VISUALIZACIÓN DE LA FÓRMULA DE CÁLCULO DE ÁRBOLES/HA -->
-            <div class="formula-info-box margin-top-sm">
-                <h4>📐 Metodología de Cálculo de Densidad ($N$, árb./ha):</h4>
-                <p>
-                    $$	ext{Factor de Expansión (F)} = rac{10.000 	ext{ m}^2}{n 	imes A} = rac{10.000}{	ext{Superficie Muestreada Total (m}^2	ext{)}}$$
-                    $$	ext{Número de Árboles por Hectárea (N)} = 	ext{Árboles Registrados} 	imes F$$
+            <!-- Caja Metodológica -->
+            <div class="methodology-card margin-top-sm">
+                <div class="methodology-header">📐 Metodología de Cálculo de Densidad (N, árb./ha):</div>
+                <p class="math-expr">
+                    <strong>Factor de Expansión (F):</strong> <code>F = 10.000 m² / (n × A)</code> | 
+                    <strong>Densidad (N):</strong> <code>N = Árboles Medidos × F</code>
                 </p>
-                <p class="formula-note">
-                    Factor de Expansión Hectárea ($F$): <strong id="factorExpansionText">--</strong> | Cada árbol medido representa en el rodal a <strong id="arbolesEquivalentesText">--</strong> árboles/ha.
-                </p>
+                <div class="methodology-footer">
+                    Factor de Expansión (F): <strong id="factorExpansionText">--</strong> | Cada árbol medido equivale a <strong id="arbolesEquivalentesText">--</strong> árb./ha
+                </div>
             </div>
 
-            <div class="table-responsive margin-top-sm" id="printTablaArea">
-                <table id="tablaRodal" class="tabla-rodal-custom">
-                    <thead id="theadRodal">
-                        <!-- Encabezados estructurados -->
-                    </thead>
-                    <tbody id="tbodyRodal">
-                        <!-- Filas calculadas -->
-                    </tbody>
+            <div class="table-container margin-top-sm" id="printTablaArea">
+                <table id="tablaRodal" class="rodal-table">
+                    <thead id="theadRodal"></thead>
+                    <tbody id="tbodyRodal"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- SECCIÓN FÓRMULAS DE VOLUMEN Y FUENTES (HOJA ANEXA) -->
-        <section class="card border-highlight-blue" id="secFormulasFuentes">
-            <h2>6. Memoria de Ecuaciones Volumétricas y Fuentes Bibliográficas (Anexo Técnico)</h2>
-            <p class="help-text">Relación de modelos alométricos y ecuaciones de volumen bruto/neto ($V, m^3$) aplicadas a cada especie nativa procesada en el rodal conforme a bibliografía dasométrica chilena (CONAF / INFOR).</p>
+        <!-- SECCIÓN 6: MEMORIA DE ECUACIONES -->
+        <section class="panel-card border-teal" id="secFormulasFuentes">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title"><span class="step-num">6</span> Memoria de Ecuaciones Volumétricas y Fuentes</h2>
+                    <p class="card-subtitle">Modelos alométricos oficiales aplicados por especie para el cálculo del volumen bruto/neto.</p>
+                </div>
+            </div>
 
-            <div class="table-responsive margin-top-sm">
-                <table class="tabla-anexo">
+            <div class="table-container margin-top-sm">
+                <table class="anexo-table">
                     <thead>
                         <tr>
                             <th>Especie Arbórea Nativa</th>
                             <th>Ecuación de Volumen ($V, m^3$) / Factor Forma ($f$)</th>
-                            <th>Variables Requeridas</th>
-                            <th>Fuente Bibliográfica / Referencia Técnica</th>
+                            <th>Variables</th>
+                            <th>Fuente Bibliográfica</th>
                         </tr>
                     </thead>
-                    <tbody id="tbodyFormulasFuentes">
-                        <!-- Generado dinámicamente -->
-                    </tbody>
+                    <tbody id="tbodyFormulasFuentes"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- SECCIÓN DE ESTADÍSTICA DE MUESTREO (TABLA SOLICITADA) -->
-        <section class="card border-highlight-orange" id="secEstadisticaMuestreo">
-            <h2>7. Estadísticas del Inventario Forestal por Rodal (Precisión del Muestreo)</h2>
-            <p class="help-text">Cálculo de la media, varianza, coeficiente de variación ($CV\%$) y error de muestreo ($E\%$) con distribución $t$-Student al $95\%$ de confianza para Densidad y Área Basal por parcela.</p>
+        <!-- SECCIÓN 7: ESTADÍSTICA DE MUESTREO -->
+        <section class="panel-card border-amber" id="secEstadisticaMuestreo">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title"><span class="step-num">7</span> Estadísticas del Inventario por Rodal (Precisión)</h2>
+                    <p class="card-subtitle">Parámetros inferenciales con distribución $t$-Student al 95% de confianza para $N$ y $G$.</p>
+                </div>
+            </div>
 
-            <div class="table-responsive margin-top-sm" id="printEstadisticaArea">
-                <table id="tablaEstadisticaMuestreo" class="tabla-estadistica-custom">
+            <div class="table-container margin-top-sm" id="printEstadisticaArea">
+                <table id="tablaEstadisticaMuestreo" class="stat-table">
                     <thead>
                         <tr>
                             <th rowspan="2">Rodal</th>
@@ -321,44 +329,48 @@
                             <th colspan="2">Error de Muestreo (%)</th>
                         </tr>
                         <tr>
-                            <th class="sub-header">Densidad<br>(arb/ha)</th>
-                            <th class="sub-header">Área Basal<br>(m²/ha)</th>
-                            <th class="sub-header">Densidad<br>(arb/ha)</th>
-                            <th class="sub-header">Área Basal<br>(m²/ha)</th>
-                            <th class="sub-header">Densidad</th>
-                            <th class="sub-header">Área Basal</th>
-                            <th class="sub-header">Densidad</th>
-                            <th class="sub-header">Área Basal</th>
+                            <th class="sub">Densidad (arb/ha)</th>
+                            <th class="sub">Área Basal (m²/ha)</th>
+                            <th class="sub">Densidad (arb/ha)</th>
+                            <th class="sub">Área Basal (m²/ha)</th>
+                            <th class="sub">Densidad</th>
+                            <th class="sub">Área Basal</th>
+                            <th class="sub">Densidad</th>
+                            <th class="sub">Área Basal</th>
                         </tr>
                     </thead>
-                    <tbody id="tbodyEstadisticaMuestreo">
-                        <!-- Insertado dinámicamente -->
-                    </tbody>
+                    <tbody id="tbodyEstadisticaMuestreo"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- GRÁFICOS ASOCIADOS -->
-        <section class="card" id="secGraficosArea">
-            <h2>8. Gráficos de Estructura, Área Basal y Volumetría Forestal</h2>
-            <div class="charts-grid">
-                <div class="chart-box" id="boxChart1">
-                    <h3>Estructura Diamétrica del Rodal (N/ha por Clase)</h3>
+        <!-- SECCIÓN 8: GRÁFICOS -->
+        <section class="panel-card" id="secGraficosArea">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title"><span class="step-num">8</span> Visualización Gráfica de Estructura y Manejo</h2>
+                    <p class="card-subtitle">Análisis gráfico de la estructura diamétrica, volumen por especie y balance de intervención.</p>
+                </div>
+            </div>
+
+            <div class="charts-grid margin-top">
+                <div class="chart-card" id="boxChart1">
+                    <h3>Estructura Diamétrica (N/ha por Clase)</h3>
                     <canvas id="chartEstructuraDiametrica"></canvas>
                 </div>
-                <div class="chart-box" id="boxChart2">
-                    <h3>Distribución del Volumen por Especie (m³/ha)</h3>
+                <div class="chart-card" id="boxChart2">
+                    <h3>Distribución de Volumen por Especie (m³/ha)</h3>
                     <canvas id="chartVolumenEspecie"></canvas>
                 </div>
-                <div class="chart-box" id="boxChart3">
-                    <h3>Balance de Volumen Manejado (Inicial / Corta / Residual)</h3>
+                <div class="chart-card" id="boxChart3">
+                    <h3>Balance de Manejo Forestal (Inicial / Corta / Residual)</h3>
                     <canvas id="chartComparativaManejo"></canvas>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="footer">
+    <footer class="app-footer">
         <p>&copy; 2026 Consultoría y Gestión Forestal Sostenible | Cumplimiento Ley N° 20.283, D.S. N° 259 / 1980 & D.S. N° 68 / 2009 MINAGRI</p>
     </footer>
 

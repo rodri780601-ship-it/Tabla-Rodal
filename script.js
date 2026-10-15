@@ -143,6 +143,9 @@ function setupEventListeners() {
 
     // Drag & Drop
     const dropzone = document.getElementById("dropzoneContainer");
+    dropzone.addEventListener("click", () => {
+        if (parametrosValidados) fileInput.click();
+    });
     dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("dragover"); });
     dropzone.addEventListener("dragleave", () => { dropzone.classList.remove("dragover"); });
     dropzone.addEventListener("drop", (e) => {
@@ -218,14 +221,14 @@ function actualizarEstadoInterfaz(habilitado) {
 
     if (habilitado) {
         statusBadge.textContent = "Validado";
-        statusBadge.className = "badge badge-success";
+        statusBadge.className = "status-badge badge-success";
         lockWarning.style.display = "none";
         lockWarningAlt.style.display = "none";
         lockWarningImport.style.display = "none";
         inputsCampo.forEach(id => document.getElementById(id).removeAttribute("disabled"));
     } else {
         statusBadge.textContent = "Incompleto";
-        statusBadge.className = "badge badge-warning";
+        statusBadge.className = "status-badge badge-pending";
         lockWarning.style.display = "block";
         lockWarningAlt.style.display = "block";
         lockWarningImport.style.display = "block";
@@ -247,7 +250,7 @@ function procesarArchivoSubido() {
     }
 
     const fileName = file.name.toLowerCase();
-    feedback.innerHTML = `<p style="color:#0288d1;">⏳ Leyendo archivo: <strong>${file.name}</strong>...</p>`;
+    feedback.innerHTML = `<p style="color:#0284c7;">⏳ Leyendo archivo: <strong>${file.name}</strong>...</p>`;
 
     if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
         const reader = new FileReader();
@@ -259,7 +262,7 @@ function procesarArchivoSubido() {
                 const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], { defval: "" });
                 importarArraySimplificado(jsonData, file.name);
             } catch (err) {
-                feedback.innerHTML = `<div class="alert alert-warning">❌ Error al leer Excel: ${err.message}</div>`;
+                feedback.innerHTML = `<div class="callout callout-warning">❌ Error al leer Excel: ${err.message}</div>`;
             }
         };
         reader.readAsArrayBuffer(file);
@@ -271,12 +274,12 @@ function procesarArchivoSubido() {
                 const parseado = parsearTextoPlano(text);
                 importarArraySimplificado(parseado, file.name);
             } catch (err) {
-                feedback.innerHTML = `<div class="alert alert-warning">❌ Error al leer archivo TXT: ${err.message}</div>`;
+                feedback.innerHTML = `<div class="callout callout-warning">❌ Error al leer archivo TXT: ${err.message}</div>`;
             }
         };
         reader.readAsText(file);
     } else {
-        feedback.innerHTML = `<div class="alert alert-warning">⚠️ Formato no soportado. Suba un archivo .xlsx, .xls, .txt o .csv</div>`;
+        feedback.innerHTML = `<div class="callout callout-warning">⚠️ Formato no soportado. Suba un archivo .xlsx, .xls, .txt o .csv</div>`;
     }
 }
 
@@ -308,7 +311,7 @@ function parsearTextoPlano(texto) {
 function importarArraySimplificado(dataArray, nombreArchivo) {
     const feedback = document.getElementById("importFeedback");
     if (!dataArray || dataArray.length === 0) {
-        feedback.innerHTML = `<div class="alert alert-warning">⚠️ El archivo está vacío o no contiene datos válidos.</div>`;
+        feedback.innerHTML = `<div class="callout callout-warning">⚠️ El archivo está vacío o no contiene datos válidos.</div>`;
         return;
     }
 
@@ -350,7 +353,7 @@ function importarArraySimplificado(dataArray, nombreArchivo) {
     });
 
     feedback.innerHTML = `
-        <div class="alert alert-success">
+        <div class="callout methodology-card" style="background-color:#ecfdf5;">
             ✅ <strong>Importación Simplificada exitosa (${nombreArchivo}):</strong><br>
             Se cargaron <strong>${contadorValidos}</strong> registros considerando <strong>Parcela</strong>, <strong>Especie</strong> y <strong>DAP</strong> (redondeado a máx. 2 decimales).
             ${contadorErrores > 0 ? `<br><small>(${contadorErrores} filas omitidas por error o DAP inválido)</small>` : ''}
@@ -407,13 +410,13 @@ function renderizarResumenParametros() {
     const intenMuestreoPct = (supMuestreadaHa / p.superficieRodal) * 100;
 
     container.innerHTML = `
-        <div class="info-rodal-grid">
-            <div class="info-rodal-item"><span class="label">Rodal:</span><strong>${p.rodalName} (${p.superficieRodal} ha)</strong></div>
-            <div class="info-rodal-item"><span class="label">Tipo Forestal:</span><strong>${p.tipoForestal}</strong></div>
-            <div class="info-rodal-item"><span class="label">Estructura / Estado:</span><strong>${p.estructuraRodal} | ${p.estadoDesarrollo}</strong></div>
-            <div class="info-rodal-item"><span class="label">Diseño Muestreo:</span><strong>${p.tipoMuestreo} (${p.formaParcela})</strong></div>
-            <div class="info-rodal-item"><span class="label">Parcelas / Superficie:</span><strong>${p.numParcelas} parc. de ${p.areaParcela} m²</strong></div>
-            <div class="info-rodal-item"><span class="label">Intensidad Muestreo:</span><strong>${supMuestreadaHa.toFixed(3)} ha (${intenMuestreoPct.toFixed(2)}%)</strong></div>
+        <div class="info-rodal-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:0.6rem;">
+            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">RODAL:</span><br><strong>${p.rodalName} (${p.superficieRodal} ha)</strong></div>
+            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">TIPO FORESTAL:</span><br><strong>${p.tipoForestal}</strong></div>
+            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">ESTRUCTURA / ESTADO:</span><br><strong>${p.estructuraRodal} | ${p.estadoDesarrollo}</strong></div>
+            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">MUESTREO:</span><br><strong>${p.tipoMuestreo} (${p.formaParcela})</strong></div>
+            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">PARCELAS:</span><br><strong>${p.numParcelas} parc. de ${p.areaParcela} m²</strong></div>
+            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">INTENSIDAD:</span><br><strong>${supMuestreadaHa.toFixed(3)} ha (${intenMuestreoPct.toFixed(2)}%)</strong></div>
         </div>
     `;
 }
@@ -469,7 +472,7 @@ function actualizarConfiguracionAlturas() {
     container.innerHTML = "";
 
     if (registrosIngresados.length === 0) {
-        container.innerHTML = "<p><em>No hay registros de campo ingresados o cargados aún.</em></p>";
+        container.innerHTML = "<p class='placeholder-text'>No hay registros de campo ingresados o cargados aún.</p>";
         return;
     }
 
@@ -486,14 +489,14 @@ function actualizarConfiguracionAlturas() {
         };
 
         const divCard = document.createElement("div");
-        divCard.className = "especie-altura-card";
+        divCard.className = "species-card";
         divCard.innerHTML = `
             <div><strong>🌳 ${espNombre}</strong></div>
-            <div class="form-group">
+            <div class="input-group">
                 <label>Altura Promedio H (m):</label>
                 <input type="number" step="0.1" min="1" value="${alturasPromedioEspecie[espNombre]}" onchange="actualizarAlturaEspecieManual('${espNombre}', this.value)">
             </div>
-            <div style="font-size:0.78rem; color:#424242; margin-top:0.2rem;">
+            <div style="font-size:0.75rem; color:#475569; margin-top:0.2rem;">
                 <strong>Ecuación:</strong> ${infoEspecieObj.ecuacion}<br>
                 <strong>Fuente:</strong> ${infoEspecieObj.fuente}
             </div>
@@ -559,7 +562,7 @@ function renderizarTablaIngresos() {
             <td>${H.toFixed(1)} <small>(prom)</small></td>
             <td>${g.toFixed(4)}</td>
             <td>${v.toFixed(4)}</td>
-            <td><span style="color: ${item.corta === 'SI' ? '#c62828' : '#2e7d32'}; font-weight:bold;">${item.corta === 'SI' ? 'Corta' : 'Residual'}</span></td>
+            <td><span style="color: ${item.corta === 'SI' ? '#dc2626' : '#059669'}; font-weight:bold;">${item.corta === 'SI' ? 'Corta' : 'Residual'}</span></td>
             <td><button class="btn btn-danger btn-sm" onclick="eliminarArbol(${index})">❌</button></td>
         `;
         tbody.appendChild(tr);
@@ -574,8 +577,6 @@ function calcularTablaRodal() {
     }
 
     const { numParcelas, areaParcela, amplitudClase } = parametrosValidados;
-    
-    // FORMULA DE CALCULOS DE ARBOLES POR HECTAREA (FACTOR DE EXPANSION F = 10,000 / (n * A))
     const factorExpansion = 10000 / (numParcelas * areaParcela);
     
     document.getElementById("factorExpansionText").textContent = `${factorExpansion.toFixed(2)} (1 ha / ${(numParcelas * areaParcela)} m² muestreados)`;
@@ -633,7 +634,6 @@ function calcularTablaRodal() {
 
         const columnaEsp = topEspecies.includes(arb.especie) ? arb.especie : "Otras";
 
-        // APLICACIÓN DEL FACTOR DE EXPANSIÓN
         matriz[claseIdx][columnaEsp].nIni += factorExpansion;
         matriz[claseIdx][columnaEsp].gIni += gArbol * factorExpansion;
         matriz[claseIdx][columnaEsp].vIni += vArbol * factorExpansion;
@@ -701,9 +701,9 @@ function renderizarTablaRodal(res) {
     const tr2 = document.createElement("tr");
     res.especiesColumnas.forEach(() => {
         tr2.innerHTML += `
-            <th colspan="2" class="sub-header">N (árb./ha)</th>
-            <th colspan="2" class="sub-header">G (m²/ha)</th>
-            <th colspan="2" class="sub-header">V (m³/ha)</th>
+            <th colspan="2" class="sub">N (árb./ha)</th>
+            <th colspan="2" class="sub">G (m²/ha)</th>
+            <th colspan="2" class="sub">V (m³/ha)</th>
         `;
     });
     thead.appendChild(tr2);
@@ -754,7 +754,6 @@ function renderizarTablaRodal(res) {
     tbody.appendChild(trTotal);
 }
 
-// RENDERIZADO DE LA TABLA ESTADÍSTICA DE MUESTREO POR RODAL
 function renderizarEstadisticaMuestreo() {
     const tbody = document.getElementById("tbodyEstadisticaMuestreo");
     tbody.innerHTML = "";
@@ -871,8 +870,8 @@ function actualizarGraficos(res) {
         data: {
             labels: labelsClases,
             datasets: [
-                { label: 'N° Inicial (árb./ha)', data: dataNIni, backgroundColor: '#81c784' },
-                { label: 'N° Residual (árb./ha)', data: dataNRes, backgroundColor: '#2e7d32' }
+                { label: 'N° Inicial (árb./ha)', data: dataNIni, backgroundColor: '#a7f3d0' },
+                { label: 'N° Residual (árb./ha)', data: dataNRes, backgroundColor: '#059669' }
             ]
         },
         options: {
@@ -892,7 +891,7 @@ function actualizarGraficos(res) {
             labels: especiesLabels,
             datasets: [{
                 data: dataVPorEspecie,
-                backgroundColor: ['#2e7d32', '#0288d1', '#f57f17', '#78909c']
+                backgroundColor: ['#059669', '#0284c7', '#d97706', '#64748b']
             }]
         },
         options: {
@@ -908,9 +907,9 @@ function actualizarGraficos(res) {
         data: {
             labels: ['Volumen Bruto (m³/ha)'],
             datasets: [
-                { label: 'Volumen Inicial', data: [totGlobal.vIni], backgroundColor: '#90caf9' },
-                { label: 'Volumen Corta (Extraído)', data: [totGlobal.vIni - totGlobal.vRes], backgroundColor: '#e57373' },
-                { label: 'Volumen Residual', data: [totGlobal.vRes], backgroundColor: '#66bb6a' }
+                { label: 'Volumen Inicial', data: [totGlobal.vIni], backgroundColor: '#38bdf8' },
+                { label: 'Volumen Corta (Extraído)', data: [totGlobal.vIni - totGlobal.vRes], backgroundColor: '#f87171' },
+                { label: 'Volumen Residual', data: [totGlobal.vRes], backgroundColor: '#34d399' }
             ]
         },
         options: {
@@ -921,7 +920,6 @@ function actualizarGraficos(res) {
     });
 }
 
-// EXPORTACIÓN A EXCEL CON BORDES, TÍTULOS EN NEGRITA Y LA TABLA ESTADÍSTICA
 function exportarTablaExcel() {
     if (typeof XLSX === 'undefined') {
         alert("La librería SheetJS no está disponible.");
@@ -994,7 +992,7 @@ function exportarTablaExcel() {
 
     const styleHeader = {
         font: { bold: true, color: { rgb: "FFFFFF" } },
-        fill: { fgColor: { rgb: "2E7D32" } },
+        fill: { fgColor: { rgb: "047857" } },
         alignment: { horizontal: "center", vertical: "center", wrapText: true },
         border: thinBorder
     };
@@ -1006,7 +1004,7 @@ function exportarTablaExcel() {
 
     const styleTotal = {
         font: { bold: true },
-        fill: { fgColor: { rgb: "E8F5E9" } },
+        fill: { fgColor: { rgb: "ECFDF5" } },
         alignment: { horizontal: "center", vertical: "center" },
         border: thinBorder
     };
@@ -1161,7 +1159,7 @@ async function exportarInformePDFApaisadoOficio() {
     const printableWidth = pageWidth - (margin * 2);
 
     // PÁGINA 1: ENCABEZADO Y TABLA DE RODAL COMPLETA
-    doc.setFillColor(27, 94, 32);
+    doc.setFillColor(5, 150, 105);
     doc.rect(0, 0, pageWidth, 18, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(14);
@@ -1198,7 +1196,7 @@ async function exportarInformePDFApaisadoOficio() {
     // PÁGINA 2: ESTADÍSTICA DE MUESTREO Y GRÁFICOS
     doc.addPage([215.9, 355.6], 'landscape');
 
-    doc.setFillColor(27, 94, 32);
+    doc.setFillColor(5, 150, 105);
     doc.rect(0, 0, pageWidth, 18, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(14);
