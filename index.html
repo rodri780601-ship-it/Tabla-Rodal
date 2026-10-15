@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultor Forestal - Tabla de Rodal & PDF Apaisado Tamaño Oficio</title>
+    <title>Consultor Forestal - Tabla de Rodal, Volumetría & Estadística de Muestreo</title>
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,7 +19,7 @@
             <span class="tree-icon">🌲</span>
             <div>
                 <h1>Consultoría Forestal Chile</h1>
-                <p>Generador de Tabla de Rodal, Volumetría & Carga Masiva (Parcela, Especie, DAP) | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
+                <p>Generador de Tabla de Rodal, Volumetría, Carga Masiva & Análisis Estadístico de Muestreo | D.S. N° 259 / D.S. N° 68 MINAGRI</p>
             </div>
         </div>
     </header>
@@ -281,9 +281,44 @@
             </div>
         </section>
 
+        <!-- SECCIÓN DE ESTADÍSTICA DE MUESTREO (NUEVA TABLA SOLICITADA) -->
+        <section class="card border-highlight-orange" id="secEstadisticaMuestreo">
+            <h2>7. Estadísticas del Inventario Forestal por Rodal (Precisión del Muestreo)</h2>
+            <p class="help-text">Cálculo de la media, varianza, coeficiente de variación ($CV\%$) y error de muestreo ($E\%$) con distribucion $t$-Student al $95\%$ de confianza para Densidad y Área Basal por parcela.</p>
+
+            <div class="table-responsive margin-top-sm" id="printEstadisticaArea">
+                <table id="tablaEstadisticaMuestreo" class="tabla-estadistica-custom">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Rodal</th>
+                            <th rowspan="2">Parcelas (N°)</th>
+                            <th rowspan="2">t student<br>(95%)</th>
+                            <th colspan="2">Media</th>
+                            <th colspan="2">Varianza</th>
+                            <th colspan="2">Coeficiente de Variación (%)</th>
+                            <th colspan="2">Error de Muestreo (%)</th>
+                        </tr>
+                        <tr>
+                            <th class="sub-header">Densidad<br>(arb/ha)</th>
+                            <th class="sub-header">Área Basal<br>(m²/ha)</th>
+                            <th class="sub-header">Densidad<br>(arb/ha)</th>
+                            <th class="sub-header">Área Basal<br>(m²/ha)</th>
+                            <th class="sub-header">Densidad</th>
+                            <th class="sub-header">Área Basal</th>
+                            <th class="sub-header">Densidad</th>
+                            <th class="sub-header">Área Basal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyEstadisticaMuestreo">
+                        <!-- Insertado dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- GRÁFICOS ASOCIADOS -->
         <section class="card" id="secGraficosArea">
-            <h2>7. Gráficos de Estructura, Área Basal y Volumetría Forestal</h2>
+            <h2>8. Gráficos de Estructura, Área Basal y Volumetría Forestal</h2>
             <div class="charts-grid">
                 <div class="chart-box" id="boxChart1">
                     <h3>Estructura Diamétrica del Rodal (N/ha por Clase)</h3>

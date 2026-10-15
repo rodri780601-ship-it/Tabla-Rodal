@@ -1,3 +1,25 @@
+// Tabla de Distribución t-Student (dos colas al 95% de confianza)
+const TABLA_T_STUDENT_95 = {
+    1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571,
+    6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228,
+    11: 2.201, 12: 2.179, 13: 2.160, 14: 2.145, 15: 2.131,
+    16: 2.120, 17: 2.110, 18: 2.101, 19: 2.093, 20: 2.086,
+    21: 2.080, 22: 2.074, 23: 2.069, 24: 2.064, 25: 2.060,
+    26: 2.056, 27: 2.052, 28: 2.048, 29: 2.045, 30: 2.042,
+    40: 2.021, 60: 2.000, 120: 1.980, 1000: 1.960
+};
+
+function obtenerTStudent(gradosLibertad) {
+    if (gradosLibertad <= 0) return 2.000;
+    if (TABLA_T_STUDENT_95[gradosLibertad]) return TABLA_T_STUDENT_95[gradosLibertad];
+    
+    // Interpolación básica o aproximación para df > 30
+    if (gradosLibertad > 30 && gradosLibertad < 40) return 2.030;
+    if (gradosLibertad > 40 && gradosLibertad < 60) return 2.010;
+    if (gradosLibertad > 60) return 1.980;
+    return 2.000;
+}
+
 // Catálogo de Especies Arbóreas Nativas de Chile (D.S. N° 68 / 2009 MINAGRI)
 const ESPECIES_NATIVAS_DS68 = [
     { cientifico: "Nothofagus obliqua", comun: "Roble", ecuacion: "V = 0.0000632 * (DAP^1.921) * (H^0.985)", fForma: 0.60, fuente: "INFOR / CONAF (Ecuación de volumen fustal para Nothofagus obliqua)" },
@@ -440,6 +462,7 @@ function procesarYActualizarTodo() {
     const resultadoRodal = calcularTablaRodal();
     renderizarTablaRodal(resultadoRodal);
     renderizarAnexoFormulas(resultadoRodal);
+    renderizarEstadisticaMuestreo();
     actualizarGraficos(resultadoRodal);
 }
 
@@ -725,6 +748,86 @@ function renderizarTablaRodal(res) {
     tbody.appendChild(trTotal);
 }
 
+// RENDERIZADO DE LA NUEVA TABLA SOLICITADA EN LA IMAGEN (ESTADÍSTICA DE MUESTREO POR RODAL)
+function renderizarEstadisticaMuestreo() {
+    const tbody = document.getElementById("tbodyEstadisticaMuestreo");
+    tbody.innerHTML = "";
+
+    if (!parametrosValidados || registrosIngresados.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11">Complete la configuración del rodal e ingrese datos de parcelas para calcular la estadística del inventario.</td></tr>`;
+        return;
+    }
+
+    const { rodalName, numParcelas, areaParcela } = parametrosValidados;
+    const factorParcelaHa = 10000 / areaParcela;
+
+    // Agrupar por parcelas
+    const parcelasMap = {};
+    for (let p = 1; p <= numParcelas; p++) {
+        parcelasMap[p] = { nArboles: 0, gTotal: 0 };
+    }
+
+    registrosIngresados.forEach(arb => {
+        const pNo = arb.parcela;
+        if (!parcelasMap[pNo]) {
+            parcelasMap[pNo] = { nArboles: 0, gTotal: 0 };
+        }
+        const gArbol = (Math.PI / 40000) * Math.pow(arb.dap, 2);
+        parcelasMap[pNo].nArboles += 1;
+        parcelasMap[pNo].gTotal += gArbol;
+    });
+
+    // Convertir a valores por hectárea por parcela
+    const listaN_ha = [];
+    const listaG_ha = [];
+
+    Object.keys(parcelasMap).forEach(pNo => {
+        const pData = parcelasMap[pNo];
+        listaN_ha.push(pData.nArboles * factorParcelaHa);
+        listaG_ha.push(pData.gTotal * factorParcelaHa);
+    });
+
+    const nNum = listaN_ha.length;
+    const df = Math.max(1, nNum - 1);
+    const tVal = obtenerTStudent(df);
+
+    // Medias
+    const mediaN = listaN_ha.reduce((a,b) => a+b, 0) / nNum;
+    const mediaG = listaG_ha.reduce((a,b) => a+b, 0) / nNum;
+
+    // Varianzas muestrales (s^2)
+    const varN = nNum > 1 ? (listaN_ha.reduce((a,b) => a + Math.pow(b - mediaN, 2), 0) / (nNum - 1)) : 0;
+    const varG = nNum > 1 ? (listaG_ha.reduce((a,b) => a + Math.pow(b - mediaG, 2), 0) / (nNum - 1)) : 0;
+
+    // Desviaciones estándar (s)
+    const sdN = Math.sqrt(varN);
+    const sdG = Math.sqrt(varG);
+
+    // Coeficiente de Variación CV (%) = (s / media) * 100
+    const cvN = mediaN > 0 ? (sdN / mediaN) * 100 : 0;
+    const cvG = mediaG > 0 ? (sdG / mediaG) * 100 : 0;
+
+    // Error de Muestreo E (%) = (t * (s / sqrt(n)) / media) * 100
+    const errN = mediaN > 0 ? (tVal * (sdN / Math.sqrt(nNum)) / mediaN) * 100 : 0;
+    const errG = mediaG > 0 ? (tVal * (sdG / Math.sqrt(nNum)) / mediaG) * 100 : 0;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+        <td><strong>${rodalName}</strong></td>
+        <td>${nNum}</td>
+        <td>${tVal.toFixed(3)}</td>
+        <td>${mediaN.toFixed(2)}</td>
+        <td>${mediaG.toFixed(2)}</td>
+        <td>${varN.toFixed(2)}</td>
+        <td>${varG.toFixed(4)}</td>
+        <td>${cvN.toFixed(2)}%</td>
+        <td>${cvG.toFixed(2)}%</td>
+        <td>${errN.toFixed(2)}%</td>
+        <td>${errG.toFixed(2)}%</td>
+    `;
+    tbody.appendChild(tr);
+}
+
 function renderizarAnexoFormulas(res) {
     const tbody = document.getElementById("tbodyFormulasFuentes");
     tbody.innerHTML = "";
@@ -819,7 +922,7 @@ function actualizarGraficos(res) {
     });
 }
 
-// EXPORTACIÓN A EXCEL CON BORDES, TÍTULOS EN NEGRITA Y CENTRADOS
+// EXPORTACIÓN A EXCEL CON BORDES, TÍTULOS EN NEGRITA Y LA TABLA ESTADÍSTICA
 function exportarTablaExcel() {
     if (typeof XLSX === 'undefined') {
         alert("La librería SheetJS no está disponible.");
@@ -850,7 +953,6 @@ function exportarTablaExcel() {
     ws1Data.push(["Forma Parcela:", p.formaParcela, "", "Amplitud Clase (cm):", p.amplitudClase]);
     ws1Data.push([]);
 
-    // Header Fila 1 Especies
     const rowH1 = ["Rango (cm) ≤ Ø <", "", "Mc"];
     res.especiesColumnas.forEach(esp => {
         const altP = alturasPromedioEspecie[esp] ? ` (H=${alturasPromedioEspecie[esp]}m)` : '';
@@ -858,17 +960,14 @@ function exportarTablaExcel() {
     });
     ws1Data.push(rowH1);
 
-    // Header Fila 2 N, G, V
     const rowH2 = ["Min", "Max", "cm"];
     res.especiesColumnas.forEach(() => rowH2.push("N (árb./ha)", "", "G (m²/ha)", "", "V (m³/ha)", ""));
     ws1Data.push(rowH2);
 
-    // Header Fila 3 Ini / Res
     const rowH3 = ["", "", ""];
     res.especiesColumnas.forEach(() => rowH3.push("Ini.", "Res.", "Ini.", "Res.", "Ini.", "Res."));
     ws1Data.push(rowH3);
 
-    // Filas
     res.clases.forEach((cl, i) => {
         const row = [cl.min, cl.max, cl.mc];
         res.especiesColumnas.forEach(esp => {
@@ -878,7 +977,6 @@ function exportarTablaExcel() {
         ws1Data.push(row);
     });
 
-    // Totales
     const rowTot = ["TOTAL RODAL", "", ""];
     res.especiesColumnas.forEach(esp => {
         const t = res.totalesEspecie[esp];
@@ -925,20 +1023,64 @@ function exportarTablaExcel() {
 
             if (R === 0) {
                 cell.s = { font: { bold: true, size: 14 }, alignment: { horizontal: "center" } };
-            }
-            else if (R >= 7 && R <= 9) {
+            } else if (R >= 7 && R <= 9) {
                 cell.s = styleHeader;
-            }
-            else if (R === range.e.r) {
+            } else if (R === range.e.r) {
                 cell.s = styleTotal;
-            }
-            else if (R > 9) {
+            } else if (R > 9) {
                 cell.s = styleCellCenter;
             }
         }
     }
 
-    // HOJA 2: REGISTROS DE CAMPO
+    // HOJA 2: ESTADÍSTICA DE MUESTREO (NUEVA HOJA CON LA TABLA DE LA IMAGEN)
+    const wsStatData = [
+        ["ESTADÍSTICAS DEL INVENTARIO FORESTAL POR RODAL (PRECISIÓN DEL MUESTREO)"],
+        [],
+        ["Rodal", "Parcelas (N°)", "t student (95%)", "Media", "", "Varianza", "", "Coeficiente de Variación (%)", "", "Error de Muestreo (%)", ""],
+        ["", "", "", "Densidad (arb/ha)", "Área Basal (m²/ha)", "Densidad (arb/ha)", "Área Basal (m²/ha)", "Densidad", "Área Basal", "Densidad", "Área Basal"]
+    ];
+
+    // Cálculos estadísticos
+    const factorParcelaHa = 10000 / p.areaParcela;
+    const parcelasMap = {};
+    for (let pr = 1; pr <= p.numParcelas; pr++) parcelasMap[pr] = { nArboles: 0, gTotal: 0 };
+    registrosIngresados.forEach(arb => {
+        if (!parcelasMap[arb.parcela]) parcelasMap[arb.parcela] = { nArboles: 0, gTotal: 0 };
+        parcelasMap[arb.parcela].nArboles += 1;
+        parcelasMap[arb.parcela].gTotal += (Math.PI / 40000) * Math.pow(arb.dap, 2);
+    });
+
+    const listaN = []; const listaG = [];
+    Object.keys(parcelasMap).forEach(pr => {
+        listaN.push(parcelasMap[pr].nArboles * factorParcelaHa);
+        listaG.push(parcelasMap[pr].gTotal * factorParcelaHa);
+    });
+
+    const nNum = listaN.length;
+    const df = Math.max(1, nNum - 1);
+    const tVal = obtenerTStudent(df);
+
+    const mN = listaN.reduce((a,b)=>a+b,0)/nNum;
+    const mG = listaG.reduce((a,b)=>a+b,0)/nNum;
+    const vN = nNum > 1 ? (listaN.reduce((a,b)=>a+Math.pow(b-mN,2),0)/(nNum-1)) : 0;
+    const vG = nNum > 1 ? (listaG.reduce((a,b)=>a+Math.pow(b-mG,2),0)/(nNum-1)) : 0;
+    const cvN = mN > 0 ? (Math.sqrt(vN)/mN)*100 : 0;
+    const cvG = mG > 0 ? (Math.sqrt(vG)/mG)*100 : 0;
+    const errN = mN > 0 ? (tVal*(Math.sqrt(vN)/Math.sqrt(nNum))/mN)*100 : 0;
+    const errG = mG > 0 ? (tVal*(Math.sqrt(vG)/Math.sqrt(nNum))/mG)*100 : 0;
+
+    wsStatData.push([
+        p.rodalName, nNum, tVal.toFixed(3),
+        mN.toFixed(2), mG.toFixed(2),
+        vN.toFixed(2), vG.toFixed(4),
+        `${cvN.toFixed(2)}%`, `${cvG.toFixed(2)}%`,
+        `${errN.toFixed(2)}%`, `${errG.toFixed(2)}%`
+    ]);
+
+    const wsStat = XLSX.utils.aoa_to_sheet(wsStatData);
+
+    // HOJA 3: REGISTROS DE CAMPO
     const ws2Data = [
         ["PARÁMETROS DEL RODAL:"],
         ["Rodal", p.rodalName],
@@ -959,7 +1101,7 @@ function exportarTablaExcel() {
 
     const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);
 
-    // HOJA 3: ANEXO DE ECUACIONES
+    // HOJA 4: ANEXO DE ECUACIONES
     const ws3Data = [
         ["ANEXO TÉCNICO: MEMORIA DE ECUACIONES DE VOLUMEN Y FUENTES BIBLIOGRÁFICAS"],
         [],
@@ -981,13 +1123,14 @@ function exportarTablaExcel() {
 
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws1, "Hoja1_TablaRodal_Volumen");
-    XLSX.utils.book_append_sheet(wb, ws2, "Hoja2_DatosCampo");
-    XLSX.utils.book_append_sheet(wb, ws3, "Hoja3_Anexo_Formulas_Fuentes");
+    XLSX.utils.book_append_sheet(wb, wsStat, "Hoja2_EstadisticaMuestreo");
+    XLSX.utils.book_append_sheet(wb, ws2, "Hoja3_DatosCampo");
+    XLSX.utils.book_append_sheet(wb, ws3, "Hoja4_Anexo_Formulas_Fuentes");
 
     XLSX.writeFile(wb, `Tabla_Rodal_Volumen_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
 }
 
-// EXPORTACIÓN A PDF EN HOJA TAMAÑO OFICIO (LEGAL) APAISADA (LANDSCAPE) SIN CORTES
+// EXPORTACIÓN A PDF EN HOJA TAMAÑO OFICIO APAISADA
 async function exportarInformePDFApaisadoOficio() {
     if (!window.jspdf || !window.html2canvas) {
         alert("Las librerías de generación PDF no están disponibles.");
@@ -1001,8 +1144,7 @@ async function exportarInformePDFApaisadoOficio() {
 
     const { jsPDF } = window.jspdf;
     
-    // TAMAÑO OFICIO / LEGAL EN CHILE Y SUDAMÉRICA: 215.9 mm x 355.6 mm (8.5 x 14 pulgadas)
-    // EN FORMATO APAISADO (LANDSCAPE): Ancho = 355.6 mm, Alto = 215.9 mm
+    // TAMAÑO OFICIO / LEGAL APAISADO: 355.6 mm x 215.9 mm
     const doc = new jsPDF({
         orientation: 'landscape',
         unit: 'mm',
@@ -1013,9 +1155,9 @@ async function exportarInformePDFApaisadoOficio() {
     const pageWidth = 355.6;
     const pageHeight = 215.9;
     const margin = 10;
-    const printableWidth = pageWidth - (margin * 2); // 335.6 mm
+    const printableWidth = pageWidth - (margin * 2);
 
-    // PÁGINA 1: ENCABEZADO, RESUMEN Y TABLA DE RODAL COMPLETA
+    // PÁGINA 1: ENCABEZADO Y TABLA DE RODAL COMPLETA
     doc.setFillColor(27, 94, 32);
     doc.rect(0, 0, pageWidth, 18, 'F');
     doc.setTextColor(255, 255, 255);
@@ -1023,7 +1165,6 @@ async function exportarInformePDFApaisadoOficio() {
     doc.setFont('helvetica', 'bold');
     doc.text("INFORME DE INVENTARIO Y TABLA DE RODAL COMPLETA", pageWidth / 2, 11, { align: "center" });
 
-    // Cuadro de Resumen de Parámetros del Rodal
     doc.setTextColor(33, 33, 33);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
@@ -1033,38 +1174,25 @@ async function exportarInformePDFApaisadoOficio() {
     doc.text(`Tipo Forestal: ${p.tipoForestal} | Estructura: ${p.estructuraRodal} | Estado: ${p.estadoDesarrollo}`, margin, 29);
     doc.text(`Superficie: ${p.superficieRodal} ha | Muestreo: ${p.tipoMuestreo} (${p.formaParcela}) | Parcelas: ${p.numParcelas} de ${p.areaParcela} m²`, margin, 34);
 
-    // Capturar Tabla de Rodal Completa
     const tablaElement = document.getElementById("printTablaArea");
-    
-    // Generar canvas de alta resolución
-    const canvasTabla = await html2canvas(tablaElement, {
-        scale: 2,
-        useCORS: true,
-        logging: false
-    });
-
+    const canvasTabla = await html2canvas(tablaElement, { scale: 2, useCORS: true, logging: false });
     const imgDataTabla = canvasTabla.toDataURL("image/png");
 
-    // Límite vertical disponible en la Hoja Oficio Apaisada
     const startY = 38;
-    const availableHeight = pageHeight - startY - margin; // ~167.9 mm
+    const availableHeight = pageHeight - startY - margin;
 
-    // Cálculo proporcional de escala horizontal
-    let imgWidth = printableWidth; // 335.6 mm
+    let imgWidth = printableWidth;
     let imgHeight = (canvasTabla.height * imgWidth) / canvasTabla.width;
 
-    // Si la altura sobrepasa el espacio vertical restante, escalar proporcionalmente para GARANTIZAR que CABE COMPLETA SIN CORTAR
     if (imgHeight > availableHeight) {
         imgHeight = availableHeight;
         imgWidth = (canvasTabla.width * imgHeight) / canvasTabla.height;
     }
 
-    // Centrar horizontalmente si el ancho resultante es menor al imprimible
     const xPos = margin + ((printableWidth - imgWidth) / 2);
-
     doc.addImage(imgDataTabla, 'PNG', xPos, startY, imgWidth, imgHeight);
 
-    // PÁGINA 2: GRÁFICOS DE ESTRUCTURA Y Y BALANCE VOLUMÉTRICO
+    // PÁGINA 2: ESTADÍSTICA DE MUESTREO Y GRÁFICOS
     doc.addPage([215.9, 355.6], 'landscape');
 
     doc.setFillColor(27, 94, 32);
@@ -1072,7 +1200,15 @@ async function exportarInformePDFApaisadoOficio() {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text("ANÁLISIS GRÁFICO DE ESTRUCTURA Y VOLUMETRÍA FORESTAL", pageWidth / 2, 11, { align: "center" });
+    doc.text("ESTADÍSTICAS DEL MUESTREO Y ANÁLISIS GRÁFICO", pageWidth / 2, 11, { align: "center" });
+
+    // Capturar Tabla Estadística
+    const statElement = document.getElementById("printEstadisticaArea");
+    const canvasStat = await html2canvas(statElement, { scale: 2, useCORS: true });
+    const imgStat = canvasStat.toDataURL("image/png");
+
+    let hStat = (canvasStat.height * printableWidth) / canvasStat.width;
+    doc.addImage(imgStat, 'PNG', margin, 24, printableWidth, Math.min(hStat, 40));
 
     // Capturar los 3 Gráficos
     const chartBox1 = document.getElementById("boxChart1");
@@ -1087,18 +1223,17 @@ async function exportarInformePDFApaisadoOficio() {
     const imgC2 = canvasC2.toDataURL("image/png");
     const imgC3 = canvasC3.toDataURL("image/png");
 
-    const wChart = 105;
+    const yGraficos = 24 + Math.min(hStat, 40) + 8;
+    const wChart = 100;
     const hC1 = (canvasC1.height * wChart) / canvasC1.width;
     const hC2 = (canvasC2.height * wChart) / canvasC2.width;
 
-    doc.addImage(imgC1, 'PNG', 15, 28, wChart, hC1);
-    doc.addImage(imgC2, 'PNG', 130, 28, wChart, hC2);
+    doc.addImage(imgC1, 'PNG', 15, yGraficos, wChart, hC1);
+    doc.addImage(imgC2, 'PNG', 125, yGraficos, wChart, hC2);
 
-    const wChart3 = 180;
+    const wChart3 = 110;
     const hC3 = (canvasC3.height * wChart3) / canvasC3.width;
-    const xPosC3 = margin + ((printableWidth - wChart3) / 2);
-
-    doc.addImage(imgC3, 'PNG', xPosC3, 28 + Math.max(hC1, hC2) + 10, wChart3, Math.min(hC3, 85));
+    doc.addImage(imgC3, 'PNG', 230, yGraficos, wChart3, hC3);
 
     doc.save(`Tabla_Rodal_Oficio_Apaisado_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
 }
