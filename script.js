@@ -221,14 +221,14 @@ function actualizarEstadoInterfaz(habilitado) {
 
     if (habilitado) {
         statusBadge.textContent = "Validado";
-        statusBadge.className = "status-badge badge-success";
+        statusBadge.className = "badge-status badge-success";
         lockWarning.style.display = "none";
         lockWarningAlt.style.display = "none";
         lockWarningImport.style.display = "none";
         inputsCampo.forEach(id => document.getElementById(id).removeAttribute("disabled"));
     } else {
         statusBadge.textContent = "Incompleto";
-        statusBadge.className = "status-badge badge-pending";
+        statusBadge.className = "badge-status badge-incompleto";
         lockWarning.style.display = "block";
         lockWarningAlt.style.display = "block";
         lockWarningImport.style.display = "block";
@@ -236,7 +236,6 @@ function actualizarEstadoInterfaz(habilitado) {
     }
 }
 
-// PROCESAMIENTO SIMPLIFICADO DE ARCHIVOS
 function procesarArchivoSubido() {
     const fileInput = document.getElementById("fileInput");
     const feedback = document.getElementById("importFeedback");
@@ -250,7 +249,7 @@ function procesarArchivoSubido() {
     }
 
     const fileName = file.name.toLowerCase();
-    feedback.innerHTML = `<p style="color:#0284c7;">⏳ Leyendo archivo: <strong>${file.name}</strong>...</p>`;
+    feedback.innerHTML = `<p style="color:#006633; font-weight:bold;">⏳ Leyendo archivo: ${file.name}...</p>`;
 
     if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
         const reader = new FileReader();
@@ -262,7 +261,7 @@ function procesarArchivoSubido() {
                 const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], { defval: "" });
                 importarArraySimplificado(jsonData, file.name);
             } catch (err) {
-                feedback.innerHTML = `<div class="callout callout-warning">❌ Error al leer Excel: ${err.message}</div>`;
+                feedback.innerHTML = `<div class="conaf-alert alert-warning">❌ Error al leer Excel: ${err.message}</div>`;
             }
         };
         reader.readAsArrayBuffer(file);
@@ -274,12 +273,12 @@ function procesarArchivoSubido() {
                 const parseado = parsearTextoPlano(text);
                 importarArraySimplificado(parseado, file.name);
             } catch (err) {
-                feedback.innerHTML = `<div class="callout callout-warning">❌ Error al leer archivo TXT: ${err.message}</div>`;
+                feedback.innerHTML = `<div class="conaf-alert alert-warning">❌ Error al leer archivo TXT: ${err.message}</div>`;
             }
         };
         reader.readAsText(file);
     } else {
-        feedback.innerHTML = `<div class="callout callout-warning">⚠️ Formato no soportado. Suba un archivo .xlsx, .xls, .txt o .csv</div>`;
+        feedback.innerHTML = `<div class="conaf-alert alert-warning">⚠️ Formato no soportado. Suba un archivo .xlsx, .xls, .txt o .csv</div>`;
     }
 }
 
@@ -311,7 +310,7 @@ function parsearTextoPlano(texto) {
 function importarArraySimplificado(dataArray, nombreArchivo) {
     const feedback = document.getElementById("importFeedback");
     if (!dataArray || dataArray.length === 0) {
-        feedback.innerHTML = `<div class="callout callout-warning">⚠️ El archivo está vacío o no contiene datos válidos.</div>`;
+        feedback.innerHTML = `<div class="conaf-alert alert-warning">⚠️ El archivo está vacío o no contiene datos válidos.</div>`;
         return;
     }
 
@@ -353,7 +352,7 @@ function importarArraySimplificado(dataArray, nombreArchivo) {
     });
 
     feedback.innerHTML = `
-        <div class="callout methodology-card" style="background-color:#ecfdf5;">
+        <div class="conaf-alert" style="background-color:#e6f2eb; border:1px solid #a3d9b8; color:#006633;">
             ✅ <strong>Importación Simplificada exitosa (${nombreArchivo}):</strong><br>
             Se cargaron <strong>${contadorValidos}</strong> registros considerando <strong>Parcela</strong>, <strong>Especie</strong> y <strong>DAP</strong> (redondeado a máx. 2 decimales).
             ${contadorErrores > 0 ? `<br><small>(${contadorErrores} filas omitidas por error o DAP inválido)</small>` : ''}
@@ -410,13 +409,13 @@ function renderizarResumenParametros() {
     const intenMuestreoPct = (supMuestreadaHa / p.superficieRodal) * 100;
 
     container.innerHTML = `
-        <div class="info-rodal-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:0.6rem;">
-            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">RODAL:</span><br><strong>${p.rodalName} (${p.superficieRodal} ha)</strong></div>
-            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">TIPO FORESTAL:</span><br><strong>${p.tipoForestal}</strong></div>
-            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">ESTRUCTURA / ESTADO:</span><br><strong>${p.estructuraRodal} | ${p.estadoDesarrollo}</strong></div>
-            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">MUESTREO:</span><br><strong>${p.tipoMuestreo} (${p.formaParcela})</strong></div>
-            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">PARCELAS:</span><br><strong>${p.numParcelas} parc. de ${p.areaParcela} m²</strong></div>
-            <div><span style="font-size:0.75rem; color:#0369a1; font-weight:bold;">INTENSIDAD:</span><br><strong>${supMuestreadaHa.toFixed(3)} ha (${intenMuestreoPct.toFixed(2)}%)</strong></div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:0.6rem;">
+            <div><span style="font-size:0.75rem; color:#004085; font-weight:bold;">RODAL:</span><br><strong>${p.rodalName} (${p.superficieRodal} ha)</strong></div>
+            <div><span style="font-size:0.75rem; color:#004085; font-weight:bold;">TIPO FORESTAL:</span><br><strong>${p.tipoForestal}</strong></div>
+            <div><span style="font-size:0.75rem; color:#004085; font-weight:bold;">ESTRUCTURA / ESTADO:</span><br><strong>${p.estructuraRodal} | ${p.estadoDesarrollo}</strong></div>
+            <div><span style="font-size:0.75rem; color:#004085; font-weight:bold;">MUESTREO:</span><br><strong>${p.tipoMuestreo} (${p.formaParcela})</strong></div>
+            <div><span style="font-size:0.75rem; color:#004085; font-weight:bold;">PARCELAS:</span><br><strong>${p.numParcelas} parc. de ${p.areaParcela} m²</strong></div>
+            <div><span style="font-size:0.75rem; color:#004085; font-weight:bold;">INTENSIDAD:</span><br><strong>${supMuestreadaHa.toFixed(3)} ha (${intenMuestreoPct.toFixed(2)}%)</strong></div>
         </div>
     `;
 }
@@ -472,7 +471,7 @@ function actualizarConfiguracionAlturas() {
     container.innerHTML = "";
 
     if (registrosIngresados.length === 0) {
-        container.innerHTML = "<p class='placeholder-text'>No hay registros de campo ingresados o cargados aún.</p>";
+        container.innerHTML = "<p class='empty-msg'>No hay registros de campo ingresados o cargados aún.</p>";
         return;
     }
 
@@ -492,11 +491,11 @@ function actualizarConfiguracionAlturas() {
         divCard.className = "species-card";
         divCard.innerHTML = `
             <div><strong>🌳 ${espNombre}</strong></div>
-            <div class="input-group">
+            <div class="conaf-group">
                 <label>Altura Promedio H (m):</label>
                 <input type="number" step="0.1" min="1" value="${alturasPromedioEspecie[espNombre]}" onchange="actualizarAlturaEspecieManual('${espNombre}', this.value)">
             </div>
-            <div style="font-size:0.75rem; color:#475569; margin-top:0.2rem;">
+            <div style="font-size:0.75rem; color:#555555; margin-top:0.2rem;">
                 <strong>Ecuación:</strong> ${infoEspecieObj.ecuacion}<br>
                 <strong>Fuente:</strong> ${infoEspecieObj.fuente}
             </div>
@@ -562,8 +561,8 @@ function renderizarTablaIngresos() {
             <td>${H.toFixed(1)} <small>(prom)</small></td>
             <td>${g.toFixed(4)}</td>
             <td>${v.toFixed(4)}</td>
-            <td><span style="color: ${item.corta === 'SI' ? '#dc2626' : '#059669'}; font-weight:bold;">${item.corta === 'SI' ? 'Corta' : 'Residual'}</span></td>
-            <td><button class="btn btn-danger btn-sm" onclick="eliminarArbol(${index})">❌</button></td>
+            <td><span style="color: ${item.corta === 'SI' ? '#cc0000' : '#006633'}; font-weight:bold;">${item.corta === 'SI' ? 'Corta' : 'Residual'}</span></td>
+            <td><button class="btn-conaf btn-red btn-sm" onclick="eliminarArbol(${index})">❌</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -701,9 +700,9 @@ function renderizarTablaRodal(res) {
     const tr2 = document.createElement("tr");
     res.especiesColumnas.forEach(() => {
         tr2.innerHTML += `
-            <th colspan="2" class="sub">N (árb./ha)</th>
-            <th colspan="2" class="sub">G (m²/ha)</th>
-            <th colspan="2" class="sub">V (m³/ha)</th>
+            <th colspan="2" class="sub-header">N (árb./ha)</th>
+            <th colspan="2" class="sub-header">G (m²/ha)</th>
+            <th colspan="2" class="sub-header">V (m³/ha)</th>
         `;
     });
     thead.appendChild(tr2);
@@ -870,8 +869,8 @@ function actualizarGraficos(res) {
         data: {
             labels: labelsClases,
             datasets: [
-                { label: 'N° Inicial (árb./ha)', data: dataNIni, backgroundColor: '#a7f3d0' },
-                { label: 'N° Residual (árb./ha)', data: dataNRes, backgroundColor: '#059669' }
+                { label: 'N° Inicial (árb./ha)', data: dataNIni, backgroundColor: '#a3d9b8' },
+                { label: 'N° Residual (árb./ha)', data: dataNRes, backgroundColor: '#006633' }
             ]
         },
         options: {
@@ -891,7 +890,7 @@ function actualizarGraficos(res) {
             labels: especiesLabels,
             datasets: [{
                 data: dataVPorEspecie,
-                backgroundColor: ['#059669', '#0284c7', '#d97706', '#64748b']
+                backgroundColor: ['#006633', '#003366', '#d48806', '#4b5563']
             }]
         },
         options: {
@@ -907,9 +906,9 @@ function actualizarGraficos(res) {
         data: {
             labels: ['Volumen Bruto (m³/ha)'],
             datasets: [
-                { label: 'Volumen Inicial', data: [totGlobal.vIni], backgroundColor: '#38bdf8' },
-                { label: 'Volumen Corta (Extraído)', data: [totGlobal.vIni - totGlobal.vRes], backgroundColor: '#f87171' },
-                { label: 'Volumen Residual', data: [totGlobal.vRes], backgroundColor: '#34d399' }
+                { label: 'Volumen Inicial', data: [totGlobal.vIni], backgroundColor: '#80b3ff' },
+                { label: 'Volumen Corta (Extraído)', data: [totGlobal.vIni - totGlobal.vRes], backgroundColor: '#ff8080' },
+                { label: 'Volumen Residual', data: [totGlobal.vRes], backgroundColor: '#80e6b3' }
             ]
         },
         options: {
@@ -992,7 +991,7 @@ function exportarTablaExcel() {
 
     const styleHeader = {
         font: { bold: true, color: { rgb: "FFFFFF" } },
-        fill: { fgColor: { rgb: "047857" } },
+        fill: { fgColor: { rgb: "006633" } },
         alignment: { horizontal: "center", vertical: "center", wrapText: true },
         border: thinBorder
     };
@@ -1004,7 +1003,7 @@ function exportarTablaExcel() {
 
     const styleTotal = {
         font: { bold: true },
-        fill: { fgColor: { rgb: "ECFDF5" } },
+        fill: { fgColor: { rgb: "E6F2EB" } },
         alignment: { horizontal: "center", vertical: "center" },
         border: thinBorder
     };
@@ -1123,7 +1122,7 @@ function exportarTablaExcel() {
     XLSX.utils.book_append_sheet(wb, ws2, "Hoja3_DatosCampo");
     XLSX.utils.book_append_sheet(wb, ws3, "Hoja4_Anexo_Formulas_Fuentes");
 
-    XLSX.writeFile(wb, `Tabla_Rodal_Volumen_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
+    XLSX.writeFile(wb, `Tabla_Rodal_CONAF_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`);
 }
 
 // EXPORTACIÓN A PDF EN HOJA TAMAÑO OFICIO APAISADA
@@ -1158,13 +1157,13 @@ async function exportarInformePDFApaisadoOficio() {
     const margin = 10;
     const printableWidth = pageWidth - (margin * 2);
 
-    // PÁGINA 1: ENCABEZADO Y TABLA DE RODAL COMPLETA
-    doc.setFillColor(5, 150, 105);
+    // PÁGINA 1: ENCABEZADO CONAF Y TABLA DE RODAL COMPLETA
+    doc.setFillColor(0, 102, 51); // Verde CONAF
     doc.rect(0, 0, pageWidth, 18, 'F');
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(14);
+    doc.setFontSize(13);
     doc.setFont('helvetica', 'bold');
-    doc.text("INFORME DE INVENTARIO Y TABLA DE RODAL COMPLETA", pageWidth / 2, 11, { align: "center" });
+    doc.text("CONAF - CORPORACIÓN NACIONAL FORESTAL | INFORME DE INVENTARIO Y TABLA DE RODAL", pageWidth / 2, 11, { align: "center" });
 
     doc.setTextColor(33, 33, 33);
     doc.setFontSize(9);
@@ -1196,12 +1195,12 @@ async function exportarInformePDFApaisadoOficio() {
     // PÁGINA 2: ESTADÍSTICA DE MUESTREO Y GRÁFICOS
     doc.addPage([215.9, 355.6], 'landscape');
 
-    doc.setFillColor(5, 150, 105);
+    doc.setFillColor(0, 102, 51);
     doc.rect(0, 0, pageWidth, 18, 'F');
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(14);
+    doc.setFontSize(13);
     doc.setFont('helvetica', 'bold');
-    doc.text("ESTADÍSTICAS DEL MUESTREO Y ANÁLISIS GRÁFICO", pageWidth / 2, 11, { align: "center" });
+    doc.text("CONAF - ESTADÍSTICAS DEL MUESTREO Y ANÁLISIS GRÁFICO DEL RODAL", pageWidth / 2, 11, { align: "center" });
 
     // Capturar Tabla Estadística
     const statElement = document.getElementById("printEstadisticaArea");
@@ -1238,5 +1237,5 @@ async function exportarInformePDFApaisadoOficio() {
 
     if (!wasOpen) detailsElem.removeAttribute("open");
 
-    doc.save(`Tabla_Rodal_Oficio_Apaisado_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
+    doc.save(`Tabla_Rodal_CONAF_Oficio_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
 }

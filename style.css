@@ -1,62 +1,77 @@
-/* ESTILOS MODERNO PROFESIONAL - DASHBOARD FORESTAL CHILE */
+/* ESTILOS INSTITUCIONALES CONAF - CORPORACIÓN NACIONAL FORESTAL CHILE */
 :root {
-    --bg-main: #f8fafc;
-    --panel-bg: #ffffff;
-    --primary: #059669; /* Emerald Primary */
-    --primary-hover: #047857;
-    --primary-light: #ecfdf5;
-    --primary-border: #a7f3d0;
-    
-    --slate-900: #0f172a;
-    --slate-800: #1e293b;
-    --slate-700: #334155;
-    --slate-600: #475569;
-    --slate-500: #64748b;
-    --slate-200: #e2e8f0;
-    --slate-100: #f1f5f9;
-    --slate-50: #f8fafc;
+    --conaf-green: #006633;        /* Verde Institucional CONAF */
+    --conaf-green-hover: #004d26;
+    --conaf-green-light: #e6f2eb;
+    --conaf-green-border: #a3d9b8;
 
-    --accent-blue: #0284c7;
-    --accent-blue-light: #f0f9ff;
-    --accent-teal: #0d9488;
-    --accent-amber: #d97706;
-    --accent-amber-light: #fffbeb;
-    --danger: #dc2626;
-    --pdf-red: #b91c1c;
+    --gob-blue: #003366;
+    --gob-red: #cc0000;
 
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --bg-page: #f4f6f7;
+    --card-bg: #ffffff;
 
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
+    --text-dark: #222222;
+    --text-muted: #555555;
+    --border-gray: #d1d5db;
+    --border-table: #000000;
+
+    --warning-bg: #fffbe6;
+    --warning-border: #ffe58f;
+    --warning-text: #d48806;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 }
 
 body {
-    background-color: var(--bg-main);
-    color: var(--slate-800);
+    background-color: var(--bg-page);
+    color: var(--text-dark);
     line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
 }
 
-/* Header */
-.app-header {
-    background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+/* Barra Gobierno de Chile */
+.gob-bar {
+    background-color: #ffffff;
+    border-bottom: 2px solid #e2e8f0;
+    padding: 0.3rem 1.5rem;
+    font-size: 0.8rem;
+    color: var(--gob-blue);
+    font-weight: 600;
+}
+
+.gob-container {
+    max-width: 1350px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.gob-flag {
+    display: inline-flex;
+    height: 12px;
+    width: 20px;
+}
+
+.flag-blue { background-color: var(--gob-blue); width: 50%; height: 100%; }
+.flag-red { background-color: var(--gob-red); width: 50%; height: 100%; }
+
+/* Cabecera CONAF */
+.conaf-header {
+    background: linear-gradient(180deg, #00552b 0%, #006633 100%);
     color: white;
-    padding: 1.5rem 2rem;
-    box-shadow: var(--shadow-md);
+    padding: 1.2rem 1.5rem;
+    border-bottom: 4px solid #004d26;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
 
-.header-content {
-    max-width: 1380px;
+.header-container {
+    max-width: 1350px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -65,322 +80,332 @@ body {
     gap: 1rem;
 }
 
-.brand {
+.conaf-brand {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: 1rem;
 }
 
-.brand-icon {
-    font-size: 2.8rem;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 0.5rem;
-    border-radius: var(--radius-md);
-    backdrop-filter: blur(4px);
+.conaf-logo-box {
+    background: white;
+    color: var(--conaf-green);
+    width: 52px;
+    height: 52px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.brand-title {
-    font-size: 1.7rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-}
-
-.brand-subtitle {
-    font-size: 0.88rem;
-    opacity: 0.9;
-    font-weight: 300;
-}
-
-.header-status {
-    background: rgba(255, 255, 255, 0.15);
-    padding: 0.4rem 0.9rem;
-    border-radius: 20px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    backdrop-filter: blur(4px);
-}
-
-/* Container */
-.main-layout {
-    max-width: 1380px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
+.conaf-titles {
     display: flex;
     flex-direction: column;
-    gap: 1.8rem;
 }
 
-/* Tarjetas y Paneles */
-.panel-card {
-    background: var(--panel-bg);
-    border-radius: var(--radius-lg);
-    padding: 1.8rem;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--slate-200);
-    transition: box-shadow 0.2s ease;
+.conaf-main-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.5px;
 }
 
-.panel-card:hover {
-    box-shadow: var(--shadow-md);
+.conaf-sub-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    opacity: 0.95;
 }
 
-.border-emerald { border-top: 4px solid var(--primary); }
-.border-blue { border-top: 4px solid var(--accent-blue); }
-.border-teal { border-top: 4px solid var(--accent-teal); }
-.border-amber { border-top: 4px solid var(--accent-amber); }
+.conaf-dept {
+    font-size: 0.8rem;
+    opacity: 0.85;
+}
 
-.card-header {
+.conaf-system-badge {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-align: right;
+}
+
+.sys-badge-title {
+    display: block;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.sys-badge-sub {
+    font-size: 0.75rem;
+    opacity: 0.85;
+}
+
+/* Layout Principal */
+.main-container {
+    max-width: 1350px;
+    margin: 1.8rem auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+/* Tarjetas Estilo CONAF */
+.conaf-card {
+    background: var(--card-bg);
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 1.4rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.border-green {
+    border-top: 4px solid var(--conaf-green);
+}
+
+.card-header-conaf {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.2rem;
+    align-items: center;
+    margin-bottom: 0.8rem;
 }
 
-.card-header.border-bottom {
-    border-bottom: 1px solid var(--slate-200);
-    padding-bottom: 1rem;
+.card-header-conaf.border-b {
+    border-bottom: 2px solid var(--bg-page);
+    padding-bottom: 0.8rem;
 }
 
-.card-title {
-    font-size: 1.25rem;
+.card-title-conaf {
+    color: var(--conaf-green);
+    font-size: 1.2rem;
     font-weight: 700;
-    color: var(--slate-900);
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    letter-spacing: -0.01em;
 }
 
-.step-num {
-    background: var(--primary-light);
-    color: var(--primary);
-    width: 28px;
-    height: 28px;
+.icon-num {
+    background-color: var(--conaf-green);
+    color: white;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.88rem;
-    font-weight: 700;
-    border: 1px solid var(--primary-border);
+    font-size: 0.85rem;
+    font-weight: bold;
 }
 
-.card-subtitle {
-    font-size: 0.88rem;
-    color: var(--slate-500);
-    margin-top: 0.2rem;
+.conaf-help-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
 }
 
-/* Form Grid */
-.grid-form {
+/* Formularios CONAF */
+.conaf-grid-form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
     align-items: end;
 }
 
-.input-group {
+.conaf-group {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.3rem;
 }
 
-.span-full {
+.full-width {
     grid-column: 1 / -1;
 }
 
 label {
     font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--slate-700);
+    font-weight: 700;
+    color: #333333;
 }
 
 label .req {
-    color: var(--danger);
+    color: var(--gob-red);
 }
 
 input, select {
-    width: 100%;
-    padding: 0.65rem 0.85rem;
-    border: 1px solid var(--slate-200);
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    color: var(--slate-800);
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--border-gray);
+    border-radius: 3px;
+    font-size: 0.88rem;
+    color: var(--text-dark);
     background-color: #ffffff;
-    transition: all 0.2s ease;
+    transition: border-color 0.2s;
 }
 
 input:focus, select:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+    border-color: var(--conaf-green);
+    box-shadow: 0 0 0 2px rgba(0, 102, 51, 0.15);
 }
 
 input:disabled, select:disabled {
-    background-color: var(--slate-100);
-    color: var(--slate-500);
+    background-color: #eef2f5;
+    color: #777;
     cursor: not-allowed;
 }
 
-/* Botones */
-.btn {
-    padding: 0.65rem 1.4rem;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
+/* Botones CONAF */
+.btn-conaf {
+    padding: 0.6rem 1.2rem;
+    border-radius: 3px;
     font-size: 0.88rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.15s ease;
+    border: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    border: 1px solid transparent;
+    gap: 0.4rem;
+    transition: background-color 0.2s;
 }
 
-.btn:disabled {
+.btn-conaf:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    transform: none !important;
 }
 
-.btn-emerald {
-    background-color: var(--primary);
+.btn-green {
+    background-color: var(--conaf-green);
     color: white;
 }
-.btn-emerald:hover:not(:disabled) {
-    background-color: var(--primary-hover);
-    box-shadow: var(--shadow-sm);
+.btn-green:hover:not(:disabled) {
+    background-color: var(--conaf-green-hover);
 }
 
-.btn-outline {
-    background-color: transparent;
-    border-color: var(--slate-200);
-    color: var(--slate-700);
-}
-.btn-outline:hover:not(:disabled) {
-    background-color: var(--slate-100);
-}
-
-.btn-danger {
-    background-color: var(--danger);
+.btn-gray {
+    background-color: #4b5563;
     color: white;
 }
-.btn-danger:hover:not(:disabled) {
-    background-color: #b91c1c;
+.btn-gray:hover:not(:disabled) {
+    background-color: #374151;
 }
 
-.btn-pdf {
-    background-color: var(--pdf-red);
+.btn-red {
+    background-color: var(--gob-red);
     color: white;
 }
-.btn-pdf:hover:not(:disabled) {
-    background-color: #991b1b;
+.btn-red:hover:not(:disabled) {
+    background-color: #990000;
+}
+
+.btn-outline-conaf {
+    background-color: white;
+    border: 1px solid var(--conaf-green);
+    color: var(--conaf-green);
+}
+.btn-outline-conaf:hover:not(:disabled) {
+    background-color: var(--conaf-green-light);
 }
 
 .btn-sm {
-    padding: 0.4rem 0.8rem;
+    padding: 0.35rem 0.75rem;
     font-size: 0.8rem;
 }
 
-.form-actions, .action-btn-group {
+.conaf-actions, .conaf-btn-group {
     display: flex;
     gap: 0.8rem;
     flex-wrap: wrap;
     margin-top: 0.5rem;
 }
 
-/* Callouts y Badges */
-.callout {
-    padding: 0.9rem 1.2rem;
-    border-radius: var(--radius-sm);
+/* Alertas y Badges */
+.conaf-alert {
+    padding: 0.75rem 1rem;
+    border-radius: 3px;
     font-size: 0.88rem;
     margin-bottom: 1rem;
 }
 
-.callout-warning {
-    background-color: var(--accent-amber-light);
-    border: 1px solid #fde68a;
-    color: var(--accent-amber);
+.alert-warning {
+    background-color: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    color: var(--warning-text);
 }
 
-.status-badge {
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 700;
+.badge-status {
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: bold;
     text-transform: uppercase;
 }
 
-.badge-pending {
-    background-color: var(--accent-amber-light);
-    color: var(--accent-amber);
-    border: 1px solid #fde68a;
+.badge-incompleto {
+    background-color: var(--warning-bg);
+    color: var(--warning-text);
+    border: 1px solid var(--warning-border);
 }
 
 .badge-success {
-    background-color: var(--primary-light);
-    color: var(--primary);
-    border: 1px solid var(--primary-border);
+    background-color: var(--conaf-green-light);
+    color: var(--conaf-green);
+    border: 1px solid var(--conaf-green-border);
 }
 
-/* Dropzone */
-.dropzone {
-    border: 2px dashed var(--slate-200);
-    background-color: var(--slate-50);
-    border-radius: var(--radius-md);
-    padding: 2rem 1.5rem;
+/* Dropzone CONAF */
+.dropzone-conaf {
+    border: 2px dashed var(--conaf-green-border);
+    background-color: var(--conaf-green-light);
+    border-radius: 4px;
+    padding: 1.5rem;
     text-align: center;
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.8rem;
-    transition: all 0.2s ease;
+    gap: 0.6rem;
 }
 
-.dropzone.dragover {
-    background-color: var(--primary-light);
-    border-color: var(--primary);
+.dropzone-conaf.dragover {
+    background-color: #c7e8d5;
+    border-color: var(--conaf-green);
 }
 
-.dropzone-icon {
-    font-size: 2.8rem;
+.drop-icon { font-size: 2.5rem; }
+
+.drop-info strong {
+    color: var(--conaf-green);
+    font-size: 0.95rem;
 }
 
-.dropzone-text strong {
-    font-size: 1rem;
-    color: var(--slate-900);
-}
-
-.dropzone-text p {
-    font-size: 0.85rem;
-    color: var(--slate-500);
-    margin-top: 0.2rem;
-}
-
-.dropzone-text code {
-    background: var(--slate-200);
-    padding: 0.15rem 0.4rem;
-    border-radius: 4px;
+.drop-info p {
     font-size: 0.82rem;
+    color: var(--text-muted);
 }
 
-.file-hidden {
-    display: none;
+.drop-info code {
+    background: #ffffff;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid #c7e8d5;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    font-weight: bold;
 }
 
-.template-btns {
+.hidden-input { display: none; }
+
+.drop-btns {
     display: flex;
     gap: 0.8rem;
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
 }
 
-/* Secciones Desplegables (Details) */
-details {
-    width: 100%;
-}
+/* Desplegable Details / Summary */
+details { width: 100%; }
 
-summary.collapsible-header {
+summary.conaf-summary {
     list-style: none;
     cursor: pointer;
     display: flex;
@@ -389,83 +414,95 @@ summary.collapsible-header {
     user-select: none;
 }
 
-summary.collapsible-header::-webkit-details-marker {
-    display: none;
-}
+summary.conaf-summary::-webkit-details-marker { display: none; }
 
-.summary-title-group {
+.summary-left {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
-.badge-pill {
-    background-color: var(--slate-100);
-    color: var(--slate-700);
-    border: 1px solid var(--slate-200);
+.badge-count {
+    background-color: var(--conaf-green-light);
+    color: var(--conaf-green);
+    border: 1px solid var(--conaf-green-border);
+    padding: 0.15rem 0.6rem;
     border-radius: 12px;
-    padding: 0.2rem 0.7rem;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.78rem;
+    font-weight: bold;
 }
 
-.chevron-icon {
+.arrow-icon {
     font-size: 0.9rem;
-    color: var(--slate-500);
-    transition: transform 0.2s ease;
+    color: var(--conaf-green);
+    transition: transform 0.2s;
 }
 
-details[open] .chevron-icon {
-    transform: rotate(180deg);
+details[open] .arrow-icon { transform: rotate(180deg); }
+
+.collapsible-content-conaf {
+    border-top: 2px solid var(--bg-page);
+    margin-top: 1rem;
+    padding-top: 1rem;
 }
 
-.collapsible-content {
-    border-top: 1px solid var(--slate-200);
-    margin-top: 1.2rem;
-    padding-top: 1.2rem;
-}
-
-/* Banners e información */
-.info-banner {
-    background-color: var(--accent-blue-light);
-    border: 1px solid #bae6fd;
-    border-radius: var(--radius-sm);
-    padding: 1rem;
+/* Cajas Técnicas e Información */
+.conaf-info-box {
+    background-color: #eaf4fd;
+    border: 1px solid #b6d8f6;
+    border-radius: 3px;
+    padding: 0.9rem;
     font-size: 0.88rem;
-    color: #0369a1;
+    color: #004085;
 }
 
-.methodology-card {
-    background-color: var(--primary-light);
-    border: 1px solid var(--primary-border);
-    border-radius: var(--radius-sm);
-    padding: 1rem 1.2rem;
-    color: #065f46;
+.conaf-formula-card {
+    background-color: var(--conaf-green-light);
+    border: 1px solid var(--conaf-green-border);
+    border-radius: 3px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.88rem;
+    color: var(--conaf-green);
 }
 
-.methodology-header {
+.formula-title {
     font-weight: 700;
-    font-size: 0.92rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
 }
 
-.math-expr {
-    font-size: 0.88rem;
-    margin-bottom: 0.4rem;
+.formula-body {
+    margin-bottom: 0.3rem;
 }
 
-.methodology-footer {
-    font-size: 0.85rem;
-    border-top: 1px dashed var(--primary-border);
+.formula-body code {
+    background: white;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--conaf-green-border);
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.formula-footer {
+    border-top: 1px dashed var(--conaf-green-border);
     padding-top: 0.4rem;
     margin-top: 0.4rem;
+    font-size: 0.85rem;
 }
 
-/* Tablas */
-.table-container {
+/* Tablas Formales con Bordes Negros */
+.table-responsive {
     overflow-x: auto;
-    border-radius: var(--radius-md);
+    margin-top: 1rem;
     border: 1px solid #000000;
+}
+
+.table-title {
+    background-color: #333333;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: bold;
 }
 
 table {
@@ -478,122 +515,142 @@ table {
 
 th, td {
     border: 1px solid #000000;
-    padding: 0.6rem 0.5rem;
+    padding: 0.55rem 0.4rem;
 }
 
 th {
-    background-color: #f1f5f9;
-    color: var(--slate-900);
-    font-weight: 700;
-}
-
-/* Estilos Específicos para Tabla de Rodal */
-.rodal-table th {
-    background-color: #047857;
-    color: white;
-    font-size: 0.8rem;
-    border: 1px solid #064e3b;
-}
-
-.rodal-table th.sub {
-    background-color: #059669;
-}
-
-.rodal-table td {
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: 600;
-}
-
-.rodal-table tr.total-row {
-    background-color: var(--primary-light);
-    font-weight: 700;
-}
-
-/* Tabla Estadística (Gris Claro como Imagen) */
-.stat-table th {
-    background-color: #d1d5db;
-    color: #000000;
-    font-weight: 700;
-    font-size: 0.85rem;
-    border: 1px solid #000000;
-}
-
-.stat-table th.sub {
     background-color: #e5e7eb;
+    color: #000000;
+    font-weight: bold;
 }
 
-.stat-table td {
+/* Tabla Rodal Estilo CONAF (Verde) */
+.tabla-rodal-conaf th {
+    background-color: var(--conaf-green);
+    color: white;
+    border: 1px solid #000000;
+    font-size: 0.80rem;
+    font-weight: bold;
+}
+
+.tabla-rodal-conaf th.sub-header {
+    background-color: #008844;
+}
+
+.tabla-rodal-conaf td {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+}
+
+.tabla-rodal-conaf tr.total-row {
+    background-color: var(--conaf-green-light);
+    font-weight: bold;
+}
+
+/* Tabla Estadística (Gris Claro como Imagen Adjunta) */
+.tabla-estadistica-conaf th {
+    background-color: #d6d6d6;
+    color: #000000;
+    border: 1.5px solid #000000;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.tabla-estadistica-conaf th.sub-header {
+    background-color: #e0e0e0;
+}
+
+.tabla-estadistica-conaf td {
     border: 1px solid #000000;
     font-family: 'Courier New', Courier, monospace;
     font-weight: 600;
+    background-color: #ffffff;
 }
 
 /* Tabla Anexo */
-.anexo-table th {
-    background-color: #0d9488;
+.tabla-anexo-conaf th {
+    background-color: #00552b;
     color: white;
+    border: 1px solid #000000;
 }
 
-.anexo-table td {
+.tabla-anexo-conaf td {
     text-align: left;
-    padding: 0.65rem 0.8rem;
+    padding: 0.6rem 0.8rem;
 }
 
 /* Gráficos */
-.charts-grid {
+.charts-grid-conaf {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 1.5rem;
 }
 
-.chart-card {
+.chart-box-conaf {
     background: #ffffff;
-    border: 1px solid var(--slate-200);
-    border-radius: var(--radius-md);
-    padding: 1.2rem;
+    border: 1px solid var(--border-gray);
+    border-radius: 4px;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.chart-card h3 {
-    font-size: 0.95rem;
-    color: var(--slate-700);
-    margin-bottom: 1rem;
+.chart-box-conaf h3 {
+    font-size: 0.92rem;
+    color: #333333;
+    margin-bottom: 0.8rem;
     text-align: center;
 }
 
-.chart-card canvas {
+.chart-box-conaf canvas {
     max-width: 100%;
     max-height: 280px;
 }
 
-/* Species Cards Grid */
-.species-cards-grid {
+/* Cards Especies */
+.conaf-species-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 1rem;
 }
 
 .species-card {
-    background: var(--primary-light);
-    border: 1px solid var(--primary-border);
-    border-radius: var(--radius-sm);
-    padding: 1rem;
+    background: var(--conaf-green-light);
+    border: 1px solid var(--conaf-green-border);
+    border-radius: 3px;
+    padding: 0.9rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
-/* Footer */
-.app-footer {
+.empty-msg {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.88rem;
+}
+
+/* Footer Institucional CONAF */
+.conaf-footer {
+    background-color: #1e293b;
+    color: #e2e8f0;
+    padding: 1.8rem 1rem;
     text-align: center;
-    padding: 2rem 1rem;
-    background: var(--slate-100);
-    color: var(--slate-600);
     font-size: 0.85rem;
-    border-top: 1px solid var(--slate-200);
-    margin-top: 3rem;
+    margin-top: 2.5rem;
+    border-top: 4px solid var(--conaf-green);
+}
+
+.footer-content {
+    max-width: 1350px;
+    margin: 0 auto;
+}
+
+.footer-legal {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-top: 0.4rem;
 }
 
 .margin-top { margin-top: 1.5rem; }

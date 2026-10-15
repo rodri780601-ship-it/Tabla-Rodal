@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultoría Forestal Chile | Plataforma de Inventarios & Manejo</title>
+    <title>CONAF - Corporación Nacional Forestal | Sistema de Tablas de Rodal e Inventarios</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,43 +17,56 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-    <header class="app-header">
-        <div class="header-content">
-            <div class="brand">
-                <div class="brand-icon">🌲</div>
-                <div>
-                    <h1 class="brand-title">Consultoría Forestal Chile</h1>
-                    <p class="brand-subtitle">Plataforma Biométrica de Inventarios y Tablas de Rodal (Ley N° 20.283 / D.S. N° 68 MINAGRI)</p>
+    <!-- Barra Superior de Gobierno / MINAGRI -->
+    <div class="gob-bar">
+        <div class="gob-container">
+            <div class="gob-flag">
+                <span class="flag-blue"></span><span class="flag-red"></span>
+            </div>
+            <span class="gob-text">Gobierno de Chile | Ministerio de Agricultura</span>
+        </div>
+    </div>
+
+    <!-- Cabecera Institucional CONAF -->
+    <header class="conaf-header">
+        <div class="header-container">
+            <div class="conaf-brand">
+                <div class="conaf-logo-box">
+                    <span class="conaf-logo-icon">🌲</span>
+                </div>
+                <div class="conaf-titles">
+                    <h1 class="conaf-main-title">CONAF</h1>
+                    <span class="conaf-sub-title">Corporación Nacional Forestal</span>
+                    <span class="conaf-dept">Gerencia de Forestación y Manejo Sustentable de Bosques</span>
                 </div>
             </div>
-            <div class="header-status">
-                <span class="status-indicator">● Sistema en Línea</span>
+            <div class="conaf-system-badge">
+                <span class="sys-badge-title">SISTEMA DE INVENTARIO FORESTAL</span>
+                <span class="sys-badge-sub">Tablas de Rodal & Estadística de Muestreo</span>
             </div>
         </div>
     </header>
 
-    <main class="main-layout">
+    <main class="main-container">
         <!-- SECCIÓN 1: PARAMETROS DEL RODAL -->
-        <section class="panel-card border-emerald">
-            <div class="card-header">
-                <div>
-                    <h2 class="card-title"><span class="step-num">1</span> Parámetros Normativos del Rodal</h2>
-                    <p class="card-subtitle">Complete la caracterización del rodal y diseño muestral antes del ingreso de datos.</p>
-                </div>
-                <span class="status-badge badge-pending" id="statusParametros">Incompleto</span>
+        <section class="conaf-card border-green">
+            <div class="card-header-conaf">
+                <h2 class="card-title-conaf"><span class="icon-num">1</span> Parámetros Normativos del Rodal y Muestreo</h2>
+                <span class="badge-status badge-incompleto" id="statusParametros">Incompleto</span>
             </div>
+            <p class="conaf-help-text">Parámetros requeridos para los informes técnicos del Plan de Manejo conforme al Art. 19 del D.S. N° 259 / D.S. N° 68 MINAGRI.</p>
 
-            <form id="formParametros" class="grid-form">
-                <div class="input-group">
-                    <label for="rodalName">Identificador del Rodal <span class="req">*</span></label>
-                    <input type="text" id="rodalName" placeholder="Ej: Rodal R-01 (San Francisco)" required>
+            <form id="formParametros" class="conaf-grid-form">
+                <div class="conaf-group">
+                    <label for="rodalName">Identificador del Rodal: <span class="req">*</span></label>
+                    <input type="text" id="rodalName" placeholder="Ej: Rodal R-01 (Predio San Francisco)" required>
                 </div>
-                <div class="input-group">
-                    <label for="superficieRodal">Superficie Rodal (ha) <span class="req">*</span></label>
+                <div class="conaf-group">
+                    <label for="superficieRodal">Superficie del Rodal (ha): <span class="req">*</span></label>
                     <input type="number" id="superficieRodal" step="0.01" min="0.01" placeholder="Ej: 14.80" required>
                 </div>
-                <div class="input-group">
-                    <label for="tipoForestal">Tipo Forestal (Art. 19 D.S. 259) <span class="req">*</span></label>
+                <div class="conaf-group">
+                    <label for="tipoForestal">Tipo Forestal (Art. 19 D.S. 259): <span class="req">*</span></label>
                     <select id="tipoForestal" required>
                         <option value="">-- Seleccionar Tipo Forestal --</option>
                         <option value="Alerce">Alerce</option>
@@ -70,8 +83,8 @@
                         <option value="Siempreverde">Siempreverde</option>
                     </select>
                 </div>
-                <div class="input-group">
-                    <label for="estructuraRodal">Estructura del Rodal <span class="req">*</span></label>
+                <div class="conaf-group">
+                    <label for="estructuraRodal">Estructura del Rodal: <span class="req">*</span></label>
                     <select id="estructuraRodal" required>
                         <option value="">-- Seleccionar Estructura --</option>
                         <option value="Regular">Regular (Coetáneo)</option>
@@ -79,8 +92,8 @@
                         <option value="Indefinida">Indefinida / En Transición</option>
                     </select>
                 </div>
-                <div class="input-group">
-                    <label for="estadoDesarrollo">Estado de Desarrollo <span class="req">*</span></label>
+                <div class="conaf-group">
+                    <label for="estadoDesarrollo">Estado de Desarrollo: <span class="req">*</span></label>
                     <select id="estadoDesarrollo" required>
                         <option value="">-- Seleccionar Estado --</option>
                         <option value="Renoval / Monte Bravo">Renoval / Monte Bravo</option>
@@ -90,8 +103,8 @@
                         <option value="Bosque Degradado / Sobreexplotado">Bosque Degradado / Sobreexplotado</option>
                     </select>
                 </div>
-                <div class="input-group">
-                    <label for="tipoMuestreo">Diseño de Muestreo <span class="req">*</span></label>
+                <div class="conaf-group">
+                    <label for="tipoMuestreo">Diseño de Muestreo: <span class="req">*</span></label>
                     <select id="tipoMuestreo" required>
                         <option value="">-- Seleccionar Muestreo --</option>
                         <option value="Sistemático Aleatorio">Sistemático Aleatorio</option>
@@ -101,16 +114,16 @@
                         <option value="Censo 100%">Censo 100%</option>
                     </select>
                 </div>
-                <div class="input-group">
-                    <label for="numParcelas">Número de Parcelas (N°) <span class="req">*</span></label>
+                <div class="conaf-group">
+                    <label for="numParcelas">Número de Parcelas (N°): <span class="req">*</span></label>
                     <input type="number" id="numParcelas" min="1" step="1" placeholder="Ej: 4" required>
                 </div>
-                <div class="input-group">
-                    <label for="areaParcela">Superficie Parcela (m²) <span class="req">*</span></label>
+                <div class="conaf-group">
+                    <label for="areaParcela">Superficie de Parcela (m²): <span class="req">*</span></label>
                     <input type="number" id="areaParcela" min="1" step="1" placeholder="Ej: 500" required>
                 </div>
-                <div class="input-group">
-                    <label for="formaParcela">Forma Parcela <span class="req">*</span></label>
+                <div class="conaf-group">
+                    <label for="formaParcela">Forma de la Parcela: <span class="req">*</span></label>
                     <select id="formaParcela" required>
                         <option value="">-- Seleccionar Forma --</option>
                         <option value="Circular">Circular (Radio fijo)</option>
@@ -119,111 +132,105 @@
                         <option value="Punto Variable / Bitterlich">Punto Variable / Bitterlich</option>
                     </select>
                 </div>
-                <div class="input-group">
-                    <label for="amplitudClase">Amplitud Clase Diamétrica (cm) <span class="req">*</span></label>
+                <div class="conaf-group">
+                    <label for="amplitudClase">Amplitud Clase Diamétrica (cm): <span class="req">*</span></label>
                     <input type="number" id="amplitudClase" value="5" min="1" step="1" required>
                 </div>
 
-                <div class="form-actions span-full">
-                    <button type="submit" class="btn btn-emerald">✅ Validar y Guardar Parámetros</button>
-                    <button type="button" id="btnCargarEjemplo" class="btn btn-outline">⚡ Cargar Ejemplo Completo</button>
+                <div class="conaf-actions full-width">
+                    <button type="submit" class="btn-conaf btn-green">✅ Validar y Guardar Parámetros</button>
+                    <button type="button" id="btnCargarEjemplo" class="btn-conaf btn-gray">⚡ Cargar Ejemplo Completo</button>
                 </div>
             </form>
         </section>
 
         <!-- SECCIÓN 2: IMPORTACIÓN MASIVA -->
-        <section class="panel-card border-blue" id="secImportacionArchivos">
-            <div class="card-header">
-                <div>
-                    <h2 class="card-title"><span class="step-num">2</span> Carga Masiva de Datos de Campo</h2>
-                    <p class="card-subtitle">Formatos aceptados: Excel (.xlsx, .xls) y Texto (.txt, .csv) con 3 columnas: Parcela, Especie, DAP.</p>
-                </div>
+        <section class="conaf-card border-green" id="secImportacionArchivos">
+            <div class="card-header-conaf">
+                <h2 class="card-title-conaf"><span class="icon-num">2</span> Carga Masiva de Parcelas (Excel / TXT)</h2>
+            </div>
+            <p class="conaf-help-text">Suba planillas Excel (.xlsx, .xls) o texto plano (.txt, .csv) con las 3 columnas requeridas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (DAP máx 2 decimales).</p>
+
+            <div id="lockWarningImport" class="conaf-alert alert-warning">
+                ⚠️ Debe validar los parámetros del rodal en la Sección 1 antes de importar planillas de parcelas.
             </div>
 
-            <div id="lockWarningImport" class="callout callout-warning">
-                ⚠️ Debe validar los parámetros del rodal en la Sección 1 antes de cargar archivos de parcelas.
-            </div>
-
-            <div class="dropzone" id="dropzoneContainer">
-                <div class="dropzone-icon">📥</div>
-                <div class="dropzone-text">
-                    <strong>Arrastre un archivo aquí o haga clic para examinar</strong>
-                    <p>Estructura simplificada: <code>Parcela</code> | <code>Especie</code> | <code>Dap</code> (DAP máx 2 decimales)</p>
+            <div class="dropzone-conaf" id="dropzoneContainer">
+                <div class="drop-icon">📁</div>
+                <div class="drop-info">
+                    <strong>Haga clic aquí o arrastre su archivo (.xlsx, .xls, .txt, .csv)</strong>
+                    <p>Columnas requeridas: <code>Parcela</code> | <code>Especie</code> | <code>Dap</code></p>
                 </div>
-                <input type="file" id="fileInput" accept=".xlsx, .xls, .txt, .csv" class="file-hidden" disabled>
-                <div class="template-btns">
-                    <button type="button" class="btn btn-sm btn-outline" id="btnDescargarPlantillaExcel">📄 Plantilla Excel (3 Col)</button>
-                    <button type="button" class="btn btn-sm btn-outline" id="btnDescargarPlantillaTxt">📝 Plantilla TXT (3 Col)</button>
+                <input type="file" id="fileInput" accept=".xlsx, .xls, .txt, .csv" class="hidden-input" disabled>
+                <div class="drop-btns">
+                    <button type="button" class="btn-conaf btn-sm btn-outline-conaf" id="btnDescargarPlantillaExcel">📥 Plantilla Excel (3 Col)</button>
+                    <button type="button" class="btn-conaf btn-sm btn-outline-conaf" id="btnDescargarPlantillaTxt">📄 Plantilla TXT (3 Col)</button>
                 </div>
             </div>
             <div id="importFeedback" class="margin-top-sm"></div>
         </section>
 
         <!-- SECCIÓN 3: ALTURAS PROMEDIO POR ESPECIE -->
-        <section class="panel-card" id="secConfigAltura">
-            <div class="card-header">
-                <div>
-                    <h2 class="card-title"><span class="step-num">3</span> Alturas Promedio (H, m) para Cubicación</h2>
-                    <p class="card-subtitle">Especifique o verifique las alturas representativas para el cálculo de volumen bruto (m³/ha).</p>
-                </div>
+        <section class="conaf-card" id="secConfigAltura">
+            <div class="card-header-conaf">
+                <h2 class="card-title-conaf"><span class="icon-num">3</span> Alturas Promedio (H, m) por Especie</h2>
+            </div>
+            <p class="conaf-help-text">Asigne la altura promedio fustal ($H, m$) por especie para el cálculo del volumen bruto por hectárea.</p>
+
+            <div id="lockWarningAltura" class="conaf-alert alert-warning">
+                ⚠️ Debe validar los parámetros del rodal e ingresar o importar registros de parcelas.
             </div>
 
-            <div id="lockWarningAltura" class="callout callout-warning">
-                ⚠️ Debe validar los parámetros e ingresar o importar parcelas.
-            </div>
-
-            <div id="containerAlturasEspecie" class="species-cards-grid margin-top-sm">
-                <p class="placeholder-text">Sin especies registradas...</p>
+            <div id="containerAlturasEspecie" class="conaf-species-grid margin-top-sm">
+                <p class="empty-msg">Sin especies registradas...</p>
             </div>
         </section>
 
         <!-- SECCIÓN 4: REGISTRO INDIVIDUAL DESPLEGABLE -->
-        <section class="panel-card" id="secIngresoCampo">
+        <section class="conaf-card" id="secIngresoCampo">
             <details id="detailsDatosCampo">
-                <summary class="collapsible-header">
-                    <div class="summary-title-group">
-                        <h2 class="card-title"><span class="step-num">4</span> Datos de Campo de Parcelas (Detalle por Árbol)</h2>
-                        <span class="badge-pill"><span id="totalRegistrosBadge">0</span> árboles en inventario</span>
+                <summary class="conaf-summary">
+                    <div class="summary-left">
+                        <h2 class="card-title-conaf"><span class="icon-num">4</span> Datos de Campo de Parcelas (Detalle por Árbol)</h2>
+                        <span class="badge-count"><span id="totalRegistrosBadge">0</span> árboles cargados</span>
                     </div>
-                    <span class="chevron-icon">▼</span>
+                    <span class="arrow-icon">▼</span>
                 </summary>
 
-                <div class="collapsible-content">
-                    <div id="lockWarningCampo" class="callout callout-warning">
-                        ⚠️ Debe completar y validar los parámetros del rodal antes de ingresar registros individuales.
+                <div class="collapsible-content-conaf">
+                    <div id="lockWarningCampo" class="conaf-alert alert-warning">
+                        ⚠️ Debe completar y validar todos los parámetros del Rodal antes de agregar registros manualmente.
                     </div>
 
-                    <form id="treeForm" class="grid-form">
-                        <div class="input-group">
-                            <label for="parcelaNo">N° Parcela</label>
+                    <form id="treeForm" class="conaf-grid-form">
+                        <div class="conaf-group">
+                            <label for="parcelaNo">N° Parcela:</label>
                             <input type="number" id="parcelaNo" value="1" min="1" required disabled>
                         </div>
-                        <div class="input-group">
-                            <label for="especieSelect">Especie Nativa (D.S. 68/2009)</label>
+                        <div class="conaf-group">
+                            <label for="especieSelect">Especie Nativa (D.S. 68/2009):</label>
                             <select id="especieSelect" required disabled></select>
                         </div>
-                        <div class="input-group">
-                            <label for="dapInput">DAP (cm - máx 2 decimales)</label>
+                        <div class="conaf-group">
+                            <label for="dapInput">DAP (cm - máx 2 decimales):</label>
                             <input type="number" id="dapInput" step="0.01" min="0.01" placeholder="Ej: 24.55" required disabled>
                         </div>
-                        <div class="input-group">
-                            <label for="cortaSelect">Intervención</label>
+                        <div class="conaf-group">
+                            <label for="cortaSelect">Intervención (Corta):</label>
                             <select id="cortaSelect" disabled>
                                 <option value="NO">Conservar (Residual)</option>
                                 <option value="SI">Corta (Cosecha / Raleo)</option>
                             </select>
                         </div>
-                        <div class="form-actions span-full">
-                            <button type="submit" id="btnAgregarArbol" class="btn btn-emerald" disabled>➕ Agregar Árbol</button>
-                            <button type="button" id="btnBorrarTodo" class="btn btn-danger" disabled>🗑️ Limpiar Inventario</button>
+                        <div class="conaf-actions full-width">
+                            <button type="submit" id="btnAgregarArbol" class="btn-conaf btn-green" disabled>➕ Agregar Árbol Individual</button>
+                            <button type="button" id="btnBorrarTodo" class="btn-conaf btn-red" disabled>🗑️ Limpiar Todos los Registros</button>
                         </div>
                     </form>
 
-                    <div class="table-container margin-top">
-                        <div class="table-header-info">
-                            <h3>Registros Ingresados (<span id="totalRegistrosCount">0</span>)</h3>
-                        </div>
-                        <table id="tablaIngresos" class="data-table">
+                    <div class="table-responsive margin-top">
+                        <div class="table-title">Registros Cargados (<span id="totalRegistrosCount">0</span>)</div>
+                        <table id="tablaIngresos" class="conaf-data-table">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -232,9 +239,9 @@
                                     <th>Especie</th>
                                     <th>DAP (cm)</th>
                                     <th>Altura H (m)</th>
-                                    <th>Área Basal (m²)</th>
-                                    <th>Volumen (m³)</th>
-                                    <th>Estado</th>
+                                    <th>Área Basal (g, m²)</th>
+                                    <th>Volumen Ind. (v, m³)</th>
+                                    <th>Intervención</th>
                                     <th>Acción</th>
                                 </tr>
                             </thead>
@@ -246,37 +253,37 @@
         </section>
 
         <!-- SECCIÓN 5: TABLA DE RODAL -->
-        <section class="panel-card" id="secTablaRodal">
-            <div class="card-header border-bottom">
+        <section class="conaf-card" id="secTablaRodal">
+            <div class="card-header-conaf border-b">
                 <div>
-                    <h2 class="card-title"><span class="step-num">5</span> Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
-                    <p class="card-subtitle">Estructura diamétrica, área basal y volumen por hectárea desglosados por especie.</p>
+                    <h2 class="card-title-conaf"><span class="icon-num">5</span> Tabla de Rodal Inicial y Residual (Hoja 1)</h2>
+                    <p class="conaf-help-text">Resumen cuantitativo de densidad ($N$, árb/ha), área basal ($G$, m²/ha) y volumen ($V$, m³/ha).</p>
                 </div>
-                <div class="action-btn-group">
-                    <button id="btnExportarExcel" class="btn btn-emerald" disabled>📥 Exportar Excel Estilizado</button>
-                    <button id="btnExportarPDF" class="btn btn-pdf" disabled>📄 PDF Apaisado (Oficio)</button>
+                <div class="conaf-btn-group">
+                    <button id="btnExportarExcel" class="btn-conaf btn-green" disabled>📥 Exportar Excel Estilizado (.xlsx)</button>
+                    <button id="btnExportarPDF" class="btn-conaf btn-red" disabled>📄 PDF Apaisado Tamaño Oficio</button>
                 </div>
             </div>
 
-            <!-- Resumen Informativo del Rodal -->
-            <div id="resumenParametrosRodal" class="info-banner margin-top-sm">
+            <!-- Resumen Técnico -->
+            <div id="resumenParametrosRodal" class="conaf-info-box margin-top-sm">
                 <p><em>Esperando validación de parámetros del rodal...</em></p>
             </div>
 
-            <!-- Caja Metodológica -->
-            <div class="methodology-card margin-top-sm">
-                <div class="methodology-header">📐 Metodología de Cálculo de Densidad (N, árb./ha):</div>
-                <p class="math-expr">
-                    <strong>Factor de Expansión (F):</strong> <code>F = 10.000 m² / (n × A)</code> | 
-                    <strong>Densidad (N):</strong> <code>N = Árboles Medidos × F</code>
-                </p>
-                <div class="methodology-footer">
-                    Factor de Expansión (F): <strong id="factorExpansionText">--</strong> | Cada árbol medido equivale a <strong id="arbolesEquivalentesText">--</strong> árb./ha
+            <!-- Metodología y Fórmula -->
+            <div class="conaf-formula-card margin-top-sm">
+                <div class="formula-title">📐 Metodología de Cálculo de Densidad ($N$, árb./ha):</div>
+                <div class="formula-body">
+                    <code>Factor de Expansión (F) = 10.000 m² / (n × A)</code> &nbsp;|&nbsp; 
+                    <code>Densidad (N) = Árboles Registrados × F</code>
+                </div>
+                <div class="formula-footer">
+                    Factor de Expansión Hectárea ($F$): <strong id="factorExpansionText">--</strong> | Cada árbol medido equivale a <strong id="arbolesEquivalentesText">--</strong> árb./ha
                 </div>
             </div>
 
-            <div class="table-container margin-top-sm" id="printTablaArea">
-                <table id="tablaRodal" class="rodal-table">
+            <div class="table-responsive margin-top-sm" id="printTablaArea">
+                <table id="tablaRodal" class="tabla-rodal-conaf">
                     <thead id="theadRodal"></thead>
                     <tbody id="tbodyRodal"></tbody>
                 </table>
@@ -284,22 +291,19 @@
         </section>
 
         <!-- SECCIÓN 6: MEMORIA DE ECUACIONES -->
-        <section class="panel-card border-teal" id="secFormulasFuentes">
-            <div class="card-header">
-                <div>
-                    <h2 class="card-title"><span class="step-num">6</span> Memoria de Ecuaciones Volumétricas y Fuentes</h2>
-                    <p class="card-subtitle">Modelos alométricos oficiales aplicados por especie para el cálculo del volumen bruto/neto.</p>
-                </div>
+        <section class="conaf-card border-green" id="secFormulasFuentes">
+            <div class="card-header-conaf">
+                <h2 class="card-title-conaf"><span class="icon-num">6</span> Memoria de Ecuaciones Volumétricas y Fuentes Bibliográficas</h2>
             </div>
 
-            <div class="table-container margin-top-sm">
-                <table class="anexo-table">
+            <div class="table-responsive margin-top-sm">
+                <table class="tabla-anexo-conaf">
                     <thead>
                         <tr>
                             <th>Especie Arbórea Nativa</th>
                             <th>Ecuación de Volumen ($V, m^3$) / Factor Forma ($f$)</th>
-                            <th>Variables</th>
-                            <th>Fuente Bibliográfica</th>
+                            <th>Variables Requeridas</th>
+                            <th>Fuente Bibliográfica / Referencia Técnica</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyFormulasFuentes"></tbody>
@@ -308,16 +312,14 @@
         </section>
 
         <!-- SECCIÓN 7: ESTADÍSTICA DE MUESTREO -->
-        <section class="panel-card border-amber" id="secEstadisticaMuestreo">
-            <div class="card-header">
-                <div>
-                    <h2 class="card-title"><span class="step-num">7</span> Estadísticas del Inventario por Rodal (Precisión)</h2>
-                    <p class="card-subtitle">Parámetros inferenciales con distribución $t$-Student al 95% de confianza para $N$ y $G$.</p>
-                </div>
+        <section class="conaf-card border-green" id="secEstadisticaMuestreo">
+            <div class="card-header-conaf">
+                <h2 class="card-title-conaf"><span class="icon-num">7</span> Estadísticas del Inventario Forestal por Rodal (Precisión del Muestreo)</h2>
             </div>
+            <p class="conaf-help-text">Cálculo de medias, varianzas, coeficiente de variación ($CV\%$) y error de muestreo ($E\%$) con distribucion $t$-Student al $95\%$ de confianza.</p>
 
-            <div class="table-container margin-top-sm" id="printEstadisticaArea">
-                <table id="tablaEstadisticaMuestreo" class="stat-table">
+            <div class="table-responsive margin-top-sm" id="printEstadisticaArea">
+                <table id="tablaEstadisticaMuestreo" class="tabla-estadistica-conaf">
                     <thead>
                         <tr>
                             <th rowspan="2">Rodal</th>
@@ -329,14 +331,14 @@
                             <th colspan="2">Error de Muestreo (%)</th>
                         </tr>
                         <tr>
-                            <th class="sub">Densidad (arb/ha)</th>
-                            <th class="sub">Área Basal (m²/ha)</th>
-                            <th class="sub">Densidad (arb/ha)</th>
-                            <th class="sub">Área Basal (m²/ha)</th>
-                            <th class="sub">Densidad</th>
-                            <th class="sub">Área Basal</th>
-                            <th class="sub">Densidad</th>
-                            <th class="sub">Área Basal</th>
+                            <th class="sub-header">Densidad<br>(arb/ha)</th>
+                            <th class="sub-header">Área Basal<br>(m²/ha)</th>
+                            <th class="sub-header">Densidad<br>(arb/ha)</th>
+                            <th class="sub-header">Área Basal<br>(m²/ha)</th>
+                            <th class="sub-header">Densidad</th>
+                            <th class="sub-header">Área Basal</th>
+                            <th class="sub-header">Densidad</th>
+                            <th class="sub-header">Área Basal</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyEstadisticaMuestreo"></tbody>
@@ -345,33 +347,33 @@
         </section>
 
         <!-- SECCIÓN 8: GRÁFICOS -->
-        <section class="panel-card" id="secGraficosArea">
-            <div class="card-header">
-                <div>
-                    <h2 class="card-title"><span class="step-num">8</span> Visualización Gráfica de Estructura y Manejo</h2>
-                    <p class="card-subtitle">Análisis gráfico de la estructura diamétrica, volumen por especie y balance de intervención.</p>
-                </div>
+        <section class="conaf-card" id="secGraficosArea">
+            <div class="card-header-conaf">
+                <h2 class="card-title-conaf"><span class="icon-num">8</span> Gráficos de Estructura, Área Basal y Volumetría Forestal</h2>
             </div>
 
-            <div class="charts-grid margin-top">
-                <div class="chart-card" id="boxChart1">
-                    <h3>Estructura Diamétrica (N/ha por Clase)</h3>
+            <div class="charts-grid-conaf margin-top">
+                <div class="chart-box-conaf" id="boxChart1">
+                    <h3>Estructura Diamétrica del Rodal (N/ha por Clase)</h3>
                     <canvas id="chartEstructuraDiametrica"></canvas>
                 </div>
-                <div class="chart-card" id="boxChart2">
-                    <h3>Distribución de Volumen por Especie (m³/ha)</h3>
+                <div class="chart-box-conaf" id="boxChart2">
+                    <h3>Distribución del Volumen por Especie (m³/ha)</h3>
                     <canvas id="chartVolumenEspecie"></canvas>
                 </div>
-                <div class="chart-card" id="boxChart3">
-                    <h3>Balance de Manejo Forestal (Inicial / Corta / Residual)</h3>
+                <div class="chart-box-conaf" id="boxChart3">
+                    <h3>Balance de Volumen Manejado (Inicial / Corta / Residual)</h3>
                     <canvas id="chartComparativaManejo"></canvas>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="app-footer">
-        <p>&copy; 2026 Consultoría y Gestión Forestal Sostenible | Cumplimiento Ley N° 20.283, D.S. N° 259 / 1980 & D.S. N° 68 / 2009 MINAGRI</p>
+    <footer class="conaf-footer">
+        <div class="footer-content">
+            <p>&copy; 2026 Corporación Nacional Forestal - CONAF | Ministerio de Agricultura | Gobierno de Chile</p>
+            <p class="footer-legal">Cumplimiento Ley N° 20.283 sobre Recuperación del Bosque Nativo y Fomento Forestal & D.S. N° 259 / 1980</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>
