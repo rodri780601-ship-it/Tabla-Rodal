@@ -1,4 +1,4 @@
-/* Estilos Consultoría Forestal - Secciones Desplegables & Exportaciones */
+/* Estilos Consultoría Forestal - Fórmula Árboles/ha & Exportaciones */
 :root {
     --primary-color: #1b5e20;
     --primary-hover: #2e7d32;
@@ -90,6 +90,33 @@ body {
 .card h2 {
     color: var(--primary-color);
     font-size: 1.3rem;
+}
+
+/* Caja explicativa de fórmula de densidad */
+.formula-info-box {
+    background-color: #f1f8e9;
+    border: 1px solid #c5e1a5;
+    border-radius: 6px;
+    padding: 1rem;
+    color: #2e7d32;
+    font-size: 0.9rem;
+}
+
+.formula-info-box h4 {
+    margin-bottom: 0.4rem;
+    color: #1b5e20;
+}
+
+.formula-info-box p {
+    margin-bottom: 0.3rem;
+}
+
+.formula-note {
+    font-size: 0.88rem;
+    color: #33691e;
+    margin-top: 0.4rem;
+    border-top: 1px dashed #a5d6a7;
+    padding-top: 0.4rem;
 }
 
 /* Estilos de elemento Desplegable (details/summary) */

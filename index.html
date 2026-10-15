@@ -137,7 +137,7 @@
         <!-- SECCIÓN DE IMPORTACIÓN SIMPLIFICADA DE ARCHIVOS (EXCEL / TXT) -->
         <section class="card border-highlight-green" id="secImportacionArchivos">
             <h2>2. Carga Masiva de Parcelas (Sólo: Parcela, Especie y DAP [máx. 2 decimales])</h2>
-            <p class="help-text">Suba su archivo Excel (.xlsx, .xls) o Texto Plano (.txt, .csv). El archivo debe contener strictly las columnas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (redondeado automáticamente a máximo 2 decimales).</p>
+            <p class="help-text">Suba su archivo Excel (.xlsx, .xls) o Texto Plano (.txt, .csv). El archivo debe contener estrictamente las columnas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (redondeado automáticamente a máximo 2 decimales).</p>
 
             <div id="lockWarningImport" class="alert alert-warning">
                 ⚠️ Debe validar los parámetros del Rodal (Sección 1) antes de importar parcelas.
@@ -257,8 +257,19 @@
                 <p><em>Esperando validación de parámetros del rodal...</em></p>
             </div>
 
-            <p class="help-text">Valores expresados por hectárea: $N$ (árb./ha), $G$ (m²/ha), $V$ (m³/ha). Factor de Expansión Hectárea (F): <strong id="factorExpansionText">--</strong></p>
-            <div class="table-responsive" id="printTablaArea">
+            <!-- EXPLICACIÓN Y VISUALIZACIÓN DE LA FÓRMULA DE CÁLCULO DE ÁRBOLES/HA -->
+            <div class="formula-info-box margin-top-sm">
+                <h4>📐 Metodología de Cálculo de Densidad ($N$, árb./ha):</h4>
+                <p>
+                    $$	ext{Factor de Expansión (F)} = rac{10.000 	ext{ m}^2}{n 	imes A} = rac{10.000}{	ext{Superficie Muestreada Total (m}^2	ext{)}}$$
+                    $$	ext{Número de Árboles por Hectárea (N)} = 	ext{Árboles Registrados} 	imes F$$
+                </p>
+                <p class="formula-note">
+                    Factor de Expansión Hectárea ($F$): <strong id="factorExpansionText">--</strong> | Cada árbol medido representa en el rodal a <strong id="arbolesEquivalentesText">--</strong> árboles/ha.
+                </p>
+            </div>
+
+            <div class="table-responsive margin-top-sm" id="printTablaArea">
                 <table id="tablaRodal" class="tabla-rodal-custom">
                     <thead id="theadRodal">
                         <!-- Encabezados estructurados -->

@@ -541,7 +541,6 @@ function renderizarTablaIngresos() {
     const tbody = document.getElementById("tbodyIngresos");
     tbody.innerHTML = "";
     
-    // Actualizar contadores
     document.getElementById("totalRegistrosCount").textContent = registrosIngresados.length;
     document.getElementById("totalRegistrosBadge").textContent = registrosIngresados.length;
 
@@ -570,12 +569,17 @@ function renderizarTablaIngresos() {
 function calcularTablaRodal() {
     if (!parametrosValidados) {
         document.getElementById("factorExpansionText").textContent = "--";
+        document.getElementById("arbolesEquivalentesText").textContent = "--";
         return { clases: [], especiesEspeciales: [], datos: {}, factorExpansion: 0 };
     }
 
     const { numParcelas, areaParcela, amplitudClase } = parametrosValidados;
+    
+    // FORMULA DE CALCULOS DE ARBOLES POR HECTAREA (FACTOR DE EXPANSION F = 10,000 / (n * A))
     const factorExpansion = 10000 / (numParcelas * areaParcela);
+    
     document.getElementById("factorExpansionText").textContent = `${factorExpansion.toFixed(2)} (1 ha / ${(numParcelas * areaParcela)} m² muestreados)`;
+    document.getElementById("arbolesEquivalentesText").textContent = `${factorExpansion.toFixed(2)}`;
 
     if (registrosIngresados.length === 0) {
         return { clases: [], especiesEspeciales: [], datos: {}, factorExpansion };
@@ -629,6 +633,7 @@ function calcularTablaRodal() {
 
         const columnaEsp = topEspecies.includes(arb.especie) ? arb.especie : "Otras";
 
+        // APLICACIÓN DEL FACTOR DE EXPANSIÓN
         matriz[claseIdx][columnaEsp].nIni += factorExpansion;
         matriz[claseIdx][columnaEsp].gIni += gArbol * factorExpansion;
         matriz[claseIdx][columnaEsp].vIni += vArbol * factorExpansion;
@@ -1138,7 +1143,6 @@ async function exportarInformePDFApaisadoOficio() {
     const detailsElem = document.getElementById("detailsDatosCampo");
     const wasOpen = detailsElem.hasAttribute("open");
     
-    // Asegurar que la sección de datos de campo se expanda temporalmente para capturar si fuera necesario
     if (!wasOpen) detailsElem.setAttribute("open", "true");
 
     const { jsPDF } = window.jspdf;
@@ -1234,7 +1238,6 @@ async function exportarInformePDFApaisadoOficio() {
     const hC3 = (canvasC3.height * wChart3) / canvasC3.width;
     doc.addImage(imgC3, 'PNG', 230, yGraficos, wChart3, hC3);
 
-    // Restaurar estado inicial del desplegable
     if (!wasOpen) detailsElem.removeAttribute("open");
 
     doc.save(`Tabla_Rodal_Oficio_Apaisado_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
