@@ -12,8 +12,6 @@ const TABLA_T_STUDENT_95 = {
 function obtenerTStudent(gradosLibertad) {
     if (gradosLibertad <= 0) return 2.000;
     if (TABLA_T_STUDENT_95[gradosLibertad]) return TABLA_T_STUDENT_95[gradosLibertad];
-    
-    // Interpolación básica o aproximación para df > 30
     if (gradosLibertad > 30 && gradosLibertad < 40) return 2.030;
     if (gradosLibertad > 40 && gradosLibertad < 60) return 2.010;
     if (gradosLibertad > 60) return 1.980;
@@ -542,7 +540,10 @@ function calcularVolumenArbol(dap, alturaM, especieNombre) {
 function renderizarTablaIngresos() {
     const tbody = document.getElementById("tbodyIngresos");
     tbody.innerHTML = "";
+    
+    // Actualizar contadores
     document.getElementById("totalRegistrosCount").textContent = registrosIngresados.length;
+    document.getElementById("totalRegistrosBadge").textContent = registrosIngresados.length;
 
     registrosIngresados.forEach((item, index) => {
         const g = (Math.PI / 40000) * Math.pow(item.dap, 2);
@@ -748,7 +749,7 @@ function renderizarTablaRodal(res) {
     tbody.appendChild(trTotal);
 }
 
-// RENDERIZADO DE LA NUEVA TABLA SOLICITADA EN LA IMAGEN (ESTADÍSTICA DE MUESTREO POR RODAL)
+// RENDERIZADO DE LA TABLA ESTADÍSTICA DE MUESTREO POR RODAL
 function renderizarEstadisticaMuestreo() {
     const tbody = document.getElementById("tbodyEstadisticaMuestreo");
     tbody.innerHTML = "";
@@ -761,7 +762,6 @@ function renderizarEstadisticaMuestreo() {
     const { rodalName, numParcelas, areaParcela } = parametrosValidados;
     const factorParcelaHa = 10000 / areaParcela;
 
-    // Agrupar por parcelas
     const parcelasMap = {};
     for (let p = 1; p <= numParcelas; p++) {
         parcelasMap[p] = { nArboles: 0, gTotal: 0 };
@@ -777,7 +777,6 @@ function renderizarEstadisticaMuestreo() {
         parcelasMap[pNo].gTotal += gArbol;
     });
 
-    // Convertir a valores por hectárea por parcela
     const listaN_ha = [];
     const listaG_ha = [];
 
@@ -791,23 +790,18 @@ function renderizarEstadisticaMuestreo() {
     const df = Math.max(1, nNum - 1);
     const tVal = obtenerTStudent(df);
 
-    // Medias
     const mediaN = listaN_ha.reduce((a,b) => a+b, 0) / nNum;
     const mediaG = listaG_ha.reduce((a,b) => a+b, 0) / nNum;
 
-    // Varianzas muestrales (s^2)
     const varN = nNum > 1 ? (listaN_ha.reduce((a,b) => a + Math.pow(b - mediaN, 2), 0) / (nNum - 1)) : 0;
     const varG = nNum > 1 ? (listaG_ha.reduce((a,b) => a + Math.pow(b - mediaG, 2), 0) / (nNum - 1)) : 0;
 
-    // Desviaciones estándar (s)
     const sdN = Math.sqrt(varN);
     const sdG = Math.sqrt(varG);
 
-    // Coeficiente de Variación CV (%) = (s / media) * 100
     const cvN = mediaN > 0 ? (sdN / mediaN) * 100 : 0;
     const cvG = mediaG > 0 ? (sdG / mediaG) * 100 : 0;
 
-    // Error de Muestreo E (%) = (t * (s / sqrt(n)) / media) * 100
     const errN = mediaN > 0 ? (tVal * (sdN / Math.sqrt(nNum)) / mediaN) * 100 : 0;
     const errG = mediaG > 0 ? (tVal * (sdG / Math.sqrt(nNum)) / mediaG) * 100 : 0;
 
@@ -1033,7 +1027,7 @@ function exportarTablaExcel() {
         }
     }
 
-    // HOJA 2: ESTADÍSTICA DE MUESTREO (NUEVA HOJA CON LA TABLA DE LA IMAGEN)
+    // HOJA 2: ESTADÍSTICA DE MUESTREO
     const wsStatData = [
         ["ESTADÍSTICAS DEL INVENTARIO FORESTAL POR RODAL (PRECISIÓN DEL MUESTREO)"],
         [],
@@ -1041,7 +1035,6 @@ function exportarTablaExcel() {
         ["", "", "", "Densidad (arb/ha)", "Área Basal (m²/ha)", "Densidad (arb/ha)", "Área Basal (m²/ha)", "Densidad", "Área Basal", "Densidad", "Área Basal"]
     ];
 
-    // Cálculos estadísticos
     const factorParcelaHa = 10000 / p.areaParcela;
     const parcelasMap = {};
     for (let pr = 1; pr <= p.numParcelas; pr++) parcelasMap[pr] = { nArboles: 0, gTotal: 0 };
@@ -1142,9 +1135,15 @@ async function exportarInformePDFApaisadoOficio() {
         return;
     }
 
+    const detailsElem = document.getElementById("detailsDatosCampo");
+    const wasOpen = detailsElem.hasAttribute("open");
+    
+    // Asegurar que la sección de datos de campo se expanda temporalmente para capturar si fuera necesario
+    if (!wasOpen) detailsElem.setAttribute("open", "true");
+
     const { jsPDF } = window.jspdf;
     
-    // TAMAÑO OFICIO / LEGAL APAISADO: 355.6 mm x 215.9 mm
+    // TAMAÑO OFICIO APAISADO: 355.6 mm x 215.9 mm
     const doc = new jsPDF({
         orientation: 'landscape',
         unit: 'mm',
@@ -1234,6 +1233,9 @@ async function exportarInformePDFApaisadoOficio() {
     const wChart3 = 110;
     const hC3 = (canvasC3.height * wChart3) / canvasC3.width;
     doc.addImage(imgC3, 'PNG', 230, yGraficos, wChart3, hC3);
+
+    // Restaurar estado inicial del desplegable
+    if (!wasOpen) detailsElem.removeAttribute("open");
 
     doc.save(`Tabla_Rodal_Oficio_Apaisado_${p.rodalName.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
 }

@@ -137,7 +137,7 @@
         <!-- SECCIÓN DE IMPORTACIÓN SIMPLIFICADA DE ARCHIVOS (EXCEL / TXT) -->
         <section class="card border-highlight-green" id="secImportacionArchivos">
             <h2>2. Carga Masiva de Parcelas (Sólo: Parcela, Especie y DAP [máx. 2 decimales])</h2>
-            <p class="help-text">Suba su archivo Excel (.xlsx, .xls) o Texto Plano (.txt, .csv). El archivo debe contener estrictamente las columnas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (redondeado automáticamente a máximo 2 decimales).</p>
+            <p class="help-text">Suba su archivo Excel (.xlsx, .xls) o Texto Plano (.txt, .csv). El archivo debe contener strictly las columnas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (redondeado automáticamente a máximo 2 decimales).</p>
 
             <div id="lockWarningImport" class="alert alert-warning">
                 ⚠️ Debe validar los parámetros del Rodal (Sección 1) antes de importar parcelas.
@@ -172,63 +172,74 @@
             </div>
         </section>
 
-        <!-- REGISTRO Y EDICIÓN INDIVIDUAL DE ÁRBOLES (HOJA 2) -->
+        <!-- REGISTRO Y EDICIÓN INDIVIDUAL DE ÁRBOLES (HOJA 2) - DESPLEGABLE CON DETAILS/SUMMARY -->
         <section class="card" id="secIngresoCampo">
-            <h2>4. Datos de Campo de Parcelas (Hoja 2 - Detalle por Árbol)</h2>
-            <div id="lockWarningCampo" class="alert alert-warning">
-                ⚠️ Debe completar y validar todos los parámetros del Rodal antes de agregar registros manualmente.
-            </div>
+            <details id="detailsDatosCampo">
+                <summary class="collapsible-summary">
+                    <div class="summary-content">
+                        <h2>4. Datos de Campo de Parcelas (Hoja 2 - Detalle por Árbol)</h2>
+                        <span class="summary-badge-count"><span id="totalRegistrosBadge">0</span> árboles registrados</span>
+                    </div>
+                    <span class="toggle-icon">🔽</span>
+                </summary>
 
-            <form id="treeForm" class="form-grid">
-                <div class="form-group">
-                    <label for="parcelaNo">N° Parcela:</label>
-                    <input type="number" id="parcelaNo" value="1" min="1" required disabled>
-                </div>
-                <div class="form-group">
-                    <label for="especieSelect">Especie Arbórea Nativa (D.S. 68/2009):</label>
-                    <select id="especieSelect" required disabled>
-                        <!-- Cargado dinámicamente -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="dapInput">DAP (cm - máx 2 decimales):</label>
-                    <input type="number" id="dapInput" step="0.01" min="0.01" placeholder="Ej: 24.55" required disabled>
-                </div>
-                <div class="form-group">
-                    <label for="cortaSelect">Intervención (Corta):</label>
-                    <select id="cortaSelect" disabled>
-                        <option value="NO">Conservar (Residual)</option>
-                        <option value="SI">Corta (Cosecha / Raleo)</option>
-                    </select>
-                </div>
-                <div class="form-group full-width">
-                    <button type="submit" id="btnAgregarArbol" class="btn btn-primary" disabled>➕ Agregar Árbol Individual</button>
-                    <button type="button" id="btnBorrarTodo" class="btn btn-danger" disabled>🗑️ Limpiar Todos los Registros</button>
-                </div>
-            </form>
+                <div class="collapsible-body margin-top-sm">
+                    <div id="lockWarningCampo" class="alert alert-warning">
+                        ⚠️ Debe completar y validar todos los parámetros del Rodal antes de agregar registros manualmente.
+                    </div>
 
-            <div class="table-responsive margin-top">
-                <h3>Registros Cargados (<span id="totalRegistrosCount">0</span> árboles)</h3>
-                <table id="tablaIngresos">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Rodal</th>
-                            <th>Parcela</th>
-                            <th>Especie</th>
-                            <th>DAP (cm)</th>
-                            <th>Altura H (m)</th>
-                            <th>Área Basal (g, m²)</th>
-                            <th>Volumen Ind. (v, m³)</th>
-                            <th>Intervención</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbodyIngresos">
-                        <!-- Filas insertadas dinámicamente -->
-                    </tbody>
-                </table>
-            </div>
+                    <form id="treeForm" class="form-grid">
+                        <div class="form-group">
+                            <label for="parcelaNo">N° Parcela:</label>
+                            <input type="number" id="parcelaNo" value="1" min="1" required disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="especieSelect">Especie Arbórea Nativa (D.S. 68/2009):</label>
+                            <select id="especieSelect" required disabled>
+                                <!-- Cargado dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dapInput">DAP (cm - máx 2 decimales):</label>
+                            <input type="number" id="dapInput" step="0.01" min="0.01" placeholder="Ej: 24.55" required disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="cortaSelect">Intervención (Corta):</label>
+                            <select id="cortaSelect" disabled>
+                                <option value="NO">Conservar (Residual)</option>
+                                <option value="SI">Corta (Cosecha / Raleo)</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <button type="submit" id="btnAgregarArbol" class="btn btn-primary" disabled>➕ Agregar Árbol Individual</button>
+                            <button type="button" id="btnBorrarTodo" class="btn btn-danger" disabled>🗑️ Limpiar Todos los Registros</button>
+                        </div>
+                    </form>
+
+                    <div class="table-responsive margin-top">
+                        <h3>Registros Cargados (<span id="totalRegistrosCount">0</span> árboles)</h3>
+                        <table id="tablaIngresos">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Rodal</th>
+                                    <th>Parcela</th>
+                                    <th>Especie</th>
+                                    <th>DAP (cm)</th>
+                                    <th>Altura H (m)</th>
+                                    <th>Área Basal (g, m²)</th>
+                                    <th>Volumen Ind. (v, m³)</th>
+                                    <th>Intervención</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyIngresos">
+                                <!-- Filas insertadas dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </details>
         </section>
 
         <!-- TABLA DE RODAL GENERADA (HOJA 1) -->
@@ -281,10 +292,10 @@
             </div>
         </section>
 
-        <!-- SECCIÓN DE ESTADÍSTICA DE MUESTREO (NUEVA TABLA SOLICITADA) -->
+        <!-- SECCIÓN DE ESTADÍSTICA DE MUESTREO (TABLA SOLICITADA) -->
         <section class="card border-highlight-orange" id="secEstadisticaMuestreo">
             <h2>7. Estadísticas del Inventario Forestal por Rodal (Precisión del Muestreo)</h2>
-            <p class="help-text">Cálculo de la media, varianza, coeficiente de variación ($CV\%$) y error de muestreo ($E\%$) con distribucion $t$-Student al $95\%$ de confianza para Densidad y Área Basal por parcela.</p>
+            <p class="help-text">Cálculo de la media, varianza, coeficiente de variación ($CV\%$) y error de muestreo ($E\%$) con distribución $t$-Student al $95\%$ de confianza para Densidad y Área Basal por parcela.</p>
 
             <div class="table-responsive margin-top-sm" id="printEstadisticaArea">
                 <table id="tablaEstadisticaMuestreo" class="tabla-estadistica-custom">
