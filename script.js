@@ -337,6 +337,7 @@ function importarArraySimplificado(dataArray, nombreArchivo) {
         const especieFinal = especieEncontrada ? especieEncontrada.comun : (especieRaw || "Roble");
 
         if (!isNaN(dapRaw) && dapRaw > 0) {
+            // REDONDEO ESTRICTO A MÁXIMO DOS DECIMALES
             const dapFinal = Math.round(dapRaw * 100) / 100;
             registrosIngresados.push({
                 rodal: parametrosValidados.rodalName,
@@ -725,8 +726,8 @@ function renderizarTablaRodal(res) {
         res.especiesColumnas.forEach(esp => {
             const cell = res.matriz[i][esp];
             tr.innerHTML += `
-                <td>${cell.nIni > 0 ? cell.nIni.toFixed(0) : '-'}</td>
-                <td>${cell.nRes > 0 ? cell.nRes.toFixed(0) : '-'}</td>
+                <td>${cell.nIni > 0 ? cell.nIni.toFixed(2) : '-'}</td>
+                <td>${cell.nRes > 0 ? cell.nRes.toFixed(2) : '-'}</td>
                 <td>${cell.gIni > 0 ? cell.gIni.toFixed(2) : '-'}</td>
                 <td>${cell.gRes > 0 ? cell.gRes.toFixed(2) : '-'}</td>
                 <td>${cell.vIni > 0 ? cell.vIni.toFixed(2) : '-'}</td>
@@ -742,8 +743,8 @@ function renderizarTablaRodal(res) {
     res.especiesColumnas.forEach(esp => {
         const tot = res.totalesEspecie[esp];
         trTotal.innerHTML += `
-            <td><strong>${tot.nIni.toFixed(0)}</strong></td>
-            <td><strong>${tot.nRes.toFixed(0)}</strong></td>
+            <td><strong>${tot.nIni.toFixed(2)}</strong></td>
+            <td><strong>${tot.nRes.toFixed(2)}</strong></td>
             <td><strong>${tot.gIni.toFixed(2)}</strong></td>
             <td><strong>${tot.gRes.toFixed(2)}</strong></td>
             <td><strong>${tot.vIni.toFixed(2)}</strong></td>
@@ -812,11 +813,11 @@ function renderizarEstadisticaMuestreo() {
     tr.innerHTML = `
         <td><strong>${rodalName}</strong></td>
         <td>${nNum}</td>
-        <td>${tVal.toFixed(3)}</td>
+        <td>${tVal.toFixed(2)}</td>
         <td>${mediaN.toFixed(2)}</td>
         <td>${mediaG.toFixed(2)}</td>
         <td>${varN.toFixed(2)}</td>
-        <td>${varG.toFixed(4)}</td>
+        <td>${varG.toFixed(2)}</td>
         <td>${cvN.toFixed(2)}%</td>
         <td>${cvG.toFixed(2)}%</td>
         <td>${errN.toFixed(2)}%</td>
@@ -919,6 +920,7 @@ function actualizarGraficos(res) {
     });
 }
 
+// EXPORTACIÓN A EXCEL CON TÍTULOS EN NEGRITA, FONDO GRIS DE RELLENO Y BORDES DE FILA/COLUMNA MARCADOS (MÁX 2 DECIMALES)
 function exportarTablaExcel() {
     if (typeof XLSX === 'undefined') {
         alert("La librería SheetJS no está disponible.");
@@ -942,16 +944,16 @@ function exportarTablaExcel() {
     const ws1Data = [];
     ws1Data.push(["12.3.9 TABLA DE RODAL INICIAL, RESIDUAL Y VOLUMETRÍA FORESTAL"]);
     ws1Data.push([]);
-    ws1Data.push(["Identificador Rodal:", p.rodalName, "", "Superficie Rodal (ha):", p.superficieRodal]);
+    ws1Data.push(["Identificador Rodal:", p.rodalName, "", "Superficie Rodal (ha):", Number(p.superficieRodal.toFixed(2))]);
     ws1Data.push(["Tipo Forestal (Art. 19 D.S. 259):", p.tipoForestal, "", "Estructura:", p.estructuraRodal]);
     ws1Data.push(["Estado de Desarrollo:", p.estadoDesarrollo, "", "Diseño Muestreo:", p.tipoMuestreo]);
-    ws1Data.push(["N° Parcelas:", p.numParcelas, "", "Superficie Parcela (m²):", p.areaParcela]);
-    ws1Data.push(["Forma Parcela:", p.formaParcela, "", "Amplitud Clase (cm):", p.amplitudClase]);
+    ws1Data.push(["N° Parcelas:", p.numParcelas, "", "Superficie Parcela (m²):", Number(p.areaParcela.toFixed(2))]);
+    ws1Data.push(["Forma Parcela:", p.formaParcela, "", "Amplitud Clase (cm):", Number(p.amplitudClase.toFixed(2))]);
     ws1Data.push([]);
 
     const rowH1 = ["Rango (cm) ≤ Ø <", "", "Mc"];
     res.especiesColumnas.forEach(esp => {
-        const altP = alturasPromedioEspecie[esp] ? ` (H=${alturasPromedioEspecie[esp]}m)` : '';
+        const altP = alturasPromedioEspecie[esp] ? ` (H=${alturasPromedioEspecie[esp].toFixed(2)}m)` : '';
         rowH1.push(`${esp}${altP}`, "", "", "", "", "");
     });
     ws1Data.push(rowH1);
@@ -965,10 +967,14 @@ function exportarTablaExcel() {
     ws1Data.push(rowH3);
 
     res.clases.forEach((cl, i) => {
-        const row = [cl.min, cl.max, cl.mc];
+        const row = [Number(cl.min.toFixed(2)), Number(cl.max.toFixed(2)), Number(cl.mc.toFixed(2))];
         res.especiesColumnas.forEach(esp => {
             const c = res.matriz[i][esp];
-            row.push(c.nIni, c.nRes, c.gIni, c.gRes, c.vIni, c.vRes);
+            row.push(
+                Number(c.nIni.toFixed(2)), Number(c.nRes.toFixed(2)),
+                Number(c.gIni.toFixed(2)), Number(c.gRes.toFixed(2)),
+                Number(c.vIni.toFixed(2)), Number(c.vRes.toFixed(2))
+            );
         });
         ws1Data.push(row);
     });
@@ -976,12 +982,17 @@ function exportarTablaExcel() {
     const rowTot = ["TOTAL RODAL", "", ""];
     res.especiesColumnas.forEach(esp => {
         const t = res.totalesEspecie[esp];
-        rowTot.push(t.nIni, t.nRes, t.gIni, t.gRes, t.vIni, t.vRes);
+        rowTot.push(
+            Number(t.nIni.toFixed(2)), Number(t.nRes.toFixed(2)),
+            Number(t.gIni.toFixed(2)), Number(t.gRes.toFixed(2)),
+            Number(t.vIni.toFixed(2)), Number(t.vRes.toFixed(2))
+        );
     });
     ws1Data.push(rowTot);
 
     const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
 
+    // ESTILOS EXCEL: BORDES EN CELDAS, TÍTULOS EN NEGRITA Y CON RELLENO GRIS (#D6D6D6)
     const thinBorder = {
         top: { style: "thin", color: { rgb: "000000" } },
         bottom: { style: "thin", color: { rgb: "000000" } },
@@ -989,9 +1000,9 @@ function exportarTablaExcel() {
         right: { style: "thin", color: { rgb: "000000" } }
     };
 
-    const styleHeader = {
-        font: { bold: true, color: { rgb: "FFFFFF" } },
-        fill: { fgColor: { rgb: "006633" } },
+    const styleHeaderGray = {
+        font: { bold: true, color: { rgb: "000000" } },
+        fill: { fgColor: { rgb: "D6D6D6" } },
         alignment: { horizontal: "center", vertical: "center", wrapText: true },
         border: thinBorder
     };
@@ -1003,14 +1014,14 @@ function exportarTablaExcel() {
 
     const styleTotal = {
         font: { bold: true },
-        fill: { fgColor: { rgb: "E6F2EB" } },
+        fill: { fgColor: { rgb: "E6E6E6" } },
         alignment: { horizontal: "center", vertical: "center" },
         border: thinBorder
     };
 
-    const range = XLSX.utils.decode_range(ws1['!ref']);
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-        for (let C = range.s.c; C <= range.e.c; ++C) {
+    const range1 = XLSX.utils.decode_range(ws1['!ref']);
+    for (let R = range1.s.r; R <= range1.e.r; ++R) {
+        for (let C = range1.s.c; C <= range1.e.c; ++C) {
             const cell_address = XLSX.utils.encode_cell({ r: R, c: C });
             if (!ws1[cell_address]) {
                 ws1[cell_address] = { t: 's', v: '' };
@@ -1020,8 +1031,8 @@ function exportarTablaExcel() {
             if (R === 0) {
                 cell.s = { font: { bold: true, size: 14 }, alignment: { horizontal: "center" } };
             } else if (R >= 7 && R <= 9) {
-                cell.s = styleHeader;
-            } else if (R === range.e.r) {
+                cell.s = styleHeaderGray;
+            } else if (R === range1.e.r) {
                 cell.s = styleTotal;
             } else if (R > 9) {
                 cell.s = styleCellCenter;
@@ -1029,7 +1040,7 @@ function exportarTablaExcel() {
         }
     }
 
-    // HOJA 2: ESTADÍSTICA DE MUESTREO
+    // HOJA 2: ESTADÍSTICA DE MUESTREO (REDONDEO A MAX 2 DECIMALES Y ESTILOS)
     const wsStatData = [
         ["ESTADÍSTICAS DEL INVENTARIO FORESTAL POR RODAL (PRECISIÓN DEL MUESTREO)"],
         [],
@@ -1066,14 +1077,33 @@ function exportarTablaExcel() {
     const errG = mG > 0 ? (tVal*(Math.sqrt(vG)/Math.sqrt(nNum))/mG)*100 : 0;
 
     wsStatData.push([
-        p.rodalName, nNum, tVal.toFixed(3),
-        mN.toFixed(2), mG.toFixed(2),
-        vN.toFixed(2), vG.toFixed(4),
-        `${cvN.toFixed(2)}%`, `${cvG.toFixed(2)}%`,
-        `${errN.toFixed(2)}%`, `${errG.toFixed(2)}%`
+        p.rodalName, nNum, Number(tVal.toFixed(2)),
+        Number(mN.toFixed(2)), Number(mG.toFixed(2)),
+        Number(vN.toFixed(2)), Number(vG.toFixed(2)),
+        Number(cvN.toFixed(2)), Number(cvG.toFixed(2)),
+        Number(errN.toFixed(2)), Number(errG.toFixed(2))
     ]);
 
     const wsStat = XLSX.utils.aoa_to_sheet(wsStatData);
+
+    const rangeStat = XLSX.utils.decode_range(wsStat['!ref']);
+    for (let R = rangeStat.s.r; R <= rangeStat.e.r; ++R) {
+        for (let C = rangeStat.s.c; C <= rangeStat.e.c; ++C) {
+            const cell_address = XLSX.utils.encode_cell({ r: R, c: C });
+            if (!wsStat[cell_address]) {
+                wsStat[cell_address] = { t: 's', v: '' };
+            }
+            const cell = wsStat[cell_address];
+
+            if (R === 0) {
+                cell.s = { font: { bold: true, size: 13 }, alignment: { horizontal: "center" } };
+            } else if (R >= 2 && R <= 3) {
+                cell.s = styleHeaderGray;
+            } else if (R > 3) {
+                cell.s = styleCellCenter;
+            }
+        }
+    }
 
     // HOJA 3: REGISTROS DE CAMPO
     const ws2Data = [
@@ -1081,7 +1111,7 @@ function exportarTablaExcel() {
         ["Rodal", p.rodalName],
         ["Tipo Forestal", p.tipoForestal],
         ["Estructura", p.estructuraRodal],
-        ["Superficie (ha)", p.superficieRodal],
+        ["Superficie (ha)", Number(p.superficieRodal.toFixed(2))],
         [],
         ["DETALLE DE REGISTROS DE CAMPO:"],
         ["Rodal", "Parcela", "Especie", "DAP (cm)", "Área Basal g (m²)", "Volumen Ind. v (m³)"]
@@ -1091,7 +1121,7 @@ function exportarTablaExcel() {
         const g = (Math.PI / 40000) * Math.pow(item.dap, 2);
         const H = alturasPromedioEspecie[item.especie] || 15.0;
         const v = calcularVolumenArbol(item.dap, H, item.especie);
-        ws2Data.push([item.rodal, item.parcela, item.especie, item.dap, g, v]);
+        ws2Data.push([item.rodal, item.parcela, item.especie, Number(item.dap.toFixed(2)), Number(g.toFixed(2)), Number(v.toFixed(2))]);
     });
 
     const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);
@@ -1172,7 +1202,7 @@ async function exportarInformePDFApaisadoOficio() {
     
     doc.setFont('helvetica', 'normal');
     doc.text(`Tipo Forestal: ${p.tipoForestal} | Estructura: ${p.estructuraRodal} | Estado: ${p.estadoDesarrollo}`, margin, 29);
-    doc.text(`Superficie: ${p.superficieRodal} ha | Muestreo: ${p.tipoMuestreo} (${p.formaParcela}) | Parcelas: ${p.numParcelas} de ${p.areaParcela} m²`, margin, 34);
+    doc.text(`Superficie: ${p.superficieRodal.toFixed(2)} ha | Muestreo: ${p.tipoMuestreo} (${p.formaParcela}) | Parcelas: ${p.numParcelas} de ${p.areaParcela.toFixed(2)} m²`, margin, 34);
 
     const tablaElement = document.getElementById("printTablaArea");
     const canvasTabla = await html2canvas(tablaElement, { scale: 2, useCORS: true, logging: false });

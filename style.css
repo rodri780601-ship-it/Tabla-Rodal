@@ -490,7 +490,7 @@ details[open] .arrow-icon { transform: rotate(180deg); }
     font-size: 0.85rem;
 }
 
-/* Tablas Formales con Bordes Negros */
+/* Tablas Formales con Bordes Negros Continuos */
 .table-responsive {
     overflow-x: auto;
     margin-top: 1rem;
@@ -519,10 +519,14 @@ th, td {
 }
 
 th {
-    background-color: #e5e7eb;
+    background-color: #d6d6d6;
     color: #000000;
     font-weight: bold;
+    text-align: center;
 }
+
+tbody tr:nth-child(even) { background-color: #f8f9fa; }
+tbody tr:hover { background-color: #e6f2eb; }
 
 /* Tabla Rodal Estilo CONAF (Verde) */
 .tabla-rodal-conaf th {
@@ -547,7 +551,7 @@ th {
     font-weight: bold;
 }
 
-/* Tabla Estadística (Gris Claro como Imagen Adjunta) */
+/* Tabla Estadística (Gris Claro Oficial de Inventarios) */
 .tabla-estadistica-conaf th {
     background-color: #d6d6d6;
     color: #000000;
