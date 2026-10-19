@@ -579,7 +579,7 @@ function calcularTablaRodal() {
     const factorExpansion = 10000 / (numParcelas * areaParcela);
     
     document.getElementById("factorExpansionText").textContent = `${factorExpansion.toFixed(2)} (1 ha / ${(numParcelas * areaParcela)} m² muestreados)`;
-    document.getElementById("arbolesEquivalentesText").textContent = `${factorExpansion.toFixed(2)}`;
+    document.getElementById("arbolesEquivalentesText").textContent = `${Math.round(factorExpansion)}`;
 
     if (registrosIngresados.length === 0) {
         return { clases: [], especiesEspeciales: [], datos: {}, factorExpansion };
@@ -724,9 +724,10 @@ function renderizarTablaRodal(res) {
 
         res.especiesColumnas.forEach(esp => {
             const cell = res.matriz[i][esp];
+            // REDONDEO DE N (ÁRB./HA) A NÚMERO ENTERO SÍN DECIMALES
             tr.innerHTML += `
-                <td>${cell.nIni > 0 ? cell.nIni.toFixed(2) : '-'}</td>
-                <td>${cell.nRes > 0 ? cell.nRes.toFixed(2) : '-'}</td>
+                <td>${cell.nIni > 0 ? Math.round(cell.nIni) : '-'}</td>
+                <td>${cell.nRes > 0 ? Math.round(cell.nRes) : '-'}</td>
                 <td>${cell.gIni > 0 ? cell.gIni.toFixed(2) : '-'}</td>
                 <td>${cell.gRes > 0 ? cell.gRes.toFixed(2) : '-'}</td>
                 <td>${cell.vIni > 0 ? cell.vIni.toFixed(2) : '-'}</td>
@@ -741,9 +742,10 @@ function renderizarTablaRodal(res) {
     trTotal.innerHTML = `<td colspan="3"><strong>TOTAL RODAL</strong></td>`;
     res.especiesColumnas.forEach(esp => {
         const tot = res.totalesEspecie[esp];
+        // REDONDEO DE N (ÁRB./HA) A NÚMERO ENTERO SÍN DECIMALES
         trTotal.innerHTML += `
-            <td><strong>${tot.nIni.toFixed(2)}</strong></td>
-            <td><strong>${tot.nRes.toFixed(2)}</strong></td>
+            <td><strong>${Math.round(tot.nIni)}</strong></td>
+            <td><strong>${Math.round(tot.nRes)}</strong></td>
             <td><strong>${tot.gIni.toFixed(2)}</strong></td>
             <td><strong>${tot.gRes.toFixed(2)}</strong></td>
             <td><strong>${tot.vIni.toFixed(2)}</strong></td>
@@ -809,13 +811,14 @@ function renderizarEstadisticaMuestreo() {
     const errG = mediaG > 0 ? (tVal * (sdG / Math.sqrt(nNum)) / mediaG) * 100 : 0;
 
     const tr = document.createElement("tr");
+    // REDONDEO DE DENSIDAD N MEDIA A ENTERO
     tr.innerHTML = `
         <td><strong>${rodalName}</strong></td>
         <td>${nNum}</td>
         <td>${tVal.toFixed(2)}</td>
-        <td>${mediaN.toFixed(2)}</td>
+        <td>${Math.round(mediaN)}</td>
         <td>${mediaG.toFixed(2)}</td>
-        <td>${varN.toFixed(2)}</td>
+        <td>${Math.round(varN)}</td>
         <td>${varG.toFixed(2)}</td>
         <td>${cvN.toFixed(2)}%</td>
         <td>${cvG.toFixed(2)}%</td>
@@ -860,8 +863,9 @@ function actualizarGraficos(res) {
 
     const labelsClases = res.clases.map(c => `${c.min}-${c.max} cm`);
     
-    const dataNIni = res.clases.map((_, i) => res.matriz[i]["Total"].nIni);
-    const dataNRes = res.clases.map((_, i) => res.matriz[i]["Total"].nRes);
+    // REDONDEO DE DENSIDAD A ENTERO MÁS CERCANO
+    const dataNIni = res.clases.map((_, i) => Math.round(res.matriz[i]["Total"].nIni));
+    const dataNRes = res.clases.map((_, i) => Math.round(res.matriz[i]["Total"].nRes));
 
     if (chartEstructura) chartEstructura.destroy();
     chartEstructura = new Chart(document.getElementById("chartEstructuraDiametrica"), {
@@ -919,7 +923,7 @@ function actualizarGraficos(res) {
     });
 }
 
-// EXPORTACIÓN A EXCEL FORMATEADO EN GRIS CON MÁXIMO 2 DECIMALES
+// EXPORTACIÓN A EXCEL CON TÍTULOS EN NEGRITA, RELLENO GRIS (#D6D6D6), BORDES Y DENSIDAD N SIN DECIMALES (ENTERO MÁS CERCANO)
 function exportarTablaExcel() {
     if (typeof XLSX === 'undefined') {
         alert("La librería SheetJS no está disponible.");
@@ -969,8 +973,9 @@ function exportarTablaExcel() {
         const row = [Number(cl.min.toFixed(2)), Number(cl.max.toFixed(2)), Number(cl.mc.toFixed(2))];
         res.especiesColumnas.forEach(esp => {
             const c = res.matriz[i][esp];
+            // DENSIDAD N SIN DECIMALES (ENTERO MÁS CERCANO)
             row.push(
-                Number(c.nIni.toFixed(2)), Number(c.nRes.toFixed(2)),
+                Math.round(c.nIni), Math.round(c.nRes),
                 Number(c.gIni.toFixed(2)), Number(c.gRes.toFixed(2)),
                 Number(c.vIni.toFixed(2)), Number(c.vRes.toFixed(2))
             );
@@ -981,8 +986,9 @@ function exportarTablaExcel() {
     const rowTot = ["TOTAL RODAL", "", ""];
     res.especiesColumnas.forEach(esp => {
         const t = res.totalesEspecie[esp];
+        // DENSIDAD N SIN DECIMALES (ENTERO MÁS CERCANO)
         rowTot.push(
-            Number(t.nIni.toFixed(2)), Number(t.nRes.toFixed(2)),
+            Math.round(t.nIni), Math.round(t.nRes),
             Number(t.gIni.toFixed(2)), Number(t.gRes.toFixed(2)),
             Number(t.vIni.toFixed(2)), Number(t.vRes.toFixed(2))
         );
@@ -1038,7 +1044,7 @@ function exportarTablaExcel() {
         }
     }
 
-    // HOJA 2: ESTADÍSTICA DE MUESTREO
+    // HOJA 2: ESTADÍSTICA DE MUESTREO (DENSIDAD N SIN DECIMALES)
     const wsStatData = [
         ["ESTADÍSTICAS DEL INVENTARIO FORESTAL POR RODAL (PRECISIÓN DEL MUESTREO)"],
         [],
@@ -1076,8 +1082,8 @@ function exportarTablaExcel() {
 
     wsStatData.push([
         p.rodalName, nNum, Number(tVal.toFixed(2)),
-        Number(mN.toFixed(2)), Number(mG.toFixed(2)),
-        Number(vN.toFixed(2)), Number(vG.toFixed(2)),
+        Math.round(mN), Number(mG.toFixed(2)),
+        Math.round(vN), Number(vG.toFixed(2)),
         Number(cvN.toFixed(2)), Number(cvG.toFixed(2)),
         Number(errN.toFixed(2)), Number(errG.toFixed(2))
     ]);
