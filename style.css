@@ -1,6 +1,6 @@
 /* ESTILOS INSTITUCIONALES OFICIALES CONAF */
 :root {
-    --conaf-green: #006633;        /* Verde Institucional CONAF */
+    --conaf-green: #006633;
     --conaf-green-hover: #004d26;
     --conaf-green-light: #e6f2eb;
     --conaf-green-border: #a3d9b8;
@@ -34,7 +34,6 @@ body {
     line-height: 1.5;
 }
 
-/* Barra Gobierno de Chile */
 .gob-bar {
     background-color: #ffffff;
     border-bottom: 2px solid #e2e8f0;
@@ -61,7 +60,6 @@ body {
 .flag-blue { background-color: var(--gob-blue); width: 50%; height: 100%; }
 .flag-red { background-color: var(--gob-red); width: 50%; height: 100%; }
 
-/* Cabecera CONAF */
 .conaf-header {
     background: linear-gradient(180deg, #00552b 0%, #006633 100%);
     color: white;
@@ -142,7 +140,6 @@ body {
     opacity: 0.85;
 }
 
-/* Layout Principal */
 .main-container {
     max-width: 1350px;
     margin: 1.8rem auto;
@@ -152,7 +149,6 @@ body {
     gap: 1.6rem;
 }
 
-/* Tarjetas Estilo CONAF */
 .conaf-card {
     background: var(--card-bg);
     border: 1px solid #d1d5db;
@@ -205,7 +201,6 @@ body {
     margin-bottom: 1rem;
 }
 
-/* Formularios CONAF */
 .conaf-grid-form {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -255,7 +250,6 @@ input:disabled, select:disabled {
     cursor: not-allowed;
 }
 
-/* Botones CONAF */
 .btn-conaf {
     padding: 0.6rem 1.2rem;
     border-radius: 3px;
@@ -320,7 +314,6 @@ input:disabled, select:disabled {
     margin-top: 0.5rem;
 }
 
-/* Alertas y Badges */
 .conaf-alert {
     padding: 0.75rem 1rem;
     border-radius: 3px;
@@ -354,7 +347,6 @@ input:disabled, select:disabled {
     border: 1px solid var(--conaf-green-border);
 }
 
-/* Dropzone CONAF */
 .dropzone-conaf {
     border: 2px dashed var(--conaf-green-border);
     background-color: var(--conaf-green-light);
@@ -402,7 +394,6 @@ input:disabled, select:disabled {
     margin-top: 0.4rem;
 }
 
-/* Desplegable Details / Summary */
 details { width: 100%; }
 
 summary.conaf-summary {
@@ -447,7 +438,6 @@ details[open] .arrow-icon { transform: rotate(180deg); }
     padding-top: 1rem;
 }
 
-/* Cajas Técnicas e Información */
 .conaf-info-box {
     background-color: #eaf4fd;
     border: 1px solid #b6d8f6;
@@ -490,7 +480,6 @@ details[open] .arrow-icon { transform: rotate(180deg); }
     font-size: 0.85rem;
 }
 
-/* Tablas Formales con Bordes Negros Continuos */
 .table-responsive {
     overflow-x: auto;
     margin-top: 1rem;
@@ -528,7 +517,6 @@ th {
 tbody tr:nth-child(even) { background-color: #f8f9fa; }
 tbody tr:hover { background-color: #e6f2eb; }
 
-/* Tabla Rodal Estilo CONAF (Verde) */
 .tabla-rodal-conaf th {
     background-color: var(--conaf-green);
     color: white;
@@ -551,7 +539,6 @@ tbody tr:hover { background-color: #e6f2eb; }
     font-weight: bold;
 }
 
-/* Tabla Estadística (Gris Claro Oficial de Inventarios) */
 .tabla-estadistica-conaf th {
     background-color: #d6d6d6;
     color: #000000;
@@ -571,7 +558,6 @@ tbody tr:hover { background-color: #e6f2eb; }
     background-color: #ffffff;
 }
 
-/* Tabla Anexo */
 .tabla-anexo-conaf th {
     background-color: #00552b;
     color: white;
@@ -583,7 +569,6 @@ tbody tr:hover { background-color: #e6f2eb; }
     padding: 0.6rem 0.8rem;
 }
 
-/* Gráficos */
 .charts-grid-conaf {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -612,7 +597,6 @@ tbody tr:hover { background-color: #e6f2eb; }
     max-height: 280px;
 }
 
-/* Cards Especies */
 .conaf-species-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -635,7 +619,6 @@ tbody tr:hover { background-color: #e6f2eb; }
     font-size: 0.88rem;
 }
 
-/* Footer Institucional CONAF */
 .conaf-footer {
     background-color: #1e293b;
     color: #e2e8f0;

@@ -724,7 +724,6 @@ function renderizarTablaRodal(res) {
 
         res.especiesColumnas.forEach(esp => {
             const cell = res.matriz[i][esp];
-            // REDONDEO DE N (ÁRB./HA) A NÚMERO ENTERO SÍN DECIMALES
             tr.innerHTML += `
                 <td>${cell.nIni > 0 ? Math.round(cell.nIni) : '-'}</td>
                 <td>${cell.nRes > 0 ? Math.round(cell.nRes) : '-'}</td>
@@ -742,7 +741,6 @@ function renderizarTablaRodal(res) {
     trTotal.innerHTML = `<td colspan="3"><strong>TOTAL RODAL</strong></td>`;
     res.especiesColumnas.forEach(esp => {
         const tot = res.totalesEspecie[esp];
-        // REDONDEO DE N (ÁRB./HA) A NÚMERO ENTERO SÍN DECIMALES
         trTotal.innerHTML += `
             <td><strong>${Math.round(tot.nIni)}</strong></td>
             <td><strong>${Math.round(tot.nRes)}</strong></td>
@@ -811,7 +809,6 @@ function renderizarEstadisticaMuestreo() {
     const errG = mediaG > 0 ? (tVal * (sdG / Math.sqrt(nNum)) / mediaG) * 100 : 0;
 
     const tr = document.createElement("tr");
-    // REDONDEO DE DENSIDAD N MEDIA A ENTERO
     tr.innerHTML = `
         <td><strong>${rodalName}</strong></td>
         <td>${nNum}</td>
@@ -863,7 +860,6 @@ function actualizarGraficos(res) {
 
     const labelsClases = res.clases.map(c => `${c.min}-${c.max} cm`);
     
-    // REDONDEO DE DENSIDAD A ENTERO MÁS CERCANO
     const dataNIni = res.clases.map((_, i) => Math.round(res.matriz[i]["Total"].nIni));
     const dataNRes = res.clases.map((_, i) => Math.round(res.matriz[i]["Total"].nRes));
 
@@ -923,7 +919,11 @@ function actualizarGraficos(res) {
     });
 }
 
-// EXPORTACIÓN A EXCEL CON TÍTULOS EN NEGRITA, RELLENO GRIS (#D6D6D6), BORDES Y DENSIDAD N SIN DECIMALES (ENTERO MÁS CERCANO)
+// EXPORTACIÓN EXCLUSIVA A EXCEL APLICANDO FORMATO REQUERIDO
+// 1. Títulos en negrita con relleno gris (#D6D6D6), texto negro y centrados vertical/horizontal.
+// 2. Bordes finos continuos en negro en TODAS las celdas (interiores y exteriores).
+// 3. Ancho de columnas adaptado automáticamente.
+// 4. Datos originales sin alteraciones y uso de máximo 2 decimales.
 function exportarTablaExcel() {
     if (typeof XLSX === 'undefined') {
         alert("La librería SheetJS no está disponible.");
@@ -973,7 +973,6 @@ function exportarTablaExcel() {
         const row = [Number(cl.min.toFixed(2)), Number(cl.max.toFixed(2)), Number(cl.mc.toFixed(2))];
         res.especiesColumnas.forEach(esp => {
             const c = res.matriz[i][esp];
-            // DENSIDAD N SIN DECIMALES (ENTERO MÁS CERCANO)
             row.push(
                 Math.round(c.nIni), Math.round(c.nRes),
                 Number(c.gIni.toFixed(2)), Number(c.gRes.toFixed(2)),
@@ -986,7 +985,6 @@ function exportarTablaExcel() {
     const rowTot = ["TOTAL RODAL", "", ""];
     res.especiesColumnas.forEach(esp => {
         const t = res.totalesEspecie[esp];
-        // DENSIDAD N SIN DECIMALES (ENTERO MÁS CERCANO)
         rowTot.push(
             Math.round(t.nIni), Math.round(t.nRes),
             Number(t.gIni.toFixed(2)), Number(t.gRes.toFixed(2)),
@@ -997,6 +995,7 @@ function exportarTablaExcel() {
 
     const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
 
+    // ESTILOS EXCEL RIGUROSOS Y BORDES COMPLETOS
     const thinBorder = {
         top: { style: "thin", color: { rgb: "000000" } },
         bottom: { style: "thin", color: { rgb: "000000" } },
@@ -1005,25 +1004,42 @@ function exportarTablaExcel() {
     };
 
     const styleHeaderGray = {
-        font: { bold: true, color: { rgb: "000000" } },
+        font: { bold: true, color: { rgb: "000000" }, name: "Arial", sz: 10 },
         fill: { fgColor: { rgb: "D6D6D6" } },
         alignment: { horizontal: "center", vertical: "center", wrapText: true },
         border: thinBorder
     };
 
     const styleCellCenter = {
+        font: { name: "Arial", sz: 10 },
         alignment: { horizontal: "center", vertical: "center" },
         border: thinBorder
     };
 
     const styleTotal = {
-        font: { bold: true },
+        font: { bold: true, name: "Arial", sz: 10 },
         fill: { fgColor: { rgb: "E6E6E6" } },
         alignment: { horizontal: "center", vertical: "center" },
         border: thinBorder
     };
 
     const range1 = XLSX.utils.decode_range(ws1['!ref']);
+    
+    // Auto-ajustar ancho de columnas
+    const colWidths1 = [];
+    for (let C = range1.s.c; C <= range1.e.c; ++C) {
+        let maxL = 10;
+        for (let R = range1.s.r; R <= range1.e.r; ++R) {
+            const cell = ws1[XLSX.utils.encode_cell({ r: R, c: C })];
+            if (cell && cell.v) {
+                const len = String(cell.v).length;
+                if (len > maxL) maxL = len;
+            }
+        }
+        colWidths1.push({ wch: maxL + 3 });
+    }
+    ws1['!cols'] = colWidths1;
+
     for (let R = range1.s.r; R <= range1.e.r; ++R) {
         for (let C = range1.s.c; C <= range1.e.c; ++C) {
             const cell_address = XLSX.utils.encode_cell({ r: R, c: C });
@@ -1033,7 +1049,7 @@ function exportarTablaExcel() {
             const cell = ws1[cell_address];
 
             if (R === 0) {
-                cell.s = { font: { bold: true, size: 14 }, alignment: { horizontal: "center" } };
+                cell.s = { font: { bold: true, size: 14, name: "Arial" }, alignment: { horizontal: "center", vertical: "center" } };
             } else if (R >= 7 && R <= 9) {
                 cell.s = styleHeaderGray;
             } else if (R === range1.e.r) {
@@ -1044,7 +1060,7 @@ function exportarTablaExcel() {
         }
     }
 
-    // HOJA 2: ESTADÍSTICA DE MUESTREO (DENSIDAD N SIN DECIMALES)
+    // HOJA 2: ESTADÍSTICA DE MUESTREO (CON FORMATO Y BORDES)
     const wsStatData = [
         ["ESTADÍSTICAS DEL INVENTARIO FORESTAL POR RODAL (PRECISIÓN DEL MUESTREO)"],
         [],
@@ -1091,6 +1107,20 @@ function exportarTablaExcel() {
     const wsStat = XLSX.utils.aoa_to_sheet(wsStatData);
 
     const rangeStat = XLSX.utils.decode_range(wsStat['!ref']);
+    const colWidthsStat = [];
+    for (let C = rangeStat.s.c; C <= rangeStat.e.c; ++C) {
+        let maxL = 12;
+        for (let R = rangeStat.s.r; R <= rangeStat.e.r; ++R) {
+            const cell = wsStat[XLSX.utils.encode_cell({ r: R, c: C })];
+            if (cell && cell.v) {
+                const len = String(cell.v).length;
+                if (len > maxL) maxL = len;
+            }
+        }
+        colWidthsStat.push({ wch: maxL + 3 });
+    }
+    wsStat['!cols'] = colWidthsStat;
+
     for (let R = rangeStat.s.r; R <= rangeStat.e.r; ++R) {
         for (let C = rangeStat.s.c; C <= rangeStat.e.c; ++C) {
             const cell_address = XLSX.utils.encode_cell({ r: R, c: C });
@@ -1100,7 +1130,7 @@ function exportarTablaExcel() {
             const cell = wsStat[cell_address];
 
             if (R === 0) {
-                cell.s = { font: { bold: true, size: 13 }, alignment: { horizontal: "center" } };
+                cell.s = { font: { bold: true, size: 13, name: "Arial" }, alignment: { horizontal: "center", vertical: "center" } };
             } else if (R >= 2 && R <= 3) {
                 cell.s = styleHeaderGray;
             } else if (R > 3) {
@@ -1178,7 +1208,6 @@ async function exportarInformePDFApaisadoOficio() {
 
     const { jsPDF } = window.jspdf;
     
-    // TAMAÑO OFICIO APAISADO: 355.6 mm x 215.9 mm
     const doc = new jsPDF({
         orientation: 'landscape',
         unit: 'mm',
@@ -1191,8 +1220,7 @@ async function exportarInformePDFApaisadoOficio() {
     const margin = 10;
     const printableWidth = pageWidth - (margin * 2);
 
-    // PÁGINA 1: ENCABEZADO CONAF Y TABLA DE RODAL COMPLETA
-    doc.setFillColor(0, 102, 51); // Verde CONAF
+    doc.setFillColor(0, 102, 51);
     doc.rect(0, 0, pageWidth, 18, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(13);
@@ -1226,7 +1254,6 @@ async function exportarInformePDFApaisadoOficio() {
     const xPos = margin + ((printableWidth - imgWidth) / 2);
     doc.addImage(imgDataTabla, 'PNG', xPos, startY, imgWidth, imgHeight);
 
-    // PÁGINA 2: ESTADÍSTICA DE MUESTREO Y GRÁFICOS
     doc.addPage([215.9, 355.6], 'landscape');
 
     doc.setFillColor(0, 102, 51);
@@ -1236,7 +1263,6 @@ async function exportarInformePDFApaisadoOficio() {
     doc.setFont('helvetica', 'bold');
     doc.text("CONAF - ESTADÍSTICAS DEL MUESTREO Y ANÁLISIS GRÁFICO DEL RODAL", pageWidth / 2, 11, { align: "center" });
 
-    // Capturar Tabla Estadística
     const statElement = document.getElementById("printEstadisticaArea");
     const canvasStat = await html2canvas(statElement, { scale: 2, useCORS: true });
     const imgStat = canvasStat.toDataURL("image/png");
@@ -1244,7 +1270,6 @@ async function exportarInformePDFApaisadoOficio() {
     let hStat = (canvasStat.height * printableWidth) / canvasStat.width;
     doc.addImage(imgStat, 'PNG', margin, 24, printableWidth, Math.min(hStat, 40));
 
-    // Capturar los 3 Gráficos
     const chartBox1 = document.getElementById("boxChart1");
     const chartBox2 = document.getElementById("boxChart2");
     const chartBox3 = document.getElementById("boxChart3");
