@@ -337,7 +337,6 @@ function importarArraySimplificado(dataArray, nombreArchivo) {
         const especieFinal = especieEncontrada ? especieEncontrada.comun : (especieRaw || "Roble");
 
         if (!isNaN(dapRaw) && dapRaw > 0) {
-            // REDONDEO ESTRICTO A MÁXIMO DOS DECIMALES
             const dapFinal = Math.round(dapRaw * 100) / 100;
             registrosIngresados.push({
                 rodal: parametrosValidados.rodalName,
@@ -920,7 +919,7 @@ function actualizarGraficos(res) {
     });
 }
 
-// EXPORTACIÓN A EXCEL CON TÍTULOS EN NEGRITA, FONDO GRIS DE RELLENO Y BORDES DE FILA/COLUMNA MARCADOS (MÁX 2 DECIMALES)
+// EXPORTACIÓN A EXCEL FORMATEADO EN GRIS CON MÁXIMO 2 DECIMALES
 function exportarTablaExcel() {
     if (typeof XLSX === 'undefined') {
         alert("La librería SheetJS no está disponible.");
@@ -992,7 +991,6 @@ function exportarTablaExcel() {
 
     const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
 
-    // ESTILOS EXCEL: BORDES EN CELDAS, TÍTULOS EN NEGRITA Y CON RELLENO GRIS (#D6D6D6)
     const thinBorder = {
         top: { style: "thin", color: { rgb: "000000" } },
         bottom: { style: "thin", color: { rgb: "000000" } },
@@ -1040,7 +1038,7 @@ function exportarTablaExcel() {
         }
     }
 
-    // HOJA 2: ESTADÍSTICA DE MUESTREO (REDONDEO A MAX 2 DECIMALES Y ESTILOS)
+    // HOJA 2: ESTADÍSTICA DE MUESTREO
     const wsStatData = [
         ["ESTADÍSTICAS DEL INVENTARIO FORESTAL POR RODAL (PRECISIÓN DEL MUESTREO)"],
         [],
