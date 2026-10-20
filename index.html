@@ -9,9 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- SheetJS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+    <!-- xlsx-js-style: lectura/escritura Excel CON estilos (bordes, rellenos, celdas combinadas) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <!-- jsPDF & html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -64,6 +64,12 @@
                 <div class="conaf-group">
                     <label for="superficieRodal">Superficie del Rodal (ha): <span class="req">*</span></label>
                     <input type="number" id="superficieRodal" step="0.01" min="0.01" placeholder="Ej: 14.80" required>
+                </div>
+                <div class="conaf-group">
+                    <label for="regionCompendio">Región (numeración del Compendio, 2003): <span class="req">*</span></label>
+                    <select id="regionCompendio" required>
+                        <option value="">-- Seleccionar Región --</option>
+                    </select>
                 </div>
                 <div class="conaf-group">
                     <label for="tipoForestal">Tipo Forestal (Art. 19 D.S. 259): <span class="req">*</span></label>
@@ -149,7 +155,7 @@
             <div class="card-header-conaf">
                 <h2 class="card-title-conaf"><span class="icon-num">2</span> Carga Masiva de Parcelas (Excel / TXT)</h2>
             </div>
-            <p class="conaf-help-text">Suba planillas Excel (.xlsx, .xls) o texto plano (.txt, .csv) con las 3 columnas requeridas: <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (DAP máx 2 decimales).</p>
+            <p class="conaf-help-text">Suba planillas Excel (.xlsx, .xls) o texto plano (.txt, .csv) con las columnas <strong>Parcela</strong>, <strong>Especie</strong> y <strong>Dap</strong> (DAP máx. 2 decimales), y la columna opcional <strong>Corta</strong> (SI / NO) para marcar los árboles a intervenir. El N° de parcela debe estar entre 1 y el número de parcelas declarado; si alguna fila tiene errores, el archivo completo se rechaza y se indica qué filas corregir.</p>
 
             <div id="lockWarningImport" class="conaf-alert alert-warning">
                 ⚠️ Debe validar los parámetros del rodal en la Sección 1 antes de importar planillas de parcelas.
@@ -159,12 +165,12 @@
                 <div class="drop-icon">📁</div>
                 <div class="drop-info">
                     <strong>Haga clic aquí o arrastre su archivo (.xlsx, .xls, .txt, .csv)</strong>
-                    <p>Columnas requeridas: <code>Parcela</code> | <code>Especie</code> | <code>Dap</code></p>
+                    <p>Columnas: <code>Parcela</code> | <code>Especie</code> | <code>Dap</code> | <code>Corta</code> (opcional, SI/NO)</p>
                 </div>
                 <input type="file" id="fileInput" accept=".xlsx, .xls, .txt, .csv" class="hidden-input" disabled>
                 <div class="drop-btns">
-                    <button type="button" class="btn-conaf btn-sm btn-outline-conaf" id="btnDescargarPlantillaExcel">📥 Plantilla Excel (3 Col)</button>
-                    <button type="button" class="btn-conaf btn-sm btn-outline-conaf" id="btnDescargarPlantillaTxt">📄 Plantilla TXT (3 Col)</button>
+                    <button type="button" class="btn-conaf btn-sm btn-outline-conaf" id="btnDescargarPlantillaExcel">📥 Plantilla Excel</button>
+                    <button type="button" class="btn-conaf btn-sm btn-outline-conaf" id="btnDescargarPlantillaTxt">📄 Plantilla TXT</button>
                 </div>
             </div>
             <div id="importFeedback" class="margin-top-sm"></div>
@@ -173,9 +179,9 @@
         <!-- SECCIÓN 3: ALTURAS PROMEDIO POR ESPECIE -->
         <section class="conaf-card" id="secConfigAltura">
             <div class="card-header-conaf">
-                <h2 class="card-title-conaf"><span class="icon-num">3</span> Alturas Promedio (H, m) por Especie</h2>
+                <h2 class="card-title-conaf"><span class="icon-num">3</span> Altura Promedio y Función de Volumen por Especie</h2>
             </div>
-            <p class="conaf-help-text">Asigne la altura promedio fustal ($H, m$) por especie para el cálculo del volumen bruto por hectárea.</p>
+            <p class="conaf-help-text">Asigne la altura promedio (H, m) y la función de volumen de cada especie. Las funciones provienen del <em>Compendio de Funciones Dendrométricas del Bosque Nativo</em> (Drake, Emanuelli y Acuña, 2003; CONAF–GTZ). La marcada con ★ es la sugerida según la región y el estado de desarrollo del rodal; puede elegir otra.</p>
 
             <div id="lockWarningAltura" class="conaf-alert alert-warning">
                 ⚠️ Debe validar los parámetros del rodal e ingresar o importar registros de parcelas.
@@ -204,7 +210,7 @@
 
                     <form id="treeForm" class="conaf-grid-form">
                         <div class="conaf-group">
-                            <label for="parcelaNo">N° Parcela:</label>
+                            <label for="parcelaNo">N° Parcela (1 a N declarado):</label>
                             <input type="number" id="parcelaNo" value="1" min="1" required disabled>
                         </div>
                         <div class="conaf-group">
@@ -265,6 +271,8 @@
                 </div>
             </div>
 
+            <div id="avisoVolumen" class="margin-top-sm"></div>
+
             <!-- Resumen Técnico -->
             <div id="resumenParametrosRodal" class="conaf-info-box margin-top-sm">
                 <p><em>Esperando validación de parámetros del rodal...</em></p>
@@ -293,7 +301,7 @@
         <!-- SECCIÓN 6: MEMORIA DE ECUACIONES -->
         <section class="conaf-card border-green" id="secFormulasFuentes">
             <div class="card-header-conaf">
-                <h2 class="card-title-conaf"><span class="icon-num">6</span> Memoria de Ecuaciones Volumétricas y Fuentes Bibliográficas</h2>
+                <h2 class="card-title-conaf"><span class="icon-num">6</span> Memoria de Funciones de Volumen y Fuentes Bibliográficas</h2>
             </div>
 
             <div class="table-responsive margin-top-sm">
@@ -301,14 +309,15 @@
                     <thead>
                         <tr>
                             <th>Especie Arbórea Nativa</th>
-                            <th>Ecuación de Volumen ($V, m^3$) / Factor Forma ($f$)</th>
-                            <th>Variables Requeridas</th>
+                            <th>Función de Volumen (V, m³)</th>
+                            <th>Variables y Tipo de Volumen</th>
                             <th>Fuente Bibliográfica / Referencia Técnica</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyFormulasFuentes"></tbody>
                 </table>
             </div>
+            <p class="conaf-help-text margin-top-sm"><strong>Referencia:</strong> Drake, F.; Emanuelli, P.; Acuña, E. (2003). <em>Compendio de Funciones Dendrométricas del Bosque Nativo</em>. CONAF – GTZ, Proyecto Conservación y Manejo Sustentable del Bosque Nativo. Santiago de Chile.</p>
         </section>
 
         <!-- SECCIÓN 7: ESTADÍSTICA DE MUESTREO -->
@@ -316,7 +325,7 @@
             <div class="card-header-conaf">
                 <h2 class="card-title-conaf"><span class="icon-num">7</span> Estadísticas del Inventario Forestal por Rodal (Precisión del Muestreo)</h2>
             </div>
-            <p class="conaf-help-text">Cálculo de medias, varianzas, coeficiente de variación ($CV\%$) y error de muestreo ($E\%$) con distribución $t$-Student al $95\%$ de confianza (Densidad $N$ redondeada a entero entero más cercano).</p>
+            <p class="conaf-help-text">Cálculo de medias, varianzas, coeficiente de variación ($CV\%$) y error de muestreo ($E\%$) con distribución $t$-Student al $95\%$ de confianza (Densidad $N$ redondeada al entero más cercano). Se calcula sobre exactamente las parcelas declaradas en la Sección 1.</p>
 
             <div class="table-responsive margin-top-sm" id="printEstadisticaArea">
                 <table id="tablaEstadisticaMuestreo" class="tabla-estadistica-conaf">
@@ -344,6 +353,7 @@
                     <tbody id="tbodyEstadisticaMuestreo"></tbody>
                 </table>
             </div>
+            <p id="notaEstadistica" class="conaf-help-text margin-top-sm"></p>
         </section>
 
         <!-- SECCIÓN 8: GRÁFICOS -->

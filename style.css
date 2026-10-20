@@ -642,3 +642,93 @@ tbody tr:hover { background-color: #e6f2eb; }
 
 .margin-top { margin-top: 1.5rem; }
 .margin-top-sm { margin-top: 0.8rem; }
+
+/* ===== Agregados V5: importación, funciones de volumen e intervención ===== */
+.alert-error {
+    background-color: #fdecea;
+    border: 1px solid #f5c2c0;
+    color: #8a1c14;
+}
+
+.alert-ok {
+    background-color: #e6f2eb;
+    border: 1px solid #a3d9b8;
+    color: #006633;
+}
+
+.lista-errores {
+    margin: 0.5rem 0 0.2rem 1.2rem;
+    font-size: 0.82rem;
+}
+
+.resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.6rem;
+}
+
+.resumen-label {
+    font-size: 0.75rem;
+    color: #004085;
+    font-weight: bold;
+}
+
+.conaf-species-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.species-card select {
+    width: 100%;
+    font-size: 0.8rem;
+}
+
+.species-card .sci {
+    color: #555555;
+    font-size: 0.8rem;
+}
+
+.badge-mini {
+    float: right;
+    font-size: 0.72rem;
+    background: #ffffff;
+    border: 1px solid var(--conaf-green-border);
+    border-radius: 3px;
+    padding: 0 0.35rem;
+}
+
+.funcion-detalle {
+    font-size: 0.75rem;
+    color: #333333;
+    background: #ffffff;
+    border: 1px solid #dbe7df;
+    border-radius: 3px;
+    padding: 0.45rem 0.55rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.funcion-detalle code {
+    font-size: 0.78rem;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.aviso-funcion {
+    font-size: 0.75rem;
+    color: var(--warning-text);
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    border-radius: 3px;
+    padding: 0.3rem 0.5rem;
+}
+
+.select-corta {
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 0.15rem 0.3rem;
+}
+
+.select-corta.es-corta { color: #cc0000; }
+.select-corta.es-residual { color: #006633; }
+.conaf-data-table tbody tr.fila-corta td { background-color: #fff1f1; }
